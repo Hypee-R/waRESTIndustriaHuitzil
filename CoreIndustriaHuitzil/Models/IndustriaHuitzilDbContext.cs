@@ -1,0 +1,358 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+
+namespace CoreIndustriaHuitzil.Models
+{
+    public partial class IndustriaHuitzilDbContext : DbContext
+    {
+        public IndustriaHuitzilDbContext()
+        {
+        }
+
+        public IndustriaHuitzilDbContext(DbContextOptions<IndustriaHuitzilDbContext> options)
+            : base(options)
+        {
+        }
+
+        public virtual DbSet<Articulo> Articulos { get; set; } = null!;
+        public virtual DbSet<CatCategoria> CatCategorias { get; set; } = null!;
+        public virtual DbSet<CatProveedore> CatProveedores { get; set; } = null!;
+        public virtual DbSet<CatTalla> CatTallas { get; set; } = null!;
+        public virtual DbSet<CatUbicacione> CatUbicaciones { get; set; } = null!;
+        public virtual DbSet<Materiale> Materiales { get; set; } = null!;
+        public virtual DbSet<Rol> Rols { get; set; } = null!;
+        public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server = 10.10.0.32\\MSSQLSERVER2017;Database = cndActivacionFisicaQA;Trusted_Connection = false;MultipleActiveResultSets = true;User ID = juanma;Password = 123");
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Articulo>(entity =>
+            {
+                entity.HasKey(e => e.IdArticulo)
+                    .HasName("PK_Articulos_1");
+
+                entity.Property(e => e.IdArticulo).HasColumnName("id_articulo");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.Existencia)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("existencia");
+
+                entity.Property(e => e.FechaIngreso)
+                    .HasColumnType("date")
+                    .HasColumnName("fecha_ingreso");
+
+                entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
+
+                entity.Property(e => e.IdTalla).HasColumnName("id_talla");
+
+                entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
+
+                entity.Property(e => e.Unidad)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("unidad");
+
+                entity.HasOne(d => d.IdCategoriaNavigation)
+                    .WithMany(p => p.Articulos)
+                    .HasForeignKey(d => d.IdCategoria)
+                    .HasConstraintName("FK_Articulos_Categorias");
+
+                entity.HasOne(d => d.IdTallaNavigation)
+                    .WithMany(p => p.Articulos)
+                    .HasForeignKey(d => d.IdTalla)
+                    .HasConstraintName("FK_Articulos_Tallas");
+
+                entity.HasOne(d => d.IdUbicacionNavigation)
+                    .WithMany(p => p.Articulos)
+                    .HasForeignKey(d => d.IdUbicacion)
+                    .HasConstraintName("FK_Articulos_Ubicaciones");
+            });
+
+            modelBuilder.Entity<CatCategoria>(entity =>
+            {
+                entity.HasKey(e => e.IdCategoria);
+
+                entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
+            });
+
+            modelBuilder.Entity<CatProveedore>(entity =>
+            {
+                entity.HasKey(e => e.IdProveedor);
+
+                entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
+
+                entity.Property(e => e.ApellidoMaterno)
+                    .HasMaxLength(50)
+                    .HasColumnName("apellido_materno");
+
+                entity.Property(e => e.ApellidoPaterno)
+                    .HasMaxLength(50)
+                    .HasColumnName("apellido_paterno");
+
+                entity.Property(e => e.Correo)
+                    .HasMaxLength(50)
+                    .HasColumnName("correo");
+
+                entity.Property(e => e.Direccion)
+                    .HasMaxLength(80)
+                    .HasColumnName("direccion");
+
+                entity.Property(e => e.EncargadoNombre)
+                    .HasMaxLength(50)
+                    .HasColumnName("encargado_nombre");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .HasColumnName("nombre");
+
+                entity.Property(e => e.Telefono1)
+                    .HasMaxLength(50)
+                    .HasColumnName("telefono1");
+
+                entity.Property(e => e.Telefono2)
+                    .HasMaxLength(80)
+                    .HasColumnName("telefono2");
+            });
+
+            modelBuilder.Entity<CatTalla>(entity =>
+            {
+                entity.HasKey(e => e.IdTalla);
+
+                entity.Property(e => e.IdTalla).HasColumnName("id_talla");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
+            });
+
+            modelBuilder.Entity<CatUbicacione>(entity =>
+            {
+                entity.HasKey(e => e.IdUbicacion);
+
+                entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
+
+                entity.Property(e => e.ApellidoMEncargado)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("apellidoM_encargado");
+
+                entity.Property(e => e.ApellidoPEncargado)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("apellidoP_encargado");
+
+                entity.Property(e => e.Correo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("correo");
+
+                entity.Property(e => e.Direccion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("direccion");
+
+                entity.Property(e => e.NombreEncargado)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre_encargado");
+
+                entity.Property(e => e.Telefono1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("telefono1");
+
+                entity.Property(e => e.Telefono2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("telefono2");
+            });
+
+            modelBuilder.Entity<Materiale>(entity =>
+            {
+                entity.HasKey(e => e.IdMaterial);
+
+                entity.Property(e => e.IdMaterial).HasColumnName("id_material");
+
+                entity.Property(e => e.Cantidad).HasColumnName("cantidad");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(50)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .HasColumnName("nombre");
+
+                entity.Property(e => e.Precio).HasColumnName("precio");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(10)
+                    .HasColumnName("status")
+                    .IsFixedLength();
+
+                entity.Property(e => e.TipoMedicion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("tipo_medicion");
+            });
+
+            modelBuilder.Entity<Rol>(entity =>
+            {
+                entity.HasKey(e => e.IdRol);
+
+                entity.ToTable("Rol");
+
+                entity.Property(e => e.IdRol).HasColumnName("id_rol");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(50)
+                    .HasColumnName("descripcion");
+            });
+
+            modelBuilder.Entity<SolicitudesMateriale>(entity =>
+            {
+                entity.HasKey(e => e.IdSolicitud);
+
+                entity.Property(e => e.IdSolicitud).HasColumnName("id_solicitud");
+
+                entity.Property(e => e.Cantidad).HasColumnName("cantidad");
+
+                entity.Property(e => e.Comentarios)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("comentarios");
+
+                entity.Property(e => e.CostoTotal).HasColumnName("costo_total");
+
+                entity.Property(e => e.Fecha)
+                    .HasColumnType("date")
+                    .HasColumnName("fecha");
+
+                entity.Property(e => e.FechaUpdate)
+                    .HasColumnType("date")
+                    .HasColumnName("fecha_update");
+
+                entity.Property(e => e.IdMaterial).HasColumnName("id_material");
+
+                entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
+
+                entity.Property(e => e.IdUser).HasColumnName("id_user");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(10)
+                    .HasColumnName("status")
+                    .IsFixedLength();
+
+                entity.HasOne(d => d.IdMaterialNavigation)
+                    .WithMany(p => p.SolicitudesMateriales)
+                    .HasForeignKey(d => d.IdMaterial)
+                    .HasConstraintName("FK_SolicitudesMateriales_Materiales");
+
+                entity.HasOne(d => d.IdProveedorNavigation)
+                    .WithMany(p => p.SolicitudesMateriales)
+                    .HasForeignKey(d => d.IdProveedor)
+                    .HasConstraintName("FK_SolicitudesMateriales_Proveedores");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.SolicitudesMateriales)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_SolicitudesMateriales_Users");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.IdUser);
+
+                entity.Property(e => e.IdUser).HasColumnName("id_user");
+
+                entity.Property(e => e.ApellidoMaterno)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("apellido_materno");
+
+                entity.Property(e => e.ApellidoPaterno)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("apellido_paterno");
+
+                entity.Property(e => e.Correo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("correo");
+
+                entity.Property(e => e.IdRol).HasColumnName("id_rol");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("password");
+
+                entity.Property(e => e.Telefono)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("telefono");
+
+                entity.Property(e => e.Token)
+                    .HasMaxLength(800)
+                    .IsUnicode(false)
+                    .HasColumnName("token");
+
+                entity.Property(e => e.UltimoAcceso)
+                    .HasColumnType("datetime")
+                    .HasColumnName("ultimo_acceso");
+
+                entity.Property(e => e.Usuario)
+                    .HasMaxLength(50)
+                    .HasColumnName("usuario");
+
+                entity.HasOne(d => d.IdRolNavigation)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.IdRol)
+                    .HasConstraintName("FK_Users_Rol");
+            });
+
+            OnModelCreatingPartial(modelBuilder);
+        }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    }
+}

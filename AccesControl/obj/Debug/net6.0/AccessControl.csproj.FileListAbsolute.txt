@@ -1,0 +1,12 @@
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\bin\Debug\net6.0\AccessControl.deps.json
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\bin\Debug\net6.0\AccessControl.dll
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\bin\Debug\net6.0\AccessControl.pdb
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.csproj.AssemblyReference.cache
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.AssemblyInfoInputs.cache
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.AssemblyInfo.cs
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.csproj.CoreCompileInputs.cache
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.dll
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\refint\AccessControl.dll
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.pdb
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\ref\AccessControl.dll
