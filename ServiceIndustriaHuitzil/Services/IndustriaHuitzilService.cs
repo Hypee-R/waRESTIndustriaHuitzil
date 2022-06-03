@@ -54,7 +54,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.usuario = existeUsuario.Usuario;
                     dataLogin.password = existeUsuario.Password;
                     dataLogin.apellidoPaterno = existeUsuario.ApellidoPaterno;
-                    dataLogin.apellidoMaterno = existeUsuario.ApellidoPaterno;
+                    dataLogin.apellidoMaterno = existeUsuario.ApellidoMaterno;
                     dataLogin.correo = existeUsuario.Correo;
                     dataLogin.telefono = existeUsuario.Telefono;
                     dataLogin.token = existeUsuario.Token;

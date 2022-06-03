@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AccesControl\AccessControl.csproj" />
     <ProjectReference Include="..\CoreIndustriaHuitzil\CoreIndustriaHuitzil.csproj" />
     <ProjectReference Include="..\ServiceIndustriaHuitzil\ServiceIndustriaHuitzil.csproj" />
