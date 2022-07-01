@@ -25,6 +25,8 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<Vista> Vistas { get; set; } = null!;
+        public virtual DbSet<VistasRol> VistasRols { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -241,6 +243,11 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(50)
                     .HasColumnName("descripcion");
+
+                entity.Property(e => e.Visible)
+                    .IsRequired()
+                    .HasColumnName("visible")
+                    .HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<SolicitudesMateriale>(entity =>
@@ -348,6 +355,60 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRol)
                     .HasConstraintName("FK_Users_Rol");
+            });
+
+            modelBuilder.Entity<Vista>(entity =>
+            {
+                entity.HasKey(e => e.IdVista);
+
+                entity.Property(e => e.IdVista).HasColumnName("id_vista");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
+
+                entity.Property(e => e.Posicion).HasColumnName("posicion");
+
+                entity.Property(e => e.RouterLink)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("routerLink");
+
+                entity.Property(e => e.Visible)
+                    .IsRequired()
+                    .HasColumnName("visible")
+                    .HasDefaultValueSql("((1))");
+            });
+
+            modelBuilder.Entity<VistasRol>(entity =>
+            {
+                entity.HasKey(e => e.IdVistaRol);
+
+                entity.ToTable("VistasRol");
+
+                entity.Property(e => e.IdVistaRol).HasColumnName("id_vista_rol");
+
+                entity.Property(e => e.IdRol).HasColumnName("id_rol");
+
+                entity.Property(e => e.IdVista).HasColumnName("id_vista");
+
+                entity.HasOne(d => d.IdRolNavigation)
+                    .WithMany(p => p.VistasRols)
+                    .HasForeignKey(d => d.IdRol)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VistasRol_Rol");
+
+                entity.HasOne(d => d.IdVistaNavigation)
+                    .WithMany(p => p.VistasRols)
+                    .HasForeignKey(d => d.IdVista)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VistaRol_Vista");
             });
 
             OnModelCreatingPartial(modelBuilder);

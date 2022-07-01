@@ -77,6 +77,284 @@ namespace ServiceIndustriaHuitzil.Services
         
         }
 
+        #region Roles
+        public async Task<object> getRoles()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay roles para mostrar";
+                response.respuesta = "[]";
+                List<Rol> lista = await _ctx.Rols.Where(x => x.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los roles!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        public async Task<object> postRol(RolRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar el nuevo rol";
+                response.respuesta = "[]";
+
+                Rol newRol = new Rol();
+                newRol.Descripcion = request.Descripcion;
+                
+                _ctx.Rols.Add(newRol);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el rol correctamente!!";
+                response.respuesta = newRol;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        public async Task<object> putRol(RolRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar el rol";
+                response.respuesta = "[]";
+
+                Rol existeRol = _ctx.Rols.FirstOrDefault(x => x.IdRol == request.IdRol);
+
+                if (existeRol != null)
+                {
+                    existeRol.Descripcion = request.Descripcion;
+                    _ctx.Update(existeRol);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó el rol correctamente!!";
+                    response.respuesta = existeRol;
+                }
+
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        public async Task<object> deleteRol(RolRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el rol";
+                response.respuesta = "[]";
+
+                Rol existeRol = _ctx.Rols.FirstOrDefault(x => x.IdRol == request.IdRol);
+
+                if (existeRol != null)
+                {
+                    existeRol.Visible = false;
+                    _ctx.Update(existeRol);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el rol correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region Vistas
+        public async Task<object> getVistas()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay vistas para mostrar";
+                response.respuesta = "[]";
+                List<Vista> lista = await _ctx.Vistas.Where(x => x.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las vistas!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region VistasRoles
+        public async Task<object> getVistasRol(int idRol)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay vistas por rol para mostrar";
+                response.respuesta = "[]";
+                List<VistasRol> vistasRol = await _ctx.VistasRols.Where(x => x.IdRol == idRol).ToListAsync();
+                if (vistasRol != null)
+                {
+                    var vistaRol = _ctx.VistasRols.Include(v => v.IdVistaNavigation).Include(x => x.IdRolNavigation)
+                        .Where(y => y.IdRol == idRol).OrderBy(or => or.IdVistaNavigation.Posicion).ToList()
+                        .ConvertAll<VistasRolResponse>(r => new VistasRolResponse
+                        {
+                            idVistaRol = r.IdVistaRol,
+                            idRol = r.IdRol,
+                            rol = r.IdRolNavigation.Descripcion,
+                            idVista = r.IdVista,
+                            vista = r.IdVistaNavigation.Nombre
+                        });
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las vistas por rol!!";
+                    response.respuesta = vistaRol;
+                }
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        public async Task<object> postVistaRol(VistaRolRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo asignar la vista al rol";
+                response.respuesta = "[]";
+
+                VistasRol newVistaRol = new VistasRol();
+                newVistaRol.IdVista = request.IdVista;
+                newVistaRol.IdRol = request.IdRol;
+
+                _ctx.VistasRols.Add(newVistaRol);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se asignó correctamente la vista correspondiente al rol!!";
+                response.respuesta = newVistaRol;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        public async Task<object> putVistaRol(VistaRolRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la vista del rol";
+                response.respuesta = "[]";
+
+                VistasRol existeVistaRol = _ctx.VistasRols.FirstOrDefault(x => x.IdVistaRol == request.IdVistaRol);
+
+                if (existeVistaRol != null)
+                {
+                    existeVistaRol.IdVista = request.IdVista;
+                    existeVistaRol.IdRol = request.IdRol;
+
+                    _ctx.Update(existeVistaRol);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó correctamente la vista correspondiente al rol!!";
+                    response.respuesta = existeVistaRol;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        public async Task<object> deleteVistaRol(VistaRolRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar la vista del rol";
+                response.respuesta = "[]";
+
+                VistasRol existeVistaRol = _ctx.VistasRols.FirstOrDefault(x => x.IdVistaRol == request.IdVistaRol);
+
+                if (existeVistaRol != null)
+                {
+                    
+                    _ctx.Remove(existeVistaRol);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó correctamente la vista correspondiente al rol!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
         private UserTokens generarToken(User user)
         {
             try
