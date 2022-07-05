@@ -22,7 +22,7 @@ namespace ServiceIndustriaHuitzil.Services
             )
         {
             _ctx = ctx;
-            _connectionString = "Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            _connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }
@@ -375,5 +375,35 @@ namespace ServiceIndustriaHuitzil.Services
                 throw;
             }
         }
+
+        #region Ubicaciones
+        public async Task<object> getUbicaciones()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Ubicaciones para mostrar";
+                response.respuesta = "[]";
+                List<CatUbicacione> lista =  _ctx.CatUbicaciones.ToList();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las ubicaciones!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
     }
 }
