@@ -32,7 +32,7 @@ namespace CoreIndustriaHuitzil.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server = 10.10.0.32\\MSSQLSERVER2017;Database = cndActivacionFisicaQA;Trusted_Connection = false;MultipleActiveResultSets = true;User ID = juanma;Password = 123");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
             }
         }
 

@@ -1,17 +1,3 @@
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.deps.json
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.runtimeconfig.json
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.dll
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.pdb
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.csproj.AssemblyReference.cache
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.AssemblyInfoInputs.cache
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.AssemblyInfo.cs
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.csproj.CoreCompileInputs.cache
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.dll
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\refint\CoreIndustriaHuitzil.dll
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.pdb
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.genruntimeconfig.cache
-C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\ref\CoreIndustriaHuitzil.dll
 C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.deps.json
 C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.runtimeconfig.json
 C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.dll
@@ -26,3 +12,17 @@ C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\CoreIndustriaHuitzi
 C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.pdb
 C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.genruntimeconfig.cache
 C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\ref\CoreIndustriaHuitzil.dll
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.deps.json
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.runtimeconfig.json
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.dll
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\bin\Debug\net6.0\CoreIndustriaHuitzil.pdb
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.csproj.AssemblyReference.cache
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.AssemblyInfoInputs.cache
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.AssemblyInfo.cs
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.csproj.CoreCompileInputs.cache
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.dll
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\refint\CoreIndustriaHuitzil.dll
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.pdb
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\CoreIndustriaHuitzil.genruntimeconfig.cache
+C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\CoreIndustriaHuitzil\obj\Debug\net6.0\ref\CoreIndustriaHuitzil.dll
