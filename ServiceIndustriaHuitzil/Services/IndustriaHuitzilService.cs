@@ -5,6 +5,8 @@ using CoreIndustriaHuitzil.ModelsRequest;
 using CoreIndustriaHuitzil.ModelsResponse;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ServiceIndustriaHuitzil.Services
 {
@@ -44,6 +46,16 @@ namespace ServiceIndustriaHuitzil.Services
 
                if (existeUsuario != null)
                {
+                    List<VistasResponse> vistasU = _ctx.VistasRols.Include(a => a.IdVistaNavigation).Where(x => x.IdRol == existeUsuario.IdRol && x.IdVistaNavigation.Visible == true)
+                                                            .OrderBy(y => y.IdVistaNavigation.Posicion).ToList().ConvertAll<VistasResponse>(v => new VistasResponse
+                                                            {
+                                                                IdVista = v.IdVistaNavigation.IdVista,
+                                                                Nombre = v.IdVistaNavigation.Nombre,
+                                                                Descripcion = v.IdVistaNavigation.Descripcion,
+                                                                Posicion = v.IdVistaNavigation.Posicion,
+                                                                RouterLink = v.IdVistaNavigation.RouterLink,
+                                                                Visible = (bool)v.IdVistaNavigation.Visible
+                                                            });
                     var dataAccess = generarToken(existeUsuario);
                     existeUsuario.Token = dataAccess.Token;
                     existeUsuario.UltimoAcceso = DateTime.Now;
@@ -62,6 +74,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.ultimoAcceso = existeUsuario.UltimoAcceso.ToString();
                     dataLogin.idRol = existeUsuario.IdRolNavigation.IdRol;
                     dataLogin.rol = existeUsuario.IdRolNavigation.Descripcion;
+                    dataLogin.vistas = vistasU;
 
                     respuesta.exito = true;
                     respuesta.mensaje = "Credenciales correctas!!";
@@ -185,6 +198,135 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó el rol correctamente!!";
                     response.respuesta = "[]";
                 }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region Ubicaciones
+        public async Task<object> getUbicaciones()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Ubicaciones para mostrar";
+                response.respuesta = "[]";
+                List<CatUbicacione> lista =  _ctx.CatUbicaciones.ToList();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las ubicaciones!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region Usuarios
+        public async Task<object> getUsuarios()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay usuarios para mostrar";
+                response.respuesta = "[]";
+
+                List<UsuarioRequest> lista = _ctx.Users.Include(a => a.IdRolNavigation).Where(x => x.Visible == true).ToList()
+                                                 .ConvertAll(u => new UsuarioRequest()
+                                                 {
+                                                     IdUser = u.IdUser,
+                                                     Usuario = u.Usuario,
+                                                     Password = Encrypt.GetSHA1(u.Password),
+                                                     IdRol = (int)u.IdRol,
+                                                     Rol = u.IdRolNavigation.Descripcion,
+                                                     Nombre = u.Nombre,
+                                                     ApellidoPaterno = u.ApellidoPaterno,
+                                                     ApellidoMaterno = u.ApellidoMaterno,
+                                                     Telefono = u.Telefono,
+                                                     Correo = u.Correo
+                                                 });
+
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los usuarios!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<object> postUsuario(UsuarioRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "";
+                response.respuesta = "[]";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<object> putUsuario(UsuarioRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "";
+                response.respuesta = "[]";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<object> deleteUsuario(UsuarioRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "";
+                response.respuesta = "[]";
 
                 return response;
             }
@@ -377,34 +519,20 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        #region Ubicaciones
-        public async Task<object> getUbicaciones()
+        public class Encrypt
         {
-            ResponseModel response = new ResponseModel();
-            try
+            public static string GetSHA1(string str)
             {
-                response.exito = false;
-                response.mensaje = "No hay Ubicaciones para mostrar";
-                response.respuesta = "[]";
-                List<CatUbicacione> lista =  _ctx.CatUbicaciones.ToList();
-                if (lista != null)
-                {
-                    response.exito = true;
-                    response.mensaje = "Se han consultado exitosamente las ubicaciones!!";
-                    response.respuesta = lista;
-                }
-
-                return response;
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                response.mensaje = e.Message;
-                return response;
+                SHA1 sha1 = SHA1Managed.Create();
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                byte[] stream = null;
+                StringBuilder sb = new StringBuilder();
+                stream = sha1.ComputeHash(encoding.GetBytes(str));
+                for (int i = 0; i < stream.Length; i++) sb.AppendFormat("{0:x2}", stream[i]);
+                return sb.ToString();
             }
         }
-        #endregion
+
 
     }
 }

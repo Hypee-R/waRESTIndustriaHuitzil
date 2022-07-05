@@ -20,5 +20,6 @@ namespace CoreIndustriaHuitzil.ModelsResponse
         public string ultimoAcceso { get; set; } = string.Empty;
         public int idRol { get; set; }
         public string rol { get; set; } = string.Empty;
+        public List<VistasResponse> vistas { get; set; }
     }
 }

@@ -351,6 +351,11 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .HasColumnName("usuario");
 
+                entity.Property(e => e.Visible)
+                    .IsRequired()
+                    .HasColumnName("visible")
+                    .HasDefaultValueSql("((1))");
+
                 entity.HasOne(d => d.IdRolNavigation)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRol)
@@ -367,6 +372,12 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("descripcion");
+
+                entity.Property(e => e.Icon)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("icon")
+                    .HasDefaultValueSql("('fa-solid fa-house')");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
