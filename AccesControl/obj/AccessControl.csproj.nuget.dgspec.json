@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj": {}
+    "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj": {
+    "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj",
+        "projectUniqueName": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj",
         "projectName": "AccessControl",
-        "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj",
-        "packagesPath": "C:\\Users\\Jose Daniel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\obj\\",
+        "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj",
+        "packagesPath": "C:\\Users\\laltamirano\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Jose Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\laltamirano\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -72,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

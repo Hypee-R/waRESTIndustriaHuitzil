@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj": {}
+    "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj": {
+    "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj",
+        "projectUniqueName": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj",
         "projectName": "AccessControl",
-        "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj",
-        "packagesPath": "C:\\Users\\Jose Daniel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\obj\\",
+        "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj",
+        "packagesPath": "C:\\Users\\laltamirano\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Jose Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\laltamirano\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -72,21 +75,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj": {
+    "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
+        "projectUniqueName": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
         "projectName": "CoreIndustriaHuitzil",
-        "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
-        "packagesPath": "C:\\Users\\Jose Daniel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\obj\\",
+        "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
+        "packagesPath": "C:\\Users\\laltamirano\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Jose Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\laltamirano\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -148,21 +154,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj": {
+    "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj",
+        "projectUniqueName": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj",
         "projectName": "ServiceIndustriaHuitzil",
-        "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj",
-        "packagesPath": "C:\\Users\\Jose Daniel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\ServiceIndustriaHuitzil\\obj\\",
+        "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj",
+        "packagesPath": "C:\\Users\\laltamirano\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\ServiceIndustriaHuitzil\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Jose Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\laltamirano\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -176,11 +185,11 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj": {
-                "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj"
+              "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj": {
+                "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj"
               },
-              "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj": {
-                "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj"
+              "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj": {
+                "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj"
               }
             }
           }
@@ -215,21 +224,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj": {
+    "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj",
+        "projectUniqueName": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj",
         "projectName": "waRESTIndustriaHuitzil",
-        "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj",
-        "packagesPath": "C:\\Users\\Jose Daniel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\waRESTIndustriaHuitzil\\obj\\",
+        "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil.csproj",
+        "packagesPath": "C:\\Users\\laltamirano\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\waRESTIndustriaHuitzil\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Jose Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\laltamirano\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -243,14 +255,14 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj": {
-                "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\AccesControl\\AccessControl.csproj"
+              "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj": {
+                "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\AccesControl\\AccessControl.csproj"
               },
-              "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj": {
-                "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj"
+              "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj": {
+                "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj"
               },
-              "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj": {
-                "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj"
+              "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj": {
+                "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\ServiceIndustriaHuitzil\\ServiceIndustriaHuitzil.csproj"
               }
             }
           }
@@ -302,7 +314,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }
