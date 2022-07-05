@@ -21,12 +21,19 @@ namespace ServiceIndustriaHuitzil.Services
         Task<object> deleteRol(RolRequest rol);
         #endregion
 
-        #region Vistas
-        Task<object> getVistas();
-        #endregion
-
         #region Ubicaciones
         Task<object> getUbicaciones();
+        #endregion
+
+        #region Usuarios
+        Task<object> getUsuarios();
+        Task<object> postUsuario(UsuarioRequest usuario);
+        Task<object> putUsuario(UsuarioRequest usuario);
+        Task<object> deleteUsuario(UsuarioRequest usuario);
+        #endregion
+
+        #region Vistas
+        Task<object> getVistas();
         #endregion
 
         #region VistasRoles

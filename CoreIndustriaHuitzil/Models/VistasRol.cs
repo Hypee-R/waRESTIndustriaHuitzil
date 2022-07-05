@@ -9,7 +9,7 @@ namespace CoreIndustriaHuitzil.Models
         public int IdVista { get; set; }
         public int IdRol { get; set; }
 
-        public virtual Rol? IdRolNavigation { get; set; } = null!;
-        public virtual Vista? IdVistaNavigation { get; set; } = null!;
+        public virtual Rol IdRolNavigation { get; set; } = null!;
+        public virtual Vista IdVistaNavigation { get; set; } = null!;
     }
 }

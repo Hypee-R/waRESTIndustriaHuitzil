@@ -32,7 +32,7 @@ namespace CoreIndustriaHuitzil.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server = 10.10.0.32\\MSSQLSERVER2017;Database = cndActivacionFisicaQA;Trusted_Connection = false;MultipleActiveResultSets = true;User ID = juanma;Password = 123");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
             }
         }
 
@@ -351,6 +351,11 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .HasColumnName("usuario");
 
+                entity.Property(e => e.Visible)
+                    .IsRequired()
+                    .HasColumnName("visible")
+                    .HasDefaultValueSql("((1))");
+
                 entity.HasOne(d => d.IdRolNavigation)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRol)
@@ -367,6 +372,12 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("descripcion");
+
+                entity.Property(e => e.Icon)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("icon")
+                    .HasDefaultValueSql("('fa-solid fa-house')");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
