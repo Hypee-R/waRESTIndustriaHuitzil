@@ -1861,23 +1861,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\laltamirano\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Jose Daniel\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
+      "projectUniqueName": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
       "projectName": "CoreIndustriaHuitzil",
-      "projectPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
-      "packagesPath": "C:\\Users\\laltamirano\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\laltamirano\\source\\repos\\waRESTIndustriaHuitzil\\CoreIndustriaHuitzil\\obj\\",
+      "projectPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\CoreIndustriaHuitzil.csproj",
+      "packagesPath": "C:\\Users\\Jose Daniel\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Jose Daniel\\Desktop\\Proyectos Freelance\\BackHuitzil\\CoreIndustriaHuitzil\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\laltamirano\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Jose Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1939,7 +1935,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }

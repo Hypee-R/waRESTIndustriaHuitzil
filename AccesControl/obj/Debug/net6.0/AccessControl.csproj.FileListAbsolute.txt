@@ -10,3 +10,15 @@ C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\
 C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\refint\AccessControl.dll
 C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.pdb
 C:\Users\laltamirano\source\repos\waRESTIndustriaHuitzil\AccesControl\obj\Debug\net6.0\ref\AccessControl.dll
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\bin\Debug\net6.0\AccessControl.deps.json
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\bin\Debug\net6.0\AccessControl.dll
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\bin\Debug\net6.0\AccessControl.pdb
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.csproj.AssemblyReference.cache
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.AssemblyInfoInputs.cache
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.AssemblyInfo.cs
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.csproj.CoreCompileInputs.cache
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.dll
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\refint\AccessControl.dll
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\AccessControl.pdb
+C:\Users\Jose Daniel\Desktop\Proyectos Freelance\BackHuitzil\AccesControl\obj\Debug\net6.0\ref\AccessControl.dll

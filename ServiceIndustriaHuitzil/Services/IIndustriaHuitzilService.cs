@@ -25,6 +25,10 @@ namespace ServiceIndustriaHuitzil.Services
         Task<object> getVistas();
         #endregion
 
+        #region Ubicaciones
+        Task<object> getUbicaciones();
+        #endregion
+
         #region VistasRoles
         Task<object> getVistasRol(int idRol);
         Task<object> postVistaRol(VistaRolRequest vistaRol);
