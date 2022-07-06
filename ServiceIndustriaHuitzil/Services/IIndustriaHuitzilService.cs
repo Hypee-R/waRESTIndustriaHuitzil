@@ -23,6 +23,10 @@ namespace ServiceIndustriaHuitzil.Services
 
         #region Ubicaciones
         Task<object> getUbicaciones();
+        Task<object> postUbicacion(UbicacionRequest ubicacionRequest);
+        Task<object> putUbicacion(UbicacionRequest ubicacionRequest);
+        Task<object> deleteUbicacion(UbicacionRequest ubicacionRequest);
+
         #endregion
 
         #region Usuarios

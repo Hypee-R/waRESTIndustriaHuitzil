@@ -24,8 +24,8 @@ namespace ServiceIndustriaHuitzil.Services
             )
         {
             _ctx = ctx;
-            _connectionString = "Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
-            //_connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+           // _connectionString = "Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            _connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }
@@ -229,6 +229,114 @@ namespace ServiceIndustriaHuitzil.Services
 
                 return response;
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<object> postUbicacion(UbicacionRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo Crear la Ubicacion";
+                response.respuesta = "[]";
+
+                CatUbicacione newCatUbicacione = new CatUbicacione();
+                newCatUbicacione.Direccion = request.Direccion;
+                newCatUbicacione.NombreEncargado = request.NombreEncargado;
+                newCatUbicacione.ApellidoPEncargado = request.ApellidoPEncargado;
+                newCatUbicacione.ApellidoMEncargado = request.ApellidoMEncargado;
+                newCatUbicacione.Telefono1 = request.Telefono1;
+                newCatUbicacione.Telefono2 = request.Telefono2;
+                newCatUbicacione.Correo = request.Correo;
+
+
+                _ctx.CatUbicaciones.Add(newCatUbicacione);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se Creo Correctamente la Ubicacion!!";
+                response.respuesta = newCatUbicacione;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<object> putUbicacion(UbicacionRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la Ubicacion";
+                response.respuesta = "[]";
+
+                CatUbicacione existeUbicacion = _ctx.CatUbicaciones.FirstOrDefault(x => x.IdUbicacion == request.IdUbicacion);
+
+                if (existeUbicacion != null)
+                {
+                   
+                    existeUbicacion.Direccion = request.Direccion;
+                    existeUbicacion.NombreEncargado = request.NombreEncargado;
+                    existeUbicacion.ApellidoPEncargado = request.ApellidoPEncargado;
+                    existeUbicacion.ApellidoMEncargado = request.ApellidoMEncargado;
+                    existeUbicacion.Telefono1 = request.Telefono1;
+                    existeUbicacion.Telefono2 = request.Telefono2;
+                    existeUbicacion.Correo = request.Correo;
+
+                    _ctx.Update(existeUbicacion);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó correctamente la Ubicacion!!";
+                    response.respuesta = existeUbicacion;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<object> deleteUbicacion(UbicacionRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar la Ubicacion";
+                response.respuesta = "[]";
+
+                CatUbicacione existeUbicacion = _ctx.CatUbicaciones.FirstOrDefault(x => x.IdUbicacion == request.IdUbicacion);
+
+                if (existeUbicacion != null)
+                {
+
+                    _ctx.Remove(existeUbicacion);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó correctamente la vista correspondiente al rol!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
             }
             catch (Exception e)
             {

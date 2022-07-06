@@ -22,38 +22,38 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getUbicaciones());
         }
 
-        [HttpGet("ConsultaAllVR")]
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetVistasRoles(int idRol)
-        {
-            return Ok(await _service.getVistasRol(idRol));
-        }
+        //[HttpGet("ConsultaAllVR")]
+        //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<IActionResult> GetVistasRoles(int idRol)
+        //{
+        //    return Ok(await _service.getVistasRol(idRol));
+        //}
         #endregion
 
         #region POST
-        [HttpPost("AgregaVR")]
+        [HttpPost("AgregaUbicacion")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> AgregarVR([FromBody] VistaRolRequest request)
+        public async Task<IActionResult> AgregarUbicacion([FromBody] UbicacionRequest request)
         {
-            return Ok(await _service.postVistaRol(request));
+            return Ok(await _service.postUbicacion(request));
         }
         #endregion
 
         #region PUT
-        [HttpPut("ActualizaVR")]
+        [HttpPut("ActualizaUbicacion")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> ActualizaVR([FromBody] VistaRolRequest request)
+        public async Task<IActionResult> ActualizaUbicacion([FromBody] UbicacionRequest request)
         {
-            return Ok(await _service.putVistaRol(request));
+            return Ok(await _service.putUbicacion(request));
         }
         #endregion
 
         #region DELETE
-        [HttpDelete("EliminaVR")]
+        [HttpDelete("EliminaUbicacion")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> EliminaVR([FromBody] VistaRolRequest request)
+        public async Task<IActionResult> EliminaUbicacion([FromBody] UbicacionRequest request)
         {
-            return Ok(await _service.deleteVistaRol(request));
+            return Ok(await _service.deleteUbicacion(request));
         }
         #endregion
     }
