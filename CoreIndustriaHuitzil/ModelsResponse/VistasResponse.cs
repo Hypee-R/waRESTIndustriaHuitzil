@@ -14,5 +14,6 @@ namespace CoreIndustriaHuitzil.ModelsResponse
         public int Posicion { get; set; }
         public string RouterLink { get; set; } = null!;
         public bool Visible { get; set; }
+        public string Icon { get; set; } = null!;
     }
 }

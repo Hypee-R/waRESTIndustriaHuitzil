@@ -8,45 +8,45 @@ namespace waRESTIndustriaHuitzil.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class RolesController : ControllerBase
+    public class UsuariosController : ControllerBase
     {
         private readonly IIndustriaHuitzilService _service;
-        public RolesController(IIndustriaHuitzilService service) => _service = service;
+        public UsuariosController(IIndustriaHuitzilService service) => _service = service;
 
         #region GET
-        [HttpGet("ConsultaAll")]
+        [HttpGet("Consulta")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetRoles()
+        public async Task<IActionResult> GetUsuarios()
         {
-            return Ok(await _service.getRoles());
+            return Ok(await _service.getUsuarios());
         }
         #endregion
 
         #region POST
         [HttpPost("Agrega")]
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> AgregaRol([FromBody] RolRequest request)
+        public async Task<IActionResult> AgregaUsuario([FromBody] UsuarioRequest request)
         {
-            return Ok(await _service.postRol(request));
+            return Ok(await _service.postUsuario(request));
         }
         #endregion
 
         #region PUT
         [HttpPut("Actualiza")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> ActualizaRol([FromBody] RolRequest request)
+        public async Task<IActionResult> ActualizaUsuario([FromBody] UsuarioRequest request)
         {
-            return Ok(await _service.putRol(request));
+            return Ok(await _service.putUsuario(request));
         }
         #endregion
 
         #region DELETE
         [HttpDelete("Elimina")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> EliminaRol([FromBody] RolRequest request)
+        public async Task<IActionResult> EliminaUsuario([FromBody] UsuarioRequest request)
         {
-            return Ok(await _service.deleteRol(request));
+            return Ok(await _service.deleteUsuario(request));
         }
         #endregion
+
     }
 }

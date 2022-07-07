@@ -30,6 +30,7 @@ namespace ServiceIndustriaHuitzil.Services
             _jwtSettings = jwtSettings;
         }
 
+        #region Auth
         public async Task<object> auth(AuthUserRequest authRequest)
         {
             ResponseModel respuesta = new ResponseModel();
@@ -54,7 +55,8 @@ namespace ServiceIndustriaHuitzil.Services
                                                                 Descripcion = v.IdVistaNavigation.Descripcion,
                                                                 Posicion = v.IdVistaNavigation.Posicion,
                                                                 RouterLink = v.IdVistaNavigation.RouterLink,
-                                                                Visible = (bool)v.IdVistaNavigation.Visible
+                                                                Visible = (bool)v.IdVistaNavigation.Visible,
+                                                                Icon = v.IdVistaNavigation.Icon
                                                             });
                     var dataAccess = generarToken(existeUsuario);
                     existeUsuario.Token = dataAccess.Token;
@@ -90,6 +92,7 @@ namespace ServiceIndustriaHuitzil.Services
            }
         
         }
+        #endregion
 
         #region Roles
         public async Task<object> getRoles()
@@ -159,7 +162,7 @@ namespace ServiceIndustriaHuitzil.Services
                 if (existeRol != null)
                 {
                     existeRol.Descripcion = request.Descripcion;
-                    _ctx.Update(existeRol);
+                    _ctx.Rols.Update(existeRol);
                     await _ctx.SaveChangesAsync();
 
                     response.exito = true;
@@ -191,7 +194,7 @@ namespace ServiceIndustriaHuitzil.Services
                 if (existeRol != null)
                 {
                     existeRol.Visible = false;
-                    _ctx.Update(existeRol);
+                    _ctx.Rols.Update(existeRol);
                     await _ctx.SaveChangesAsync();
 
                     response.exito = true;
@@ -395,8 +398,25 @@ namespace ServiceIndustriaHuitzil.Services
             try
             {
                 response.exito = false;
-                response.mensaje = "";
+                response.mensaje = "No se pudo insertar el usuario";
                 response.respuesta = "[]";
+
+                User newUser = new User();
+                newUser.Usuario = request.Usuario;
+                newUser.Password = request.Password;
+                newUser.Nombre = request.Nombre;
+                newUser.ApellidoPaterno = request.ApellidoPaterno;
+                newUser.ApellidoMaterno = request.ApellidoMaterno; 
+                newUser.Telefono = request.Telefono;
+                newUser.Correo = request.Correo;
+                newUser.IdRol = request.IdRol;
+
+                _ctx.Users.Add(newUser);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el usuario correctamente!!";
+                response.respuesta = newUser;
 
                 return response;
             }
@@ -414,8 +434,27 @@ namespace ServiceIndustriaHuitzil.Services
             try
             {
                 response.exito = false;
-                response.mensaje = "";
+                response.mensaje = "No se pudo actualizar el usuario";
                 response.respuesta = "[]";
+
+                User existeUser = _ctx.Users.FirstOrDefault(x => x.IdUser == request.IdUser);
+
+                if (existeUser != null)
+                {
+                    existeUser.Usuario = request.Usuario;
+                    existeUser.Nombre = request.Nombre;
+                    existeUser.ApellidoPaterno = request.ApellidoPaterno;
+                    existeUser.ApellidoMaterno = request.ApellidoMaterno;
+                    existeUser.Telefono = request.Telefono;
+                    existeUser.Correo = request.Correo;
+                    existeUser.IdRol = request.IdRol;
+                    _ctx.Users.Update(existeUser);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó el usuario correctamente!!";
+                    response.respuesta = existeUser;
+                }
 
                 return response;
             }
@@ -433,8 +472,21 @@ namespace ServiceIndustriaHuitzil.Services
             try
             {
                 response.exito = false;
-                response.mensaje = "";
+                response.mensaje = "No se pudo eliminar el usuario";
                 response.respuesta = "[]";
+
+                User existeUser = _ctx.Users.FirstOrDefault(x => x.IdUser == request.IdUser);
+
+                if (existeUser != null)
+                {
+                    existeUser.Visible = false;
+                    _ctx.Users.Update(existeUser);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el usuario correctamente!!";
+                    response.respuesta = "[]";
+                }
 
                 return response;
             }
@@ -606,6 +658,7 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Herramientas
         private UserTokens generarToken(User user)
         {
             try
@@ -640,6 +693,7 @@ namespace ServiceIndustriaHuitzil.Services
                 return sb.ToString();
             }
         }
+        #endregion
 
 
     }
