@@ -1,5 +1,6 @@
 ﻿using CoreIndustriaHuitzil.Models;
 using CoreIndustriaHuitzil.ModelsRequest;
+using CoreIndustriaHuitzil.ModelsResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,40 +12,54 @@ namespace ServiceIndustriaHuitzil.Services
     public interface IIndustriaHuitzilService
     {
         #region Auth
-        Task<object> auth(AuthUserRequest usuario);
+        Task<ResponseModel> auth(AuthUserRequest usuario);
+        #endregion
+
+        #region Proveedores
+        Task<ResponseModel> getProveedores();
+        Task<ResponseModel> postProveedor(ProveedorRequest proveedor);
+        Task<ResponseModel> putProveedor(ProveedorRequest proveedor);
+        Task<ResponseModel> deleteProveedor(ProveedorRequest proveedor);
         #endregion
 
         #region Roles
-        Task<object> getRoles();
-        Task<object> postRol(RolRequest rol);
-        Task<object> putRol(RolRequest rol);
-        Task<object> deleteRol(RolRequest rol);
+        Task<ResponseModel> getRoles();
+        Task<ResponseModel> postRol(RolRequest rol);
+        Task<ResponseModel> putRol(RolRequest rol);
+        Task<ResponseModel> deleteRol(RolRequest rol);
+        #endregion
+
+        #region Tallas
+        Task<ResponseModel> getTallas();
+        Task<ResponseModel> postTalla(TallaRequest talla);
+        Task<ResponseModel> putTalla(TallaRequest talla);
+        Task<ResponseModel> deleteTalla(TallaRequest talla);
         #endregion
 
         #region Ubicaciones
-        Task<object> getUbicaciones();
-        Task<object> postUbicacion(UbicacionRequest ubicacionRequest);
-        Task<object> putUbicacion(UbicacionRequest ubicacionRequest);
-        Task<object> deleteUbicacion(UbicacionRequest ubicacionRequest);
+        Task<ResponseModel> getUbicaciones();
+        Task<ResponseModel> postUbicacion(UbicacionRequest ubicacionRequest);
+        Task<ResponseModel> putUbicacion(UbicacionRequest ubicacionRequest);
+        Task<ResponseModel> deleteUbicacion(UbicacionRequest ubicacionRequest);
 
         #endregion
 
         #region Usuarios
-        Task<object> getUsuarios();
-        Task<object> postUsuario(UsuarioRequest usuario);
-        Task<object> putUsuario(UsuarioRequest usuario);
-        Task<object> deleteUsuario(UsuarioRequest usuario);
+        Task<ResponseModel> getUsuarios();
+        Task<ResponseModel> postUsuario(UsuarioRequest usuario);
+        Task<ResponseModel> putUsuario(UsuarioRequest usuario);
+        Task<ResponseModel> deleteUsuario(UsuarioRequest usuario);
         #endregion
 
         #region Vistas
-        Task<object> getVistas();
+        Task<ResponseModel> getVistas();
         #endregion
 
         #region VistasRoles
-        Task<object> getVistasRol(int idRol);
-        Task<object> postVistaRol(VistaRolRequest vistaRol);
-        Task<object> putVistaRol(VistaRolRequest vistaRol);
-        Task<object> deleteVistaRol(VistaRolRequest vistasRol);
+        Task<ResponseModel> getVistasRol(int idRol);
+        Task<ResponseModel> postVistaRol(VistaRolRequest vistaRol);
+        Task<ResponseModel> putVistaRol(VistaRolRequest vistaRol);
+        Task<ResponseModel> deleteVistaRol(VistaRolRequest vistasRol);
         #endregion
     }
 }

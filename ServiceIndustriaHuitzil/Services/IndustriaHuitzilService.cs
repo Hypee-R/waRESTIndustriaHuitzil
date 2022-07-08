@@ -31,7 +31,7 @@ namespace ServiceIndustriaHuitzil.Services
         }
 
         #region Auth
-        public async Task<object> auth(AuthUserRequest authRequest)
+        public async Task<ResponseModel> auth(AuthUserRequest authRequest)
         {
             ResponseModel respuesta = new ResponseModel();
             DataUsuarioResponse dataLogin = new DataUsuarioResponse();
@@ -94,8 +94,145 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Proveedores
+        public async Task<ResponseModel> getProveedores()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay proveedores para mostrar";
+                response.respuesta = "[]";
+
+                List<CatProveedore> lista = await _ctx.CatProveedores.Where(x => x.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los proveedores!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postProveedor(ProveedorRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar el nuevo proveedor";
+                response.respuesta = "[]";
+
+                CatProveedore newProveedor = new CatProveedore();
+                newProveedor.Nombre = request.Nombre;
+                newProveedor.ApellidoPaterno = request.ApellidoPaterno;
+                newProveedor.ApellidoMaterno = request.ApellidoMaterno;
+                newProveedor.Telefono1 = request.Telefono1;
+                newProveedor.Telefono2 = request.Telefono2;
+                newProveedor.Correo = request.Correo;
+                newProveedor.Direccion = request.Direccion;
+                newProveedor.EncargadoNombre = request.EncargadoNombre;
+
+                _ctx.CatProveedores.Add(newProveedor);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el proveedor correctamente!!";
+                response.respuesta = newProveedor;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putProveedor(ProveedorRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar el proveedor";
+                response.respuesta = "[]";
+
+                CatProveedore existeProveedor = _ctx.CatProveedores.FirstOrDefault(x => x.IdProveedor == request.IdProveedor);
+
+                if (existeProveedor != null)
+                {
+                    existeProveedor.Nombre = request.Nombre;
+                    existeProveedor.ApellidoPaterno = request.ApellidoPaterno;
+                    existeProveedor.ApellidoMaterno = request.ApellidoMaterno;
+                    existeProveedor.Telefono1 = request.Telefono1;
+                    existeProveedor.Telefono2 = request.Telefono2;
+                    existeProveedor.Correo = request.Correo;
+                    existeProveedor.Direccion = request.Direccion;
+                    existeProveedor.EncargadoNombre = request.EncargadoNombre;
+
+                    _ctx.CatProveedores.Update(existeProveedor);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó el proveedor correctamente!!";
+                    response.respuesta = existeProveedor;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteProveedor(ProveedorRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el proveedor";
+                response.respuesta = "[]";
+
+                CatProveedore existeProveedor = _ctx.CatProveedores.FirstOrDefault(x => x.IdProveedor == request.IdProveedor);
+
+                if (existeProveedor != null)
+                {
+                    existeProveedor.Visible = false;
+                    _ctx.CatProveedores.Update(existeProveedor);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el proveedor correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
         #region Roles
-        public async Task<object> getRoles()
+        public async Task<ResponseModel> getRoles()
         {
             ResponseModel response = new ResponseModel();
             try
@@ -120,7 +257,7 @@ namespace ServiceIndustriaHuitzil.Services
                 return response;
             }
         }
-        public async Task<object> postRol(RolRequest request)
+        public async Task<ResponseModel> postRol(RolRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -148,7 +285,7 @@ namespace ServiceIndustriaHuitzil.Services
                 return response;
             }
         }
-        public async Task<object> putRol(RolRequest request)
+        public async Task<ResponseModel> putRol(RolRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -180,7 +317,7 @@ namespace ServiceIndustriaHuitzil.Services
                 return response;
             }
         }
-        public async Task<object> deleteRol(RolRequest request)
+        public async Task<ResponseModel> deleteRol(RolRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -213,8 +350,133 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Tallas
+        public async Task<ResponseModel> getTallas()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "";
+                response.respuesta = "[]";
+
+                List<CatTalla> lista = await _ctx.CatTallas.Where(x => x.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las tallas!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postTalla(TallaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar la nueva talla";
+                response.respuesta = "[]";
+
+                CatTalla newTalla = new CatTalla();
+                newTalla.Nombre = request.Nombre;
+                newTalla.Descripcion = request.Descripcion;
+
+                _ctx.CatTallas.Add(newTalla);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó la talla correctamente!!";
+                response.respuesta = newTalla;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putTalla(TallaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la talla";
+                response.respuesta = "[]";
+
+                CatTalla existeTalla = _ctx.CatTallas.FirstOrDefault(x => x.IdTalla == request.IdTalla);
+
+                if (existeTalla != null)
+                {
+                    existeTalla.Nombre = request.Nombre;
+                    existeTalla.Descripcion = request.Descripcion;
+
+                    _ctx.CatTallas.Update(existeTalla);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó la talla correctamente!!";
+                    response.respuesta = existeTalla;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteTalla(TallaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar la talla";
+                response.respuesta = "[]";
+
+                CatTalla existeTalla = _ctx.CatTallas.FirstOrDefault(x => x.IdTalla == request.IdTalla);
+
+                if (existeTalla != null)
+                {
+                    existeTalla.Visible = false;
+                    _ctx.CatTallas.Update(existeTalla);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó la talla correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
         #region Ubicaciones
-        public async Task<object> getUbicaciones()
+        public async Task<ResponseModel> getUbicaciones()
         {
             ResponseModel response = new ResponseModel();
             try
@@ -241,7 +503,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<object> postUbicacion(UbicacionRequest request)
+        public async Task<ResponseModel> postUbicacion(UbicacionRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -277,7 +539,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<object> putUbicacion(UbicacionRequest request)
+        public async Task<ResponseModel> putUbicacion(UbicacionRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -317,7 +579,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<object> deleteUbicacion(UbicacionRequest request)
+        public async Task<ResponseModel> deleteUbicacion(UbicacionRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -351,7 +613,7 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Usuarios
-        public async Task<object> getUsuarios()
+        public async Task<ResponseModel> getUsuarios()
         {
             ResponseModel response = new ResponseModel();
             try
@@ -392,7 +654,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<object> postUsuario(UsuarioRequest request)
+        public async Task<ResponseModel> postUsuario(UsuarioRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -428,7 +690,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<object> putUsuario(UsuarioRequest request)
+        public async Task<ResponseModel> putUsuario(UsuarioRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -466,7 +728,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<object> deleteUsuario(UsuarioRequest request)
+        public async Task<ResponseModel> deleteUsuario(UsuarioRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -500,7 +762,7 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Vistas
-        public async Task<object> getVistas()
+        public async Task<ResponseModel> getVistas()
         {
             ResponseModel response = new ResponseModel();
             try
@@ -529,7 +791,7 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region VistasRoles
-        public async Task<object> getVistasRol(int idRol)
+        public async Task<ResponseModel> getVistasRol(int idRol)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -563,7 +825,7 @@ namespace ServiceIndustriaHuitzil.Services
                 return response;
             }
         }
-        public async Task<object> postVistaRol(VistaRolRequest request)
+        public async Task<ResponseModel> postVistaRol(VistaRolRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -592,7 +854,7 @@ namespace ServiceIndustriaHuitzil.Services
                 return response;
             }
         }
-        public async Task<object> putVistaRol(VistaRolRequest request)
+        public async Task<ResponseModel> putVistaRol(VistaRolRequest request)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -625,7 +887,7 @@ namespace ServiceIndustriaHuitzil.Services
                 return response;
             }
         }
-        public async Task<object> deleteVistaRol(VistaRolRequest request)
+        public async Task<ResponseModel> deleteVistaRol(VistaRolRequest request)
         {
             ResponseModel response = new ResponseModel();
             try

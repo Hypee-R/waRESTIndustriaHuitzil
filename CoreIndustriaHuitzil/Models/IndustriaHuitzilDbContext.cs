@@ -141,6 +141,11 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.Telefono2)
                     .HasMaxLength(80)
                     .HasColumnName("telefono2");
+
+                entity.Property(e => e.Visible)
+                    .IsRequired()
+                    .HasColumnName("visible")
+                    .HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<CatTalla>(entity =>
@@ -158,6 +163,11 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("nombre");
+
+                entity.Property(e => e.Visible)
+                    .IsRequired()
+                    .HasColumnName("visible")
+                    .HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<CatUbicacione>(entity =>
