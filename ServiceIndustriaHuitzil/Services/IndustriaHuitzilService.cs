@@ -612,6 +612,137 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Categorias
+        public async Task<ResponseModel> getCategorias()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Categorias para mostrar";
+                response.respuesta = "[]";
+                List<CatCategoria> lista = _ctx.CatCategorias.ToList();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las Categorias!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postCategoria(CategoriaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo Crear la Categoria";
+                response.respuesta = "[]";
+
+                CatCategoria newCatCategoria = new CatCategoria();
+                newCatCategoria.IdCategoria = request.IdCategoria;
+                newCatCategoria.Nombre = request.Nombre;
+                newCatCategoria.Descripcion = request.Descripcion;
+             
+
+
+                _ctx.CatCategorias.Add(newCatCategoria);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se Creo Correctamente la Categoria!!";
+                response.respuesta = newCatCategoria;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putCategoria(CategoriaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la Categoria";
+                response.respuesta = "[]";
+
+                CatCategoria existeCategoria = _ctx.CatCategorias.FirstOrDefault(x => x.IdCategoria == request.IdCategoria);
+
+                if (existeCategoria != null)
+                {
+                    existeCategoria.IdCategoria = request.IdCategoria;
+                    existeCategoria.Nombre = request.Nombre;
+                    existeCategoria.Descripcion = request.Descripcion;
+                 
+                   
+
+                    _ctx.Update(existeCategoria);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó correctamente la Categoria!!";
+                    response.respuesta = existeCategoria;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteCategoria(CategoriaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar la Categoria";
+                response.respuesta = "[]";
+
+                CatCategoria existeCategoria= _ctx.CatCategorias.FirstOrDefault(x => x.IdCategoria == request.IdCategoria);
+
+                if (existeCategoria != null)
+                {
+
+                    _ctx.Remove(existeCategoria);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó correctamente la Categoria!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
         #region Usuarios
         public async Task<ResponseModel> getUsuarios()
         {

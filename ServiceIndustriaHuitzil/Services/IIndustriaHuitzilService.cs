@@ -44,6 +44,14 @@ namespace ServiceIndustriaHuitzil.Services
 
         #endregion
 
+        #region Categorias
+        Task<ResponseModel> getCategorias();
+        Task<ResponseModel> postCategoria(CategoriaRequest categoriaRequest);
+        Task<ResponseModel> putCategoria(CategoriaRequest categoriaRequest);
+        Task<ResponseModel> deleteCategoria(CategoriaRequest categoriaRequest);
+
+        #endregion
+
         #region Usuarios
         Task<ResponseModel> getUsuarios();
         Task<ResponseModel> postUsuario(UsuarioRequest usuario);
