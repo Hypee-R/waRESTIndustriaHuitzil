@@ -22,6 +22,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<CatTalla> CatTallas { get; set; } = null!;
         public virtual DbSet<CatUbicacione> CatUbicaciones { get; set; } = null!;
         public virtual DbSet<Materiale> Materiales { get; set; } = null!;
+        public virtual DbSet<ProveedoresMateriale> ProveedoresMateriales { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
@@ -218,13 +219,9 @@ namespace CoreIndustriaHuitzil.Models
 
                 entity.Property(e => e.IdMaterial).HasColumnName("id_material");
 
-                entity.Property(e => e.Cantidad).HasColumnName("cantidad");
-
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(50)
                     .HasColumnName("descripcion");
-
-                entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(50)
@@ -237,10 +234,42 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("status")
                     .IsFixedLength();
 
+                entity.Property(e => e.Stock).HasColumnName("stock");
+
                 entity.Property(e => e.TipoMedicion)
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("tipo_medicion");
+
+                entity.Property(e => e.Visible)
+                    .IsRequired()
+                    .HasColumnName("visible")
+                    .HasDefaultValueSql("((1))");
+            });
+
+            modelBuilder.Entity<ProveedoresMateriale>(entity =>
+            {
+                entity.HasKey(e => e.IdProveedorMaterial);
+
+                entity.Property(e => e.IdProveedorMaterial)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id_proveedor_material");
+
+                entity.Property(e => e.IdMaterial).HasColumnName("id_material");
+
+                entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
+
+                entity.HasOne(d => d.IdProveedorNavigation)
+                    .WithMany(p => p.ProveedoresMateriales)
+                    .HasForeignKey(d => d.IdProveedor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProveedoresMateriales_CatProveedores");
+
+                entity.HasOne(d => d.IdProveedorMaterialNavigation)
+                    .WithOne(p => p.ProveedoresMateriale)
+                    .HasForeignKey<ProveedoresMateriale>(d => d.IdProveedorMaterial)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProveedoresMateriales_Materiales");
             });
 
             modelBuilder.Entity<Rol>(entity =>
@@ -284,9 +313,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnType("date")
                     .HasColumnName("fecha_update");
 
-                entity.Property(e => e.IdMaterial).HasColumnName("id_material");
-
-                entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
+                entity.Property(e => e.IdProveedorMaterial).HasColumnName("id_proveedor_material");
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
@@ -295,15 +322,10 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("status")
                     .IsFixedLength();
 
-                entity.HasOne(d => d.IdMaterialNavigation)
+                entity.HasOne(d => d.IdProveedorMaterialNavigation)
                     .WithMany(p => p.SolicitudesMateriales)
-                    .HasForeignKey(d => d.IdMaterial)
-                    .HasConstraintName("FK_SolicitudesMateriales_Materiales");
-
-                entity.HasOne(d => d.IdProveedorNavigation)
-                    .WithMany(p => p.SolicitudesMateriales)
-                    .HasForeignKey(d => d.IdProveedor)
-                    .HasConstraintName("FK_SolicitudesMateriales_Proveedores");
+                    .HasForeignKey(d => d.IdProveedorMaterial)
+                    .HasConstraintName("FK_SolicitudesMateriales_ProveedoresMateriales");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.SolicitudesMateriales)

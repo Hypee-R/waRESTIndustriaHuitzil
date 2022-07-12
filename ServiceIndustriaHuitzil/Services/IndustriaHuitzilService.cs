@@ -94,6 +94,139 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Materiales
+        public async Task<ResponseModel> getMateriales()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay materiales para mostrar";
+                response.respuesta = "[]";
+
+                List<Materiale> lista = await _ctx.Materiales.Where(x => x.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los materiales!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postMaterial(MaterialRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar el nuevo material";
+                response.respuesta = "[]";
+
+                Materiale newMaterial = new Materiale();
+                
+                newMaterial.Nombre = request.Nombre;
+                newMaterial.Descripcion = request.Descripcion;
+                newMaterial.Precio = request.Precio;
+                newMaterial.TipoMedicion = request.TipoMedicion;
+                newMaterial.Status = request.Status;
+                newMaterial.Stock = request.Stock;
+
+                _ctx.Materiales.Add(newMaterial);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el material correctamente!!";
+                response.respuesta = newMaterial;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putMaterial(MaterialRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar el material";
+                response.respuesta = "[]";
+
+                Materiale existeMaterial = _ctx.Materiales.FirstOrDefault(x => x.IdMaterial == request.IdMaterial);
+                if (existeMaterial != null)
+                {
+                    existeMaterial.Nombre = request.Nombre;
+                    existeMaterial.Descripcion = request.Descripcion;
+                    existeMaterial.Precio = request.Precio;
+                    existeMaterial.TipoMedicion = request.TipoMedicion;
+                    existeMaterial.Status = request.Status;
+                    existeMaterial.Stock = request.Stock;
+
+                    _ctx.Materiales.Update(existeMaterial);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó el material correctamente!!";
+                    response.respuesta = existeMaterial;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteMaterial(MaterialRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el material";
+                response.respuesta = "[]";
+
+                Materiale existeMaterial = _ctx.Materiales.FirstOrDefault(x => x.IdMaterial == request.IdMaterial);
+
+                if (existeMaterial != null)
+                {
+                    existeMaterial.Visible = false;
+                    _ctx.Materiales.Update(existeMaterial);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el material correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
         #region Proveedores
         public async Task<ResponseModel> getProveedores()
         {
@@ -217,6 +350,98 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response.exito = true;
                     response.mensaje = "Se eliminó el proveedor correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region ProveedoresMateriales
+        public async Task<ResponseModel> getProveedoresMateriales()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay proveedores de materiales para mostrar";
+                response.respuesta = "[]";
+
+                List<ProveedoresMateriale> lista = await _ctx.ProveedoresMateriales.Include(x => x.IdProveedorMaterialNavigation).Include(y => y.IdProveedorNavigation)
+                                                                .Where(z => z.IdProveedorMaterialNavigation.Visible == true && z.IdProveedorNavigation.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los proveedores y materiales!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postProveedorMaterial(ProveedoresMaterialesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar el nuevo proveedor material";
+                response.respuesta = "[]";
+
+                ProveedoresMateriale newProvMaterial = new ProveedoresMateriale();
+                
+                newProvMaterial.IdMaterial = request.IdMaterial;
+                newProvMaterial.IdProveedor = request.IdProveedor;
+
+                _ctx.ProveedoresMateriales.Add(newProvMaterial);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el proveedor material correctamente!!";
+                response.respuesta = newProvMaterial;
+                
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteProveedorMaterial(ProveedoresMaterialesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el proveedor material";
+                response.respuesta = "[]";
+
+                ProveedoresMateriale existeProvMaterial = _ctx.ProveedoresMateriales.FirstOrDefault(x => x.IdProveedorMaterial == request.IdProveedorMaterial);
+                if (existeProvMaterial != null)
+                {
+                    _ctx.ProveedoresMateriales.Remove(existeProvMaterial);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el proveedor material correctamente!!";
                     response.respuesta = "[]";
                 }
 

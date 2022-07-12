@@ -7,7 +7,7 @@ namespace CoreIndustriaHuitzil.Models
     {
         public CatProveedore()
         {
-            SolicitudesMateriales = new HashSet<SolicitudesMateriale>();
+            ProveedoresMateriales = new HashSet<ProveedoresMateriale>();
         }
 
         public int IdProveedor { get; set; }
@@ -21,6 +21,6 @@ namespace CoreIndustriaHuitzil.Models
         public string? EncargadoNombre { get; set; }
         public bool? Visible { get; set; }
 
-        public virtual ICollection<SolicitudesMateriale> SolicitudesMateriales { get; set; }
+        public virtual ICollection<ProveedoresMateriale> ProveedoresMateriales { get; set; }
     }
 }
