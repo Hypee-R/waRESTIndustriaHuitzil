@@ -29,6 +29,12 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> deleteProveedor(ProveedorRequest proveedor);
         #endregion
 
+       #region Productos
+        Task<ResponseModel> getProductos();
+        Task<ResponseModel> postProductos(ProductoRequest producto);
+        Task<ResponseModel> putProductos(ProductoRequest producto);
+        Task<ResponseModel> deleteProductos(ProductoRequest producto);
+        #endregion
         #region ProveedoresMateriales
         Task<ResponseModel> getProveedoresMateriales();
         Task<ResponseModel> postProveedorMaterial(ProveedoresMaterialesRequest proveedoresMateriales);

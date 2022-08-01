@@ -24,8 +24,8 @@ namespace ServiceIndustriaHuitzil.Services
             )
         {
             _ctx = ctx;
-           // _connectionString = "Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
-            _connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            //_connectionString = "Server=localHost\\Prueba1;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            _connectionString = "Server=DESARROLLOXR\\SA;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }
@@ -350,6 +350,167 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response.exito = true;
                     response.mensaje = "Se eliminó el proveedor correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region Productos
+        public async Task<ResponseModel> getProductos()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay arituculos para mostrar";
+                response.respuesta = "[]";
+
+                List<ProductoRequest> lista = _ctx.Articulos.Include(a => a.IdTallaNavigation)
+                                                .Include(b=>b.IdCategoriaNavigation)
+                                                .Include(c=>c.IdUbicacionNavigation)
+                                                .Where(x => x.IdArticulo!=null).ToList()
+                                                   .ConvertAll(u => new ProductoRequest()
+                                                   {
+                                                       IdArticulo=u.IdArticulo,
+                                                       Unidad=u.Unidad,
+                                                       Existencia=u.Existencia,
+                                                       Descripcion=u.Descripcion,
+                                                       FechaIngreso=u.FechaIngreso,
+                                                       idTalla=(int)u.IdTalla,
+                                                       idCategoria=(int)u.IdCategoria,
+                                                       idUbicacion=(int)u.IdUbicacion,
+
+                                                       talla = u.IdTallaNavigation.Nombre,
+                                                       ubicacion= u.IdUbicacionNavigation.Direccion,
+                                                       categoria = u.IdCategoriaNavigation.Descripcion
+                                   
+                                                       
+                                                                                                       
+                                                   });
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los proveedores!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postProductos(ProductoRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar el nuevo proveedor";
+                response.respuesta = "[]";
+
+                Articulo newArticulo = new Articulo();
+                CatProveedore newProveedor = new CatProveedore();
+            
+                newArticulo.Unidad = request.Unidad;
+                newArticulo.Descripcion = request.Descripcion;
+                newArticulo.FechaIngreso = request.FechaIngreso;
+                newArticulo.Existencia = request.Existencia;
+                newArticulo.IdUbicacion = request.idUbicacion;
+                newArticulo.IdCategoria = request.idCategoria;
+                newArticulo.IdTalla = request.idTalla;
+
+                _ctx.Articulos.Add(newArticulo);
+                await _ctx.SaveChangesAsync();
+                
+                response.exito = true;
+                response.mensaje = "Se agrego el articulo correctamente!!";
+                response.respuesta = newArticulo;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putProductos(ProductoRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar el articulo";
+                response.respuesta = "[]";
+                Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
+                if (existeArticulo != null)
+                {
+
+
+
+                    existeArticulo.Unidad = request.Unidad;
+                    existeArticulo.Descripcion = request.Descripcion;
+                    existeArticulo.FechaIngreso = request.FechaIngreso;
+                    existeArticulo.Existencia = request.Existencia;
+                    existeArticulo.IdUbicacion =request.idUbicacion;
+                    existeArticulo.IdCategoria = request.idCategoria;
+                    existeArticulo.IdTalla = request.idTalla;
+                   
+                    _ctx.Articulos.Update(existeArticulo);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó el articulo correctamente!!";
+                    response.respuesta = existeArticulo;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteProductos(ProductoRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el proveedor";
+                response.respuesta = "[]";
+
+               //CatProveedore existeProveedor = _ctx.CatProveedores.FirstOrDefault(x => x.IdProveedor == request.IdProveedor);
+                Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
+               
+                if (existeArticulo != null)
+                {
+                    //existeArticulo.Visible = false;
+                    //_ctx.CatProveedores.Update(existeProveedor);
+                    _ctx.Articulos.Remove(existeArticulo);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el articulo correctamente!!";
                     response.respuesta = "[]";
                 }
 
