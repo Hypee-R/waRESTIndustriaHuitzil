@@ -13,9 +13,11 @@ namespace CoreIndustriaHuitzil.Models
         public int? IdUbicacion { get; set; }
         public int? IdCategoria { get; set; }
         public int? IdTalla { get; set; }
-
-
-
+        
+        public string imagen { get; set; }
+        
+        //public string? imagen { get; set; }
+        //public Base64FormattingOptions imagen { get; set; }
 
         public virtual CatCategoria? IdCategoriaNavigation { get; set; }
         public virtual CatTalla? IdTallaNavigation { get; set; }

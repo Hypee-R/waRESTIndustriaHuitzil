@@ -388,7 +388,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                        idTalla=(int)u.IdTalla,
                                                        idCategoria=(int)u.IdCategoria,
                                                        idUbicacion=(int)u.IdUbicacion,
-
+                                                       imagen=u.imagen,
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion= u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion
@@ -432,6 +432,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newArticulo.IdUbicacion = request.idUbicacion;
                 newArticulo.IdCategoria = request.idCategoria;
                 newArticulo.IdTalla = request.idTalla;
+                newArticulo.imagen = request.imagen;
 
                 _ctx.Articulos.Add(newArticulo);
                 await _ctx.SaveChangesAsync();
