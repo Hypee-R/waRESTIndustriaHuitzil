@@ -25,7 +25,7 @@ namespace ServiceIndustriaHuitzil.Services
         {
             _ctx = ctx;
            // _connectionString = "Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
-            _connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            _connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriasHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }
