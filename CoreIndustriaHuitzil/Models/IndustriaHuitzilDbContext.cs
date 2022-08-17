@@ -380,6 +380,10 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnType("datetime")
                     .HasColumnName("ultimo_acceso");
 
+                entity.Property(e => e.ExpiredTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("expired_time");
+
                 entity.Property(e => e.Usuario)
                     .HasMaxLength(50)
                     .HasColumnName("usuario");

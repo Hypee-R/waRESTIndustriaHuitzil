@@ -24,8 +24,8 @@ namespace ServiceIndustriaHuitzil.Services
             )
         {
             _ctx = ctx;
-            //_connectionString = "Server=localHost\\Prueba1;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
-            _connectionString = "Server=DESARROLLOXR\\SA;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            _connectionString = "Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            //_connectionString = "Server=DESARROLLOXR\\SA;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }
@@ -61,6 +61,7 @@ namespace ServiceIndustriaHuitzil.Services
                     var dataAccess = generarToken(existeUsuario);
                     existeUsuario.Token = dataAccess.Token;
                     existeUsuario.UltimoAcceso = DateTime.Now;
+                    existeUsuario.ExpiredTime = DateTime.UtcNow.AddDays(1);
                     _ctx.Users.Update(existeUsuario);
                     _ctx.SaveChanges();
 
@@ -77,6 +78,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.idRol = existeUsuario.IdRolNavigation.IdRol;
                     dataLogin.rol = existeUsuario.IdRolNavigation.Descripcion;
                     dataLogin.vistas = vistasU;
+                    dataLogin.expiredTime = (DateTime)existeUsuario.ExpiredTime;
 
                     respuesta.exito = true;
                     respuesta.mensaje = "Credenciales correctas!!";
@@ -87,6 +89,7 @@ namespace ServiceIndustriaHuitzil.Services
            }
            catch (Exception ex)
            {
+                respuesta.mensaje = ex.Message;
                 Console.WriteLine(ex);
                 return respuesta;
            }

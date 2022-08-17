@@ -18,6 +18,7 @@ namespace CoreIndustriaHuitzil.ModelsResponse
         public string correo { get; set; } = string.Empty;
         public string token { get; set; } = string.Empty;
         public string ultimoAcceso { get; set; } = string.Empty;
+        public DateTime expiredTime { get; set; }
         public int idRol { get; set; }
         public string rol { get; set; } = string.Empty;
         public List<VistasResponse> vistas { get; set; }
