@@ -29,15 +29,17 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> deleteProveedor(ProveedorRequest proveedor);
         #endregion
 
-       #region Productos
+        #region Productos
         Task<ResponseModel> getProductos();
         Task<ResponseModel> postProductos(ProductoRequest producto);
         Task<ResponseModel> putProductos(ProductoRequest producto);
         Task<ResponseModel> deleteProductos(ProductoRequest producto);
         #endregion
+
         #region ProveedoresMateriales
         Task<ResponseModel> getProveedoresMateriales();
         Task<ResponseModel> postProveedorMaterial(ProveedoresMaterialesRequest proveedoresMateriales);
+        Task<ResponseModel> putProveedorMaterial(ProveedoresMaterialesRequest proveedoresMaterialesRequest);
         Task<ResponseModel> deleteProveedorMaterial(ProveedoresMaterialesRequest proveedoresMateriales);
         #endregion
 
@@ -46,6 +48,13 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> postRol(RolRequest rol);
         Task<ResponseModel> putRol(RolRequest rol);
         Task<ResponseModel> deleteRol(RolRequest rol);
+        #endregion
+
+        #region SolicitudMaterial
+        Task<ResponseModel> getSolicitudesMateriales();
+        Task<ResponseModel> postSolicitudMaterial(SolicitudesMaterialesRequest material);
+        Task<ResponseModel> putSolicitudMaterial(SolicitudesMaterialesRequest material);
+        Task<ResponseModel> deleteSolicitudMaterial(SolicitudesMaterialesRequest material);
         #endregion
 
         #region Tallas

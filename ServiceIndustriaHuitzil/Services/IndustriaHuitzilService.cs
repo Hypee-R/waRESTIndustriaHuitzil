@@ -590,6 +590,40 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
+        public async Task<ResponseModel> putProveedorMaterial(ProveedoresMaterialesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar el proveedor material";
+                response.respuesta = "[]";
+
+                ProveedoresMateriale existeProvMaterial = _ctx.ProveedoresMateriales.FirstOrDefault(x => x.IdProveedorMaterial == request.IdProveedorMaterial);
+
+                if (existeProvMaterial != null)
+                {
+                   existeProvMaterial.IdMaterial = request.IdMaterial;
+                   existeProvMaterial.IdProveedor = request.IdProveedor;
+                   
+                   _ctx.ProveedoresMateriales.Update(existeProvMaterial);
+                   await _ctx.SaveChangesAsync();
+                   
+                   response.exito = true;
+                   response.mensaje = "Se actualizó el proveedor material correctamente!!";
+                   response.respuesta = existeProvMaterial;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
         public async Task<ResponseModel> deleteProveedorMaterial(ProveedoresMaterialesRequest request)
         {
             ResponseModel response = new ResponseModel();
@@ -726,6 +760,142 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response.exito = true;
                     response.mensaje = "Se eliminó el rol correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region SolicitudesMateriales
+        public async Task<ResponseModel> getSolicitudesMateriales()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay solicitudes de materiales para mostrar";
+                response.respuesta = "[]";
+
+                List<SolicitudesMateriale> lista = await _ctx.SolicitudesMateriales.IgnoreAutoIncludes().ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las solicitudes de materiales!!";
+                    response.respuesta = lista;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postSolicitudMaterial(SolicitudesMaterialesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar la nueva solicitud de material";
+                response.respuesta = "[]";
+
+                SolicitudesMateriale newSolicitudMaterial = new SolicitudesMateriale();
+
+                newSolicitudMaterial.Fecha = DateTime.Now;
+                newSolicitudMaterial.Cantidad = request.Cantidad;
+                newSolicitudMaterial.Comentarios = request.Comentarios;
+                newSolicitudMaterial.IdProveedorMaterial = request.IdProveedorMaterial;
+                newSolicitudMaterial.Status = request.Status;
+                newSolicitudMaterial.FechaUpdate = request.FechaUpdate;
+                newSolicitudMaterial.CostoTotal = request.CostoTotal;
+                newSolicitudMaterial.IdUser = request.IdUser;
+
+                _ctx.SolicitudesMateriales.Add(newSolicitudMaterial);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se realizó la solicitud de material correctamente!!";
+                response.respuesta = newSolicitudMaterial;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putSolicitudMaterial(SolicitudesMaterialesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la solicitud de material";
+                response.respuesta = "[]";
+
+                SolicitudesMateriale existeSolMaterial = _ctx.SolicitudesMateriales.FirstOrDefault(x => x.IdSolicitud == request.IdSolicitud);
+                if (existeSolMaterial != null)
+                {
+                    existeSolMaterial.Cantidad = request.Cantidad;
+                    existeSolMaterial.Comentarios = request.Comentarios;
+                    existeSolMaterial.IdProveedorMaterial = request.IdProveedorMaterial;
+                    existeSolMaterial.Status = request.Status;
+                    existeSolMaterial.FechaUpdate = DateTime.Now;
+                    existeSolMaterial.CostoTotal = request.CostoTotal;
+                    existeSolMaterial.IdUser = request.IdUser;
+
+                    _ctx.SolicitudesMateriales.Update(existeSolMaterial);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó la solicitud de material correctamente!!";
+                    response.respuesta = existeSolMaterial;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteSolicitudMaterial(SolicitudesMaterialesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar la solicitud de material";
+                response.respuesta = "[]";
+
+                SolicitudesMateriale existeSolMaterial = _ctx.SolicitudesMateriales.FirstOrDefault(x => x.IdSolicitud == request.IdSolicitud);
+
+                if (existeSolMaterial != null)
+                {
+                    
+                    _ctx.SolicitudesMateriales.Remove(existeSolMaterial);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó la solicitud de material correctamente!!";
                     response.respuesta = "[]";
                 }
 
