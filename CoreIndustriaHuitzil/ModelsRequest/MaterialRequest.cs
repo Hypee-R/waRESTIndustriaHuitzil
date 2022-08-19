@@ -16,5 +16,6 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public string Status { get; set; } = String.Empty;
         public double Stock { get; set; }
         public bool Visible { get; set; }
+        public List<ProveedorRequest> proveedores { get; set; }
     }
 }

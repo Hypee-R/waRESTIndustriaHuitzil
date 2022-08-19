@@ -107,12 +107,38 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay materiales para mostrar";
                 response.respuesta = "[]";
 
+                List<MaterialRequest> listaR = new List<MaterialRequest>();
                 List<Materiale> lista = await _ctx.Materiales.Where(x => x.Visible == true).ToListAsync();
                 if (lista != null)
                 {
                     response.exito = true;
-                    response.mensaje = "Se han consultado exitosamente los materiales!!";
-                    response.respuesta = lista;
+                    response.mensaje = "Se han consultado exitosamente los materiales!!"; 
+                    listaR = lista.ConvertAll(x => new MaterialRequest()
+                    {
+                        IdMaterial = x.IdMaterial,
+                        Nombre = x.Nombre,
+                        Descripcion = x.Descripcion,
+                        Precio = (int)x.Precio,
+                        TipoMedicion = x.TipoMedicion,
+                        Status = x.Status,
+                        Stock = (double)x.Stock,
+                        Visible = (bool)x.Visible,
+                        proveedores = _ctx.ProveedoresMateriales.Include(y => y.IdProveedorNavigation)
+                                          .Where(z => z.IdMaterial == x.IdMaterial)
+                                          .ToList().ConvertAll(w => new ProveedorRequest()
+                                          {
+                                             IdProveedor = w.IdProveedor,
+                                             Nombre = w.IdProveedorNavigation.Nombre,
+                                             ApellidoPaterno = w.IdProveedorNavigation.ApellidoPaterno,
+                                             ApellidoMaterno = w.IdProveedorNavigation.ApellidoMaterno,
+                                             Telefono1 = w.IdProveedorNavigation.Telefono1,
+                                             Telefono2 = w.IdProveedorNavigation.Telefono2,
+                                             Correo = w.IdProveedorNavigation.Correo,
+                                             Direccion = w.IdProveedorNavigation.Direccion,
+                                             EncargadoNombre = w.IdProveedorNavigation.EncargadoNombre
+                                          })
+                    });
+                    response.respuesta = listaR;
                 }
 
                 return response;
@@ -145,6 +171,22 @@ namespace ServiceIndustriaHuitzil.Services
 
                 _ctx.Materiales.Add(newMaterial);
                 await _ctx.SaveChangesAsync();
+
+                //Inserta los proveedores del material si es que tiene
+                if(request.proveedores.Count() > 0)
+                {
+                    List<ProveedoresMateriale> listProveedoresMateriales = new List<ProveedoresMateriale>();
+                    request.proveedores.ForEach(dataProveedor =>
+                    {
+                        listProveedoresMateriales.Add(new ProveedoresMateriale() 
+                        { 
+                            IdMaterial = newMaterial.IdMaterial,
+                            IdProveedor = dataProveedor.IdProveedor
+                        });
+                    });
+                    _ctx.ProveedoresMateriales.AddRange(listProveedoresMateriales);
+                    await _ctx.SaveChangesAsync();
+                }
 
                 response.exito = true;
                 response.mensaje = "Se insertó el material correctamente!!";
@@ -182,6 +224,62 @@ namespace ServiceIndustriaHuitzil.Services
                     _ctx.Materiales.Update(existeMaterial);
                     await _ctx.SaveChangesAsync();
 
+                    List<ProveedoresMateriale> listProvExistentes = await _ctx.ProveedoresMateriales.Where(x => x.IdMaterial == existeMaterial.IdMaterial).ToListAsync();
+                    //Actualiza los proveedores del material si es que tiene
+                    if (listProvExistentes.Count() > 0)
+                    {
+                        List<ProveedoresMateriale> provAdd = new List<ProveedoresMateriale>();
+                        List<ProveedoresMateriale> provDelete = new List<ProveedoresMateriale>();
+                        //Si no existe en base y viene del request lo agrega
+                        request.proveedores.ForEach(data =>
+                        {
+                            if (listProvExistentes.Find(x => x.IdProveedor == data.IdProveedor) == null)
+                            {
+                                provAdd.Add(new ProveedoresMateriale()
+                                {
+                                    IdMaterial = existeMaterial.IdMaterial,
+                                    IdProveedor = data.IdProveedor
+                                });
+                            }
+                        });
+                        if (provAdd.Count() > 0)
+                        {
+                            _ctx.ProveedoresMateriales.AddRange(provAdd);
+                            await _ctx.SaveChangesAsync();
+                        }
+                        //Si existe en base y no viene del request lo elimina
+                        listProvExistentes.ForEach(data =>
+                        {
+                            if (request.proveedores.Find(x => x.IdProveedor == data.IdProveedor) == null)
+                            {
+                                provDelete.Add(data);
+                            }
+                        });
+                        if (provDelete.Count() > 0)
+                        {
+                            _ctx.ProveedoresMateriales.RemoveRange(provDelete);
+                            await _ctx.SaveChangesAsync();
+                        }
+
+                    }
+                    else
+                    {
+                        //Inserta los proveedores del material si es que tiene
+                        if (request.proveedores.Count() > 0)
+                        {
+                            List<ProveedoresMateriale> listProveedoresMateriales = new List<ProveedoresMateriale>();
+                            request.proveedores.ForEach(dataProveedor =>
+                            {
+                                listProveedoresMateriales.Add(new ProveedoresMateriale()
+                                {
+                                    IdMaterial = existeMaterial.IdMaterial,
+                                    IdProveedor = dataProveedor.IdProveedor
+                                });
+                            });
+                            _ctx.ProveedoresMateriales.AddRange(listProveedoresMateriales);
+                            await _ctx.SaveChangesAsync();
+                        }
+                    }
                     response.exito = true;
                     response.mensaje = "Se actualizó el material correctamente!!";
                     response.respuesta = existeMaterial;
@@ -783,13 +881,45 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No hay solicitudes de materiales para mostrar";
                 response.respuesta = "[]";
-
-                List<SolicitudesMateriale> lista = await _ctx.SolicitudesMateriales.IgnoreAutoIncludes().ToListAsync();
+                List<SolicitudesMaterialesRequest> listaR = new List<SolicitudesMaterialesRequest>();
+                List<SolicitudesMateriale> lista = await _ctx.SolicitudesMateriales.Include(x => x.IdProveedorMaterialNavigation)
+                                                             .Include(y => y.IdUserNavigation).ThenInclude(z => z.IdRolNavigation)
+                                                             .ToListAsync();
                 if (lista != null)
                 {
                     response.exito = true;
                     response.mensaje = "Se han consultado exitosamente las solicitudes de materiales!!";
-                    response.respuesta = lista;
+                    listaR = lista.ConvertAll(x => new SolicitudesMaterialesRequest()
+                    {
+                        IdSolicitud = x.IdSolicitud,
+                        Fecha = x.Fecha,
+                        Cantidad = x.Cantidad,
+                        Comentarios = x.Comentarios,
+                        IdProveedorMaterial = x.IdProveedorMaterial,
+                        proveedorMaterial = new ProveedoresMaterialesRequest()
+                        {
+                            IdProveedorMaterial = x.IdProveedorMaterialNavigation.IdProveedorMaterial,
+                            IdProveedor = x.IdProveedorMaterialNavigation.IdProveedor,
+                            IdMaterial = x.IdProveedorMaterialNavigation.IdMaterial
+                        },
+                        Status = (string) x.Status,
+                        FechaUpdate = x.FechaUpdate,
+                        CostoTotal = x.CostoTotal,
+                        IdUser = x.IdUser,
+                        usuario = new UsuarioRequest()
+                        {
+                            IdUser = x.IdUserNavigation.IdUser,
+                            Usuario = x.IdUserNavigation.Usuario,
+                            Password = x.IdUserNavigation.Password,
+                            IdRol = (int)x.IdUserNavigation.IdRol,
+                            Rol = (string)x.IdUserNavigation.IdRolNavigation.Descripcion,
+                            Nombre = x.IdUserNavigation.Nombre,
+                            ApellidoPaterno = x.IdUserNavigation.ApellidoPaterno,
+                            ApellidoMaterno = x.IdUserNavigation.ApellidoMaterno,
+                            Telefono = x.IdUserNavigation.Telefono,
+                            Correo = x.IdUserNavigation.Correo,
+                        }
+                    });
                 }
 
                 return response;
