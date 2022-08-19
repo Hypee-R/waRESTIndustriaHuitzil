@@ -249,27 +249,26 @@ namespace CoreIndustriaHuitzil.Models
 
             modelBuilder.Entity<ProveedoresMateriale>(entity =>
             {
-                entity.HasKey(e => e.IdProveedorMaterial);
+                entity.HasKey(e => e.IdProveedorMaterial)
+                    .HasName("PK__Proveedo__AD3DDFA934F9F3DC");
 
-                entity.Property(e => e.IdProveedorMaterial)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id_proveedor_material");
+                entity.Property(e => e.IdProveedorMaterial).HasColumnName("id_proveedor_material");
 
                 entity.Property(e => e.IdMaterial).HasColumnName("id_material");
 
                 entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
+
+                entity.HasOne(d => d.IdMaterialNavigation)
+                    .WithMany(p => p.ProveedoresMateriales)
+                    .HasForeignKey(d => d.IdMaterial)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProveedoresMateriales_Materiales");
 
                 entity.HasOne(d => d.IdProveedorNavigation)
                     .WithMany(p => p.ProveedoresMateriales)
                     .HasForeignKey(d => d.IdProveedor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProveedoresMateriales_CatProveedores");
-
-                entity.HasOne(d => d.IdProveedorMaterialNavigation)
-                    .WithOne(p => p.ProveedoresMateriale)
-                    .HasForeignKey<ProveedoresMateriale>(d => d.IdProveedorMaterial)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProveedoresMateriales_Materiales");
             });
 
             modelBuilder.Entity<Rol>(entity =>
@@ -354,6 +353,10 @@ namespace CoreIndustriaHuitzil.Models
                     .IsUnicode(false)
                     .HasColumnName("correo");
 
+                entity.Property(e => e.ExpiredTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("expired_time");
+
                 entity.Property(e => e.IdRol).HasColumnName("id_rol");
 
                 entity.Property(e => e.Nombre)
@@ -379,10 +382,6 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.UltimoAcceso)
                     .HasColumnType("datetime")
                     .HasColumnName("ultimo_acceso");
-
-                entity.Property(e => e.ExpiredTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("expired_time");
 
                 entity.Property(e => e.Usuario)
                     .HasMaxLength(50)

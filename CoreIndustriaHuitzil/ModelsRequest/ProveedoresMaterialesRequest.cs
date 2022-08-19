@@ -11,5 +11,8 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public int IdProveedorMaterial { get; set; }
         public int IdProveedor { get; set; }
         public int IdMaterial { get; set; }
+        public ProveedorRequest proveedor { get; set; }
+        public MaterialRequest material { get; set; }
+
     }
 }

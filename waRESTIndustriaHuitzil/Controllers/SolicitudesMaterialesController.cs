@@ -20,6 +20,13 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.getSolicitudesMateriales());
         }
+
+        [HttpGet("ConsultaProvMat")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetProveedoresMateriales()
+        {
+            return Ok(await _service.getProveedoresMateriales());
+        }
         #endregion
 
         #region POST

@@ -637,13 +637,44 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay proveedores de materiales para mostrar";
                 response.respuesta = "[]";
 
-                List<ProveedoresMateriale> lista = await _ctx.ProveedoresMateriales.Include(x => x.IdProveedorMaterialNavigation).Include(y => y.IdProveedorNavigation)
-                                                                .Where(z => z.IdProveedorMaterialNavigation.Visible == true && z.IdProveedorNavigation.Visible == true).ToListAsync();
+                List<ProveedoresMaterialesRequest> listaR = new List<ProveedoresMaterialesRequest>();
+                List<ProveedoresMateriale> lista = await _ctx.ProveedoresMateriales.Include(x => x.IdMaterialNavigation).Include(y => y.IdProveedorNavigation)
+                                                                .Where(z => z.IdMaterialNavigation.Visible == true && z.IdProveedorNavigation.Visible == true).ToListAsync();
                 if (lista != null)
                 {
                     response.exito = true;
                     response.mensaje = "Se han consultado exitosamente los proveedores y materiales!!";
-                    response.respuesta = lista;
+                    listaR = lista.ConvertAll(x => new ProveedoresMaterialesRequest()
+                    {
+                        IdProveedorMaterial = x.IdProveedorMaterial,
+                        IdMaterial = x.IdMaterial,
+                        IdProveedor = x.IdProveedor,
+                        material = new MaterialRequest()
+                        {
+                            IdMaterial = x.IdMaterialNavigation.IdMaterial,
+                            Nombre = x.IdMaterialNavigation.Nombre,
+                            Descripcion = x.IdMaterialNavigation.Descripcion,
+                            Precio = (double)x.IdMaterialNavigation.Precio,
+                            TipoMedicion = x.IdMaterialNavigation.TipoMedicion,
+                            Status = x.IdMaterialNavigation.Status,
+                            Stock = (double)x.IdMaterialNavigation.Stock,
+                            Visible = (bool)x.IdMaterialNavigation.Visible,
+                            proveedores = null,
+                        },
+                        proveedor = new ProveedorRequest()
+                        {
+                            IdProveedor = x.IdProveedorNavigation.IdProveedor,
+                            Nombre = x.IdProveedorNavigation.Nombre,
+                            ApellidoPaterno = x.IdProveedorNavigation.ApellidoPaterno,
+                            ApellidoMaterno = x.IdProveedorNavigation.ApellidoMaterno,
+                            Telefono1 = x.IdProveedorNavigation.Telefono1,
+                            Telefono2 = x.IdProveedorNavigation.Telefono2,
+                            Correo = x.IdProveedorNavigation.Correo,
+                            Direccion = x.IdProveedorNavigation.Direccion,
+                            EncargadoNombre = x.IdProveedorNavigation.EncargadoNombre,
+                        }
+                    });
+                    response.respuesta = listaR;
                 }
 
                 return response;
@@ -920,6 +951,7 @@ namespace ServiceIndustriaHuitzil.Services
                             Correo = x.IdUserNavigation.Correo,
                         }
                     });
+                    response.respuesta = listaR;
                 }
 
                 return response;

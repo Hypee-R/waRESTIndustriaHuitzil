@@ -21,8 +21,8 @@ namespace CoreIndustriaHuitzil.Models
         public string? Correo { get; set; }
         public string? Token { get; set; }
         public DateTime? UltimoAcceso { get; set; }
-        public DateTime? ExpiredTime { get; set; }
         public bool? Visible { get; set; }
+        public DateTime? ExpiredTime { get; set; }
 
         public virtual Rol? IdRolNavigation { get; set; }
         public virtual ICollection<SolicitudesMateriale> SolicitudesMateriales { get; set; }

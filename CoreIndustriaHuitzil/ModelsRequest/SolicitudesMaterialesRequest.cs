@@ -13,11 +13,11 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public double? Cantidad { get; set; }
         public string? Comentarios { get; set; }
         public int? IdProveedorMaterial { get; set; }
-        public ProveedoresMaterialesRequest proveedorMaterial { get; set; }
+        public ProveedoresMaterialesRequest? proveedorMaterial { get; set; }
         public string? Status { get; set; }
         public DateTime? FechaUpdate { get; set; }
         public double? CostoTotal { get; set; }
         public int? IdUser { get; set; }
-        public UsuarioRequest usuario { get; set; }
+        public UsuarioRequest? usuario { get; set; }
     }
 }

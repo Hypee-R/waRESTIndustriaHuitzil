@@ -5,6 +5,11 @@ namespace CoreIndustriaHuitzil.Models
 {
     public partial class Materiale
     {
+        public Materiale()
+        {
+            ProveedoresMateriales = new HashSet<ProveedoresMateriale>();
+        }
+
         public int IdMaterial { get; set; }
         public string? Nombre { get; set; }
         public string? Descripcion { get; set; }
@@ -14,6 +19,6 @@ namespace CoreIndustriaHuitzil.Models
         public double? Stock { get; set; }
         public bool? Visible { get; set; }
 
-        public virtual ProveedoresMateriale ProveedoresMateriale { get; set; } = null!;
+        public virtual ICollection<ProveedoresMateriale> ProveedoresMateriales { get; set; }
     }
 }
