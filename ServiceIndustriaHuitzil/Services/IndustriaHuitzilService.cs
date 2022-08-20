@@ -914,6 +914,9 @@ namespace ServiceIndustriaHuitzil.Services
                 response.respuesta = "[]";
                 List<SolicitudesMaterialesRequest> listaR = new List<SolicitudesMaterialesRequest>();
                 List<SolicitudesMateriale> lista = await _ctx.SolicitudesMateriales.Include(x => x.IdProveedorMaterialNavigation)
+                                                             .ThenInclude(a => a.IdMaterialNavigation)
+                                                             .Include(b => b.IdProveedorMaterialNavigation)
+                                                             .ThenInclude(c => c.IdProveedorNavigation)
                                                              .Include(y => y.IdUserNavigation).ThenInclude(z => z.IdRolNavigation)
                                                              .ToListAsync();
                 if (lista != null)
@@ -931,7 +934,30 @@ namespace ServiceIndustriaHuitzil.Services
                         {
                             IdProveedorMaterial = x.IdProveedorMaterialNavigation.IdProveedorMaterial,
                             IdProveedor = x.IdProveedorMaterialNavigation.IdProveedor,
-                            IdMaterial = x.IdProveedorMaterialNavigation.IdMaterial
+                            IdMaterial = x.IdProveedorMaterialNavigation.IdMaterial,
+                            material = new MaterialRequest()
+                            {
+                                IdMaterial = x.IdProveedorMaterialNavigation.IdMaterialNavigation.IdMaterial,
+                                Nombre = x.IdProveedorMaterialNavigation.IdMaterialNavigation.Nombre,
+                                Descripcion = x.IdProveedorMaterialNavigation.IdMaterialNavigation.Descripcion,
+                                Precio = (double)x.IdProveedorMaterialNavigation.IdMaterialNavigation.Precio,
+                                TipoMedicion = x.IdProveedorMaterialNavigation.IdMaterialNavigation.TipoMedicion,
+                                Status = x.IdProveedorMaterialNavigation.IdMaterialNavigation.Status,
+                                Stock = (double)x.IdProveedorMaterialNavigation.IdMaterialNavigation.Stock,
+                                Visible = (bool)x.IdProveedorMaterialNavigation.IdMaterialNavigation.Visible
+                            },
+                            proveedor = new ProveedorRequest()
+                            {
+                                IdProveedor = x.IdProveedorMaterialNavigation.IdProveedorNavigation.IdProveedor,
+                                Nombre = x.IdProveedorMaterialNavigation.IdProveedorNavigation.Nombre,
+                                ApellidoPaterno = x.IdProveedorMaterialNavigation.IdProveedorNavigation.ApellidoPaterno,
+                                ApellidoMaterno = x.IdProveedorMaterialNavigation.IdProveedorNavigation.ApellidoMaterno,
+                                Telefono1 = x.IdProveedorMaterialNavigation.IdProveedorNavigation.Telefono1,
+                                Telefono2 = x.IdProveedorMaterialNavigation.IdProveedorNavigation.Telefono2,
+                                Correo = x.IdProveedorMaterialNavigation.IdProveedorNavigation.Correo,
+                                Direccion = x.IdProveedorMaterialNavigation.IdProveedorNavigation.Direccion,
+                                EncargadoNombre = x.IdProveedorMaterialNavigation.IdProveedorNavigation.EncargadoNombre,
+                            }
                         },
                         Status = (string) x.Status,
                         FechaUpdate = x.FechaUpdate,
@@ -980,7 +1006,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newSolicitudMaterial.Comentarios = request.Comentarios;
                 newSolicitudMaterial.IdProveedorMaterial = request.IdProveedorMaterial;
                 newSolicitudMaterial.Status = request.Status;
-                newSolicitudMaterial.FechaUpdate = request.FechaUpdate;
+                //newSolicitudMaterial.FechaUpdate = request.FechaUpdate;
                 newSolicitudMaterial.CostoTotal = request.CostoTotal;
                 newSolicitudMaterial.IdUser = request.IdUser;
 

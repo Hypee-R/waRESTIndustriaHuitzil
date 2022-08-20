@@ -33,8 +33,8 @@ namespace CoreIndustriaHuitzil.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
-                //optionsBuilder.UseSqlServer("Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
+                //optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
             }
         }
 
@@ -250,7 +250,7 @@ namespace CoreIndustriaHuitzil.Models
             modelBuilder.Entity<ProveedoresMateriale>(entity =>
             {
                 entity.HasKey(e => e.IdProveedorMaterial)
-                    .HasName("PK__Proveedo__AD3DDFA934F9F3DC");
+                    .HasName("PK__Proveedo__AD3DDFA9E5B7D521");
 
                 entity.Property(e => e.IdProveedorMaterial).HasColumnName("id_proveedor_material");
 

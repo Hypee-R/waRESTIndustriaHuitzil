@@ -31,6 +31,7 @@ namespace waRESTIndustriaHuitzil.Controllers
 
         #region POST
         [HttpPost("Agrega")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AgregaSolicitud([FromBody] SolicitudesMaterialesRequest request)
         {
             return Ok(await _service.postSolicitudMaterial(request));
