@@ -34,7 +34,8 @@ namespace CoreIndustriaHuitzil.Models
             if (!optionsBuilder.IsConfigured)
             {
                 //optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
-                optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
+                optionsBuilder.UseSqlServer("Server=industriahuitzil.ckqnuap2vm5f.us-east-1.rds.amazonaws.com,1433;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=HuitzilDEV;Password=Ventana0512");
+                //optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
             }
         }
 
