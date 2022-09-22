@@ -492,10 +492,8 @@ namespace ServiceIndustriaHuitzil.Services
                                                        imagen=u.imagen,
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion= u.IdUbicacionNavigation.Direccion,
-                                                       categoria = u.IdCategoriaNavigation.Descripcion
-                                   
-                                                       
-                                                                                                       
+                                                       categoria = u.IdCategoriaNavigation.Descripcion,
+                                                       sku = u.Sku
                                                    });
                 if (lista != null)
                 {
@@ -534,6 +532,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newArticulo.IdCategoria = request.idCategoria;
                 newArticulo.IdTalla = request.idTalla;
                 newArticulo.imagen = request.imagen;
+                newArticulo.Sku = request.sku;
 
                 _ctx.Articulos.Add(newArticulo);
                 await _ctx.SaveChangesAsync();
@@ -573,6 +572,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeArticulo.IdUbicacion =request.idUbicacion;
                     existeArticulo.IdCategoria = request.idCategoria;
                     existeArticulo.IdTalla = request.idTalla;
+                    existeArticulo.Sku = request.sku;
                    
                     _ctx.Articulos.Update(existeArticulo);
                     await _ctx.SaveChangesAsync();
@@ -621,6 +621,82 @@ namespace ServiceIndustriaHuitzil.Services
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> searchProduct(string queryString)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay productos relacionados con la busqueda";
+                response.respuesta = "[]";
+
+                List<ProductoRequest> allResults = new List<ProductoRequest>();
+                List<Articulo> resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation)
+                                                .Include(b => b.IdCategoriaNavigation)
+                                                .Include(c => c.IdUbicacionNavigation)
+                                                .Where(x => x.Descripcion.ToLower().Contains(queryString.ToLower())).ToList();
+                List<Articulo> resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation)
+                                                .Include(b => b.IdCategoriaNavigation)
+                                                .Include(c => c.IdUbicacionNavigation)
+                                                .Where(x => x.Sku.ToLower().Contains(queryString.ToLower())).ToList();
+
+                if (resultsByName.Count() > 0 || resultsBySku.Count() > 0)
+                {
+                    resultsBySku.ForEach(product =>
+                    {
+                        allResults.Add(new ProductoRequest()
+                        {
+                            IdArticulo = product.IdArticulo,
+                            Unidad = product.Unidad,
+                            Existencia = product.Existencia,
+                            Descripcion = product.Descripcion,
+                            FechaIngreso = product.FechaIngreso,
+                            idTalla = (int)product.IdTalla,
+                            idCategoria = (int)product.IdCategoria,
+                            idUbicacion = (int)product.IdUbicacion,
+                            imagen = product.imagen,
+                            talla = product.IdTallaNavigation.Nombre,
+                            ubicacion = product.IdUbicacionNavigation.Direccion,
+                            categoria = product.IdCategoriaNavigation.Descripcion,
+                            sku = product.Sku
+                        });
+                    });
+                    resultsByName.ForEach(product =>
+                    {
+                        if (allResults.Find(x => x.IdArticulo == product.IdArticulo) == null)
+                        {
+                            allResults.Add(new ProductoRequest()
+                            {
+                                IdArticulo = product.IdArticulo,
+                                Unidad = product.Unidad,
+                                Existencia = product.Existencia,
+                                Descripcion = product.Descripcion,
+                                FechaIngreso = product.FechaIngreso,
+                                idTalla = (int)product.IdTalla,
+                                idCategoria = (int)product.IdCategoria,
+                                idUbicacion = (int)product.IdUbicacion,
+                                imagen = product.imagen,
+                                talla = product.IdTallaNavigation.Nombre,
+                                ubicacion = product.IdUbicacionNavigation.Direccion,
+                                categoria = product.IdCategoriaNavigation.Descripcion,
+                                sku = product.Sku
+                            });
+                        }
+                    });
+                    response.exito = true;
+                    response.mensaje = "Se obtuvieron las coincidencias relacionadas con el filtro!!";
+                    response.respuesta = allResults;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
                 response.mensaje = e.Message;
                 return response;
             }

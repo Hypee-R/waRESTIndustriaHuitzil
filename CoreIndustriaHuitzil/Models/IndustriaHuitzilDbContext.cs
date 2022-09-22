@@ -34,8 +34,8 @@ namespace CoreIndustriaHuitzil.Models
             if (!optionsBuilder.IsConfigured)
             {
                 //optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
-                optionsBuilder.UseSqlServer("Server=industriahuitzil.ckqnuap2vm5f.us-east-1.rds.amazonaws.com,1433;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=HuitzilDEV;Password=Ventana0512");
-                //optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
+                //optionsBuilder.UseSqlServer("Server=industriahuitzil.ckqnuap2vm5f.us-east-1.rds.amazonaws.com,1433;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=HuitzilDEV;Password=Ventana0512");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
             }
         }
 
@@ -67,6 +67,8 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.IdTalla).HasColumnName("id_talla");
 
                 entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
+
+                entity.Property(e => e.Sku).HasColumnName("sku");
 
                 entity.Property(e => e.Unidad)
                     .HasMaxLength(50)
