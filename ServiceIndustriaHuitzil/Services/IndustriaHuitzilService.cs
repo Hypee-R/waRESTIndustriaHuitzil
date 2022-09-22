@@ -136,6 +136,19 @@ namespace ServiceIndustriaHuitzil.Services
                                              Correo = w.IdProveedorNavigation.Correo,
                                              Direccion = w.IdProveedorNavigation.Direccion,
                                              EncargadoNombre = w.IdProveedorNavigation.EncargadoNombre
+                                          }),
+                        ubicaciones = _ctx.MaterialesUbicaciones.Include(w => w.IdUbicacionNavigation)
+                                          .Where(z => z.IdMaterial == x.IdMaterial)
+                                          .ToList().ConvertAll(w => new UbicacionRequest()
+                                          {
+                                              IdUbicacion = w.IdUbicacionNavigation.IdUbicacion,
+                                              Direccion = w.IdUbicacionNavigation.Direccion,
+                                              NombreEncargado = w.IdUbicacionNavigation.NombreEncargado,
+                                              ApellidoPEncargado = w.IdUbicacionNavigation.ApellidoPEncargado,
+                                              ApellidoMEncargado = w.IdUbicacionNavigation.ApellidoMEncargado,
+                                              Telefono1 = w.IdUbicacionNavigation.Telefono2,
+                                              Telefono2 = w.IdUbicacionNavigation.Correo,
+                                              Correo = w.IdUbicacionNavigation.Direccion
                                           })
                     });
                     response.respuesta = listaR;
@@ -188,6 +201,22 @@ namespace ServiceIndustriaHuitzil.Services
                     await _ctx.SaveChangesAsync();
                 }
 
+                //Inserta las ubicaciones del material si es que tiene
+                if (request.ubicaciones.Count() > 0)
+                {
+                    List<MaterialesUbicacione> listMaterialesUbi = new List<MaterialesUbicacione>();
+                    request.ubicaciones.ForEach(dataUbicacion =>
+                    {
+                        listMaterialesUbi.Add(new MaterialesUbicacione()
+                        {
+                            IdMaterial = newMaterial.IdMaterial,
+                            IdUbicacion = dataUbicacion.IdUbicacion
+                        });
+                    });
+                    _ctx.MaterialesUbicaciones.AddRange(listMaterialesUbi);
+                    await _ctx.SaveChangesAsync();
+                }
+
                 response.exito = true;
                 response.mensaje = "Se insertó el material correctamente!!";
                 response.respuesta = newMaterial;
@@ -225,6 +254,7 @@ namespace ServiceIndustriaHuitzil.Services
                     await _ctx.SaveChangesAsync();
 
                     List<ProveedoresMateriale> listProvExistentes = await _ctx.ProveedoresMateriales.Where(x => x.IdMaterial == existeMaterial.IdMaterial).ToListAsync();
+                    List<MaterialesUbicacione> listUbiExistentes = await _ctx.MaterialesUbicaciones.Where(x => x.IdMaterial == existeMaterial.IdMaterial).ToListAsync();
                     //Actualiza los proveedores del material si es que tiene
                     if (listProvExistentes.Count() > 0)
                     {
@@ -280,6 +310,61 @@ namespace ServiceIndustriaHuitzil.Services
                             await _ctx.SaveChangesAsync();
                         }
                     }
+                    //Actualiza las ubicaciones del material si es que tiene
+                    if (listUbiExistentes.Count() > 0)
+                    {
+                        List<MaterialesUbicacione> ubiAdd = new List<MaterialesUbicacione>();
+                        List<MaterialesUbicacione> ubiDelete = new List<MaterialesUbicacione>();
+                        //Si no existe en base y viene del request lo agrega
+                        request.ubicaciones.ForEach(data =>
+                        {
+                            if (listUbiExistentes.Find(x => x.IdUbicacion == data.IdUbicacion) == null)
+                            {
+                                ubiAdd.Add(new MaterialesUbicacione()
+                                {
+                                    IdMaterial = existeMaterial.IdMaterial,
+                                    IdUbicacion = data.IdUbicacion
+                                });
+                            }
+                        });
+                        if (ubiAdd.Count() > 0)
+                        {
+                            _ctx.MaterialesUbicaciones.AddRange(ubiAdd);
+                            await _ctx.SaveChangesAsync();
+                        }
+                        //Si existe en base y no viene del request lo elimina
+                        listUbiExistentes.ForEach(data =>
+                        {
+                            if (request.ubicaciones.Find(x => x.IdUbicacion == data.IdUbicacion) == null)
+                            {
+                                ubiDelete.Add(data);
+                            }
+                        });
+                        if (ubiDelete.Count() > 0)
+                        {
+                            _ctx.MaterialesUbicaciones.RemoveRange(ubiDelete);
+                            await _ctx.SaveChangesAsync();
+                        }
+                    }
+                    else
+                    {
+                        //Inserta las ubicaciones del material si es que tiene
+                        if (request.ubicaciones.Count() > 0)
+                        {
+                            List<MaterialesUbicacione> listMaterialesUbicaciones = new List<MaterialesUbicacione>();
+                            request.ubicaciones.ForEach(dataProveedor =>
+                            {
+                                listMaterialesUbicaciones.Add(new MaterialesUbicacione()
+                                {
+                                    IdMaterial = existeMaterial.IdMaterial,
+                                    IdUbicacion = dataProveedor.IdUbicacion
+                                });
+                            });
+                            _ctx.MaterialesUbicaciones.AddRange(listMaterialesUbicaciones);
+                            await _ctx.SaveChangesAsync();
+                        }
+                    }
+
                     response.exito = true;
                     response.mensaje = "Se actualizó el material correctamente!!";
                     response.respuesta = existeMaterial;
@@ -314,6 +399,162 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response.exito = true;
                     response.mensaje = "Se eliminó el material correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region MaterialesUbicaciones
+        public async Task<ResponseModel> getMaterialesUbicaciones()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay ubicaciones de materiales para mostrar";
+                response.respuesta = "[]";
+
+                List<MaterialesUbicacionesRequest> listaR = new List<MaterialesUbicacionesRequest>();
+                List<MaterialesUbicacione> lista = await _ctx.MaterialesUbicaciones.Include(x => x.IdMaterialNavigation).Include(y => y.IdUbicacionNavigation)
+                                                                .Where(z => z.IdMaterialNavigation.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las ubicaciones de los materiales!!";
+                    listaR = lista.ConvertAll(x => new MaterialesUbicacionesRequest()
+                    {
+                        IdMaterialUbicacion = x.IdMaterialUbicacion,
+                        IdMaterial = x.IdMaterial,
+                        IdUbicacion = x.IdUbicacion,
+                        material = new MaterialRequest()
+                        {
+                            IdMaterial = x.IdMaterialNavigation.IdMaterial,
+                            Nombre = x.IdMaterialNavigation.Nombre,
+                            Descripcion = x.IdMaterialNavigation.Descripcion,
+                            Precio = (double)x.IdMaterialNavigation.Precio,
+                            TipoMedicion = x.IdMaterialNavigation.TipoMedicion,
+                            Status = x.IdMaterialNavigation.Status,
+                            Stock = (double)x.IdMaterialNavigation.Stock,
+                            Visible = (bool)x.IdMaterialNavigation.Visible,
+                            proveedores = null,
+                            ubicaciones = null
+                        },
+                        ubicacion = new UbicacionRequest()
+                        {
+                            IdUbicacion = x.IdUbicacionNavigation.IdUbicacion,
+                            Direccion = x.IdUbicacionNavigation.Direccion,
+                            NombreEncargado = x.IdUbicacionNavigation.NombreEncargado,
+                            ApellidoPEncargado = x.IdUbicacionNavigation.ApellidoPEncargado,
+                            ApellidoMEncargado = x.IdUbicacionNavigation.ApellidoMEncargado,
+                            Telefono1 = x.IdUbicacionNavigation.Telefono1,
+                            Telefono2 = x.IdUbicacionNavigation.Telefono2,
+                            Correo = x.IdUbicacionNavigation.Correo
+                        }
+                    });
+                    response.respuesta = listaR;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postMaterialUbicacion(MaterialesUbicacionesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar la nuevo ubicacion material";
+                response.respuesta = "[]";
+
+                MaterialesUbicacione newMaterialUbi = new MaterialesUbicacione();
+
+                newMaterialUbi.IdMaterial = request.IdMaterial;
+                newMaterialUbi.IdUbicacion = request.IdUbicacion;
+
+                _ctx.MaterialesUbicaciones.Add(newMaterialUbi);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó la ubicacion material correctamente!!";
+                response.respuesta = newMaterialUbi;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putMaterialUbicacion(MaterialesUbicacionesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la ubicacion material";
+                response.respuesta = "[]";
+
+                MaterialesUbicacione existeMaterialUbi = _ctx.MaterialesUbicaciones.FirstOrDefault(x => x.IdMaterialUbicacion == request.IdMaterialUbicacion);
+
+                if (existeMaterialUbi != null)
+                {
+                    existeMaterialUbi.IdMaterial = request.IdMaterial;
+                    existeMaterialUbi.IdUbicacion = request.IdUbicacion;
+
+                    _ctx.MaterialesUbicaciones.Update(existeMaterialUbi);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó la ubicacion material correctamente!!";
+                    response.respuesta = existeMaterialUbi;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteMaterialUbicacion(MaterialesUbicacionesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar la ubicacion material";
+                response.respuesta = "[]";
+
+                MaterialesUbicacione existeMaterialUbi = _ctx.MaterialesUbicaciones.FirstOrDefault(x => x.IdMaterialUbicacion == request.IdMaterialUbicacion);
+                if (existeMaterialUbi != null)
+                {
+                    _ctx.MaterialesUbicaciones.Remove(existeMaterialUbi);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó la ubicacion material correctamente!!";
                     response.respuesta = "[]";
                 }
 

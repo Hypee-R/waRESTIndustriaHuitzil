@@ -8,6 +8,7 @@ namespace CoreIndustriaHuitzil.Models
         public CatUbicacione()
         {
             Articulos = new HashSet<Articulo>();
+            MaterialesUbicaciones = new HashSet<MaterialesUbicacione>();
         }
 
         public int IdUbicacion { get; set; }
@@ -20,5 +21,6 @@ namespace CoreIndustriaHuitzil.Models
         public string? Correo { get; set; }
 
         public virtual ICollection<Articulo> Articulos { get; set; }
+        public virtual ICollection<MaterialesUbicacione> MaterialesUbicaciones { get; set; }
     }
 }
