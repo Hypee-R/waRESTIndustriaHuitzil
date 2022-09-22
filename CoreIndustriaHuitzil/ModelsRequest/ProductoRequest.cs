@@ -20,6 +20,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public string categoria { get; set; }
         public string ubicacion { get; set; }
         public string sku { get; set; }
+        public int precio { get; set; }
 
         public string imagen { get; set; }
         //public Base64FormattingOptions imagen { get; set; }

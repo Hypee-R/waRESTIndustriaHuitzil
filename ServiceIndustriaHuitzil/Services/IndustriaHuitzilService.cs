@@ -493,7 +493,9 @@ namespace ServiceIndustriaHuitzil.Services
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion= u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
+                                                       precio = u.precio,
                                                        sku = u.Sku
+
                                                    });
                 if (lista != null)
                 {
@@ -532,6 +534,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newArticulo.IdCategoria = request.idCategoria;
                 newArticulo.IdTalla = request.idTalla;
                 newArticulo.imagen = request.imagen;
+                newArticulo.precio = request.precio;
                 newArticulo.Sku = request.sku;
 
                 _ctx.Articulos.Add(newArticulo);
@@ -573,6 +576,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeArticulo.IdCategoria = request.idCategoria;
                     existeArticulo.IdTalla = request.idTalla;
                     existeArticulo.Sku = request.sku;
+                    existeArticulo.precio = request.precio;
                    
                     _ctx.Articulos.Update(existeArticulo);
                     await _ctx.SaveChangesAsync();
@@ -663,6 +667,7 @@ namespace ServiceIndustriaHuitzil.Services
                             talla = product.IdTallaNavigation.Nombre,
                             ubicacion = product.IdUbicacionNavigation.Direccion,
                             categoria = product.IdCategoriaNavigation.Descripcion,
+                            precio = product.precio,
                             sku = product.Sku
                         });
                     });
@@ -684,6 +689,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 talla = product.IdTallaNavigation.Nombre,
                                 ubicacion = product.IdUbicacionNavigation.Direccion,
                                 categoria = product.IdCategoriaNavigation.Descripcion,
+                                precio = product.precio,
                                 sku = product.Sku
                             });
                         }

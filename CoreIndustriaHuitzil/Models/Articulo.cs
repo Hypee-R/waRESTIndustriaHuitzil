@@ -14,7 +14,7 @@ namespace CoreIndustriaHuitzil.Models
         public int? IdCategoria { get; set; }
         public int? IdTalla { get; set; }
         public string? Sku { get; set; }
-
+        public int precio { get; set; }
         public string imagen { get; set; }
         
         //public string? imagen { get; set; }
