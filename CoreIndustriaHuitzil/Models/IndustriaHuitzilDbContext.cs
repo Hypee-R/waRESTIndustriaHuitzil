@@ -22,6 +22,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<CatTalla> CatTallas { get; set; } = null!;
         public virtual DbSet<CatUbicacione> CatUbicaciones { get; set; } = null!;
         public virtual DbSet<Materiale> Materiales { get; set; } = null!;
+        public virtual DbSet<MaterialesUbicacione> MaterialesUbicaciones { get; set; } = null!;
         public virtual DbSet<ProveedoresMateriale> ProveedoresMateriales { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
@@ -248,6 +249,30 @@ namespace CoreIndustriaHuitzil.Models
                     .IsRequired()
                     .HasColumnName("visible")
                     .HasDefaultValueSql("((1))");
+            });
+
+            modelBuilder.Entity<MaterialesUbicacione>(entity =>
+            {
+                entity.HasKey(e => e.IdMaterialUbicacion)
+                    .HasName("PK__Material__ED06EAA728964921");
+
+                entity.Property(e => e.IdMaterialUbicacion).HasColumnName("id_material_ubicacion");
+
+                entity.Property(e => e.IdMaterial).HasColumnName("id_material");
+
+                entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
+
+                entity.HasOne(d => d.IdMaterialNavigation)
+                    .WithMany(p => p.MaterialesUbicaciones)
+                    .HasForeignKey(d => d.IdMaterial)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MaterialesUbicaciones_Materiales");
+
+                entity.HasOne(d => d.IdUbicacionNavigation)
+                    .WithMany(p => p.MaterialesUbicaciones)
+                    .HasForeignKey(d => d.IdUbicacion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MaterialesUbicaciones_CatUbicaciones");
             });
 
             modelBuilder.Entity<ProveedoresMateriale>(entity =>
