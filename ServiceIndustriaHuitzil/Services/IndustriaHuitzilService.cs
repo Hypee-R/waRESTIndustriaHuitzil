@@ -13,7 +13,6 @@ namespace ServiceIndustriaHuitzil.Services
     public class IndustriaHuitzilService : IIndustriaHuitzilService
     {
         private readonly IndustriaHuitzilDbContext _ctx;
-        private readonly string _connectionString;
         private readonly IConfiguration _configuration;
         private readonly JwtSettings _jwtSettings;
 
@@ -24,8 +23,6 @@ namespace ServiceIndustriaHuitzil.Services
             )
         {
             _ctx = ctx;
-            _connectionString = "Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
-            //_connectionString = "Server=DESARROLLOXR\\SA;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }

@@ -30,15 +30,15 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<Vista> Vistas { get; set; } = null!;
         public virtual DbSet<VistasRol> VistasRols { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                //optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
-                //optionsBuilder.UseSqlServer("Server=industriahuitzil.ckqnuap2vm5f.us-east-1.rds.amazonaws.com,1433;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=HuitzilDEV;Password=Ventana0512");
-                optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        //optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
+        //        //optionsBuilder.UseSqlServer("Server=industriahuitzil.ckqnuap2vm5f.us-east-1.rds.amazonaws.com,1433;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=HuitzilDEV;Password=Ventana0512");
+        //        optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
+        //    }
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
