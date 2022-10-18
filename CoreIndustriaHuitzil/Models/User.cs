@@ -7,6 +7,7 @@ namespace CoreIndustriaHuitzil.Models
     {
         public User()
         {
+            Cajas = new HashSet<Caja>();
             SolicitudesMateriales = new HashSet<SolicitudesMateriale>();
         }
 
@@ -25,6 +26,7 @@ namespace CoreIndustriaHuitzil.Models
         public DateTime? ExpiredTime { get; set; }
 
         public virtual Rol? IdRolNavigation { get; set; }
+        public virtual ICollection<Caja> Cajas { get; set; }
         public virtual ICollection<SolicitudesMateriale> SolicitudesMateriales { get; set; }
     }
 }

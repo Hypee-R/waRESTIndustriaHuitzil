@@ -7,8 +7,8 @@ namespace CoreIndustriaHuitzil.Models
     {
         public Materiale()
         {
-            ProveedoresMateriales = new HashSet<ProveedoresMateriale>();
             MaterialesUbicaciones = new HashSet<MaterialesUbicacione>();
+            ProveedoresMateriales = new HashSet<ProveedoresMateriale>();
         }
 
         public int IdMaterial { get; set; }
@@ -20,7 +20,7 @@ namespace CoreIndustriaHuitzil.Models
         public double? Stock { get; set; }
         public bool? Visible { get; set; }
 
-        public virtual ICollection<ProveedoresMateriale> ProveedoresMateriales { get; set; }
         public virtual ICollection<MaterialesUbicacione> MaterialesUbicaciones { get; set; }
+        public virtual ICollection<ProveedoresMateriale> ProveedoresMateriales { get; set; }
     }
 }

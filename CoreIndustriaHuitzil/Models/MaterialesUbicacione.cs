@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreIndustriaHuitzil.Models
 {
-    public class MaterialesUbicacione
+    public partial class MaterialesUbicacione
     {
         public int IdMaterialUbicacion { get; set; }
         public int IdMaterial { get; set; }

@@ -94,6 +94,130 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Caja
+        public async Task<ResponseModel> getCaja(int idUser)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja para mostrar";
+                response.respuesta = "[]";
+
+                Caja existeCaja = _ctx.Cajas.Where(a => a.IdEmpleado == idUser).OrderByDescending(x => x.IdCaja).FirstOrDefault();
+                if (existeCaja != null)
+                {
+                    CajaRequest caja = new CajaRequest();
+                    response.exito = true;
+                    response.mensaje = "Se ha consultado la caja exitosamente!";
+                    caja.IdCaja = existeCaja.IdCaja;
+                    caja.IdEmpleado = existeCaja.IdEmpleado;
+                    caja.Fecha = existeCaja.Fecha.ToString();
+                    caja.Monto = existeCaja.Monto;
+                    caja.FechaCierre = existeCaja.FechaCierre != null ? existeCaja.FechaCierre.ToString() : null;
+                    caja.MontoCierre = existeCaja.MontoCierre;
+                    response.respuesta = caja;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> openCaja(CajaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se puede abrir la caja, hay una abierta";
+                response.respuesta = "[]";
+
+                Caja existCaja = _ctx.Cajas.Where(a => a.IdEmpleado == request.IdEmpleado).OrderByDescending(x => x.Fecha).FirstOrDefault();
+
+                var caja = existCaja;
+
+                if (caja == null)
+                {
+                    Caja newCaja = new Caja();
+                    response.exito = true;
+                    response.mensaje = "Caja abierta exitosamente!";
+
+                    newCaja.Fecha = DateTime.Parse(request.Fecha);
+                    newCaja.Monto = request.Monto;
+                    newCaja.IdEmpleado = request.IdEmpleado;
+                    _ctx.Cajas.Add(newCaja);
+                    await _ctx.SaveChangesAsync();
+
+                    response.respuesta = newCaja;
+                }
+                else if (caja.FechaCierre != null)
+                {
+                    Caja newCaja = new Caja();
+                    response.exito = true;
+                    response.mensaje = "Caja abierta exitosamente!";
+
+                    newCaja.Fecha = DateTime.Parse(request.Fecha);
+                    newCaja.Monto = request.Monto;
+                    newCaja.IdEmpleado = request.IdEmpleado;
+                    _ctx.Cajas.Add(newCaja);
+                    await _ctx.SaveChangesAsync();
+
+                    response.respuesta = newCaja;
+                }
+
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> closeCaja(CajaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja abierta para cerrar";
+                response.respuesta = "[]";
+
+                Caja existeCaja = _ctx.Cajas.Where(a => a.IdCaja == request.IdCaja).FirstOrDefault();
+                if (existeCaja != null && existeCaja.FechaCierre == null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Caja cerrada exitosamente!";
+
+                    existeCaja.FechaCierre = DateTime.Parse(request.FechaCierre ?? "");
+                    existeCaja.MontoCierre = request.MontoCierre;
+                    _ctx.Cajas.Update(existeCaja);
+                    await _ctx.SaveChangesAsync();
+
+                    response.respuesta = existeCaja;
+
+                }
+
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
         #region Materiales
         public async Task<ResponseModel> getMateriales()
         {
@@ -723,15 +847,15 @@ namespace ServiceIndustriaHuitzil.Services
                                                        Unidad=u.Unidad,
                                                        Existencia=u.Existencia,
                                                        Descripcion=u.Descripcion,
-                                                       FechaIngreso=u.FechaIngreso,
+                                                       FechaIngreso=(DateTime)u.FechaIngreso,
                                                        idTalla=(int)u.IdTalla,
                                                        idCategoria=(int)u.IdCategoria,
                                                        idUbicacion=(int)u.IdUbicacion,
-                                                       imagen=u.imagen,
+                                                       imagen=u.Imagen,
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion= u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
-                                                       precio = u.precio,
+                                                       precio = (int)u.Precio,
                                                        sku = u.Sku
 
                                                    });
@@ -771,8 +895,8 @@ namespace ServiceIndustriaHuitzil.Services
                 newArticulo.IdUbicacion = request.idUbicacion;
                 newArticulo.IdCategoria = request.idCategoria;
                 newArticulo.IdTalla = request.idTalla;
-                newArticulo.imagen = request.imagen;
-                newArticulo.precio = request.precio;
+                newArticulo.Imagen = request.imagen;
+                newArticulo.Precio = request.precio;
                 newArticulo.Sku = request.sku;
 
                 _ctx.Articulos.Add(newArticulo);
@@ -814,7 +938,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeArticulo.IdCategoria = request.idCategoria;
                     existeArticulo.IdTalla = request.idTalla;
                     existeArticulo.Sku = request.sku;
-                    existeArticulo.precio = request.precio;
+                    existeArticulo.Precio = request.precio;
                    
                     _ctx.Articulos.Update(existeArticulo);
                     await _ctx.SaveChangesAsync();
@@ -897,15 +1021,15 @@ namespace ServiceIndustriaHuitzil.Services
                             Unidad = product.Unidad,
                             Existencia = product.Existencia,
                             Descripcion = product.Descripcion,
-                            FechaIngreso = product.FechaIngreso,
+                            FechaIngreso = (DateTime)product.FechaIngreso,
                             idTalla = (int)product.IdTalla,
                             idCategoria = (int)product.IdCategoria,
                             idUbicacion = (int)product.IdUbicacion,
-                            imagen = product.imagen,
+                            imagen = product.Imagen,
                             talla = product.IdTallaNavigation.Nombre,
                             ubicacion = product.IdUbicacionNavigation.Direccion,
                             categoria = product.IdCategoriaNavigation.Descripcion,
-                            precio = product.precio,
+                            precio = (int)product.Precio,
                             sku = product.Sku
                         });
                     });
@@ -919,15 +1043,15 @@ namespace ServiceIndustriaHuitzil.Services
                                 Unidad = product.Unidad,
                                 Existencia = product.Existencia,
                                 Descripcion = product.Descripcion,
-                                FechaIngreso = product.FechaIngreso,
+                                FechaIngreso = (DateTime)product.FechaIngreso,
                                 idTalla = (int)product.IdTalla,
                                 idCategoria = (int)product.IdCategoria,
                                 idUbicacion = (int)product.IdUbicacion,
-                                imagen = product.imagen,
+                                imagen = product.Imagen,
                                 talla = product.IdTallaNavigation.Nombre,
                                 ubicacion = product.IdUbicacionNavigation.Direccion,
                                 categoria = product.IdCategoriaNavigation.Descripcion,
-                                precio = product.precio,
+                                precio = (int)product.Precio,
                                 sku = product.Sku
                             });
                         }

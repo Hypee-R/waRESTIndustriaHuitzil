@@ -11,8 +11,8 @@ namespace CoreIndustriaHuitzil.Models
         }
 
         public int IdProveedorMaterial { get; set; }
-        public int IdProveedor { get; set; }
         public int IdMaterial { get; set; }
+        public int IdProveedor { get; set; }
 
         public virtual Materiale IdMaterialNavigation { get; set; } = null!;
         public virtual CatProveedore IdProveedorNavigation { get; set; } = null!;
