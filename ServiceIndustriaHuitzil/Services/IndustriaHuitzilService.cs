@@ -23,6 +23,8 @@ namespace ServiceIndustriaHuitzil.Services
             )
         {
             _ctx = ctx;
+            _connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriasHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
+            //_connectionString = "Server=DESARROLLOXR\\SA;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }
@@ -1411,6 +1413,55 @@ namespace ServiceIndustriaHuitzil.Services
             {
                 Console.WriteLine(e.Message);
                 response = false;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> searchCliente(string queryString)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Clientes relacionados con la busqueda";
+                response.respuesta = "[]";
+
+                List<ProveedorRequest> allResults = new List<ProveedorRequest>();
+                List<CatProveedore> resultsByName = _ctx.CatProveedores
+                    .Where(x => x.Nombre.ToLower().Contains(queryString.ToLower())).ToList();
+            
+
+                if (resultsByName.Count() > 0)
+                {
+                
+                    resultsByName.ForEach(product =>
+                    {
+                        if (allResults.Find(x => x.IdProveedor == product.IdProveedor) == null)
+                        {
+                            allResults.Add(new ProveedorRequest()
+                            {
+                                IdProveedor = product.IdProveedor,
+                                Nombre = product.Nombre,
+                                ApellidoPaterno = product.ApellidoPaterno,
+                                ApellidoMaterno = product.ApellidoMaterno,
+                                Telefono1 = product.Telefono1,
+                                Telefono2 = product.Telefono2,
+                                Correo = product.Correo,
+                                Direccion = product.Direccion,
+                                EncargadoNombre = product.EncargadoNombre
+                            });
+                        }
+                    });
+                    response.exito = true;
+                    response.mensaje = "Se obtuvieron las coincidencias relacionadas con el filtro!!";
+                    response.respuesta = allResults;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.mensaje = e.Message;
                 return response;
             }
         }

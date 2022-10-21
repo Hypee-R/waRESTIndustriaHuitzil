@@ -20,6 +20,15 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.getProveedores());
         }
+
+
+
+        [HttpGet("searchCliente")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> searchCliente(string queryString)
+        {
+            return Ok(await _service.searchCliente(queryString));
+        }
         #endregion
 
         #region POST
