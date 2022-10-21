@@ -17,5 +17,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public double Stock { get; set; }
         public bool Visible { get; set; }
         public List<ProveedorRequest> proveedores { get; set; }
+
+        public List<UbicacionRequest> ubicaciones { get; set; }
     }
 }

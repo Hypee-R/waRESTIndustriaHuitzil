@@ -9,16 +9,13 @@ namespace CoreIndustriaHuitzil.Models
         public string? Unidad { get; set; }
         public string? Existencia { get; set; }
         public string? Descripcion { get; set; }
-        public DateTime FechaIngreso { get; set; }
+        public DateTime? FechaIngreso { get; set; }
         public int? IdUbicacion { get; set; }
         public int? IdCategoria { get; set; }
         public int? IdTalla { get; set; }
+        public string? Imagen { get; set; }
         public string? Sku { get; set; }
-
-        public string imagen { get; set; }
-        
-        //public string? imagen { get; set; }
-        //public Base64FormattingOptions imagen { get; set; }
+        public int? Precio { get; set; }
 
         public virtual CatCategoria? IdCategoriaNavigation { get; set; }
         public virtual CatTalla? IdTallaNavigation { get; set; }

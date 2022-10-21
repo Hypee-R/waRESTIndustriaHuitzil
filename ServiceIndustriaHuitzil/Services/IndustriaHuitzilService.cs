@@ -13,7 +13,6 @@ namespace ServiceIndustriaHuitzil.Services
     public class IndustriaHuitzilService : IIndustriaHuitzilService
     {
         private readonly IndustriaHuitzilDbContext _ctx;
-        private readonly string _connectionString;
         private readonly IConfiguration _configuration;
         private readonly JwtSettings _jwtSettings;
 
@@ -97,6 +96,130 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Caja
+        public async Task<ResponseModel> getCaja(int idUser)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja para mostrar";
+                response.respuesta = "[]";
+
+                Caja existeCaja = _ctx.Cajas.Where(a => a.IdEmpleado == idUser).OrderByDescending(x => x.IdCaja).FirstOrDefault();
+                if (existeCaja != null)
+                {
+                    CajaRequest caja = new CajaRequest();
+                    response.exito = true;
+                    response.mensaje = "Se ha consultado la caja exitosamente!";
+                    caja.IdCaja = existeCaja.IdCaja;
+                    caja.IdEmpleado = existeCaja.IdEmpleado;
+                    caja.Fecha = existeCaja.Fecha.ToString();
+                    caja.Monto = existeCaja.Monto;
+                    caja.FechaCierre = existeCaja.FechaCierre != null ? existeCaja.FechaCierre.ToString() : null;
+                    caja.MontoCierre = existeCaja.MontoCierre;
+                    response.respuesta = caja;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> openCaja(CajaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se puede abrir la caja, hay una abierta";
+                response.respuesta = "[]";
+
+                Caja existCaja = _ctx.Cajas.Where(a => a.IdEmpleado == request.IdEmpleado).OrderByDescending(x => x.Fecha).FirstOrDefault();
+
+                var caja = existCaja;
+
+                if (caja == null)
+                {
+                    Caja newCaja = new Caja();
+                    response.exito = true;
+                    response.mensaje = "Caja abierta exitosamente!";
+
+                    newCaja.Fecha = DateTime.Parse(request.Fecha);
+                    newCaja.Monto = request.Monto;
+                    newCaja.IdEmpleado = request.IdEmpleado;
+                    _ctx.Cajas.Add(newCaja);
+                    await _ctx.SaveChangesAsync();
+
+                    response.respuesta = newCaja;
+                }
+                else if (caja.FechaCierre != null)
+                {
+                    Caja newCaja = new Caja();
+                    response.exito = true;
+                    response.mensaje = "Caja abierta exitosamente!";
+
+                    newCaja.Fecha = DateTime.Parse(request.Fecha);
+                    newCaja.Monto = request.Monto;
+                    newCaja.IdEmpleado = request.IdEmpleado;
+                    _ctx.Cajas.Add(newCaja);
+                    await _ctx.SaveChangesAsync();
+
+                    response.respuesta = newCaja;
+                }
+
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> closeCaja(CajaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja abierta para cerrar";
+                response.respuesta = "[]";
+
+                Caja existeCaja = _ctx.Cajas.Where(a => a.IdCaja == request.IdCaja).FirstOrDefault();
+                if (existeCaja != null && existeCaja.FechaCierre == null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Caja cerrada exitosamente!";
+
+                    existeCaja.FechaCierre = DateTime.Parse(request.FechaCierre ?? "");
+                    existeCaja.MontoCierre = request.MontoCierre;
+                    _ctx.Cajas.Update(existeCaja);
+                    await _ctx.SaveChangesAsync();
+
+                    response.respuesta = existeCaja;
+
+                }
+
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
         #region Materiales
         public async Task<ResponseModel> getMateriales()
         {
@@ -136,6 +259,19 @@ namespace ServiceIndustriaHuitzil.Services
                                              Correo = w.IdProveedorNavigation.Correo,
                                              Direccion = w.IdProveedorNavigation.Direccion,
                                              EncargadoNombre = w.IdProveedorNavigation.EncargadoNombre
+                                          }),
+                        ubicaciones = _ctx.MaterialesUbicaciones.Include(w => w.IdUbicacionNavigation)
+                                          .Where(z => z.IdMaterial == x.IdMaterial)
+                                          .ToList().ConvertAll(w => new UbicacionRequest()
+                                          {
+                                              IdUbicacion = w.IdUbicacionNavigation.IdUbicacion,
+                                              Direccion = w.IdUbicacionNavigation.Direccion,
+                                              NombreEncargado = w.IdUbicacionNavigation.NombreEncargado,
+                                              ApellidoPEncargado = w.IdUbicacionNavigation.ApellidoPEncargado,
+                                              ApellidoMEncargado = w.IdUbicacionNavigation.ApellidoMEncargado,
+                                              Telefono1 = w.IdUbicacionNavigation.Telefono2,
+                                              Telefono2 = w.IdUbicacionNavigation.Correo,
+                                              Correo = w.IdUbicacionNavigation.Direccion
                                           })
                     });
                     response.respuesta = listaR;
@@ -188,6 +324,22 @@ namespace ServiceIndustriaHuitzil.Services
                     await _ctx.SaveChangesAsync();
                 }
 
+                //Inserta las ubicaciones del material si es que tiene
+                if (request.ubicaciones.Count() > 0)
+                {
+                    List<MaterialesUbicacione> listMaterialesUbi = new List<MaterialesUbicacione>();
+                    request.ubicaciones.ForEach(dataUbicacion =>
+                    {
+                        listMaterialesUbi.Add(new MaterialesUbicacione()
+                        {
+                            IdMaterial = newMaterial.IdMaterial,
+                            IdUbicacion = dataUbicacion.IdUbicacion
+                        });
+                    });
+                    _ctx.MaterialesUbicaciones.AddRange(listMaterialesUbi);
+                    await _ctx.SaveChangesAsync();
+                }
+
                 response.exito = true;
                 response.mensaje = "Se insertó el material correctamente!!";
                 response.respuesta = newMaterial;
@@ -225,6 +377,7 @@ namespace ServiceIndustriaHuitzil.Services
                     await _ctx.SaveChangesAsync();
 
                     List<ProveedoresMateriale> listProvExistentes = await _ctx.ProveedoresMateriales.Where(x => x.IdMaterial == existeMaterial.IdMaterial).ToListAsync();
+                    List<MaterialesUbicacione> listUbiExistentes = await _ctx.MaterialesUbicaciones.Where(x => x.IdMaterial == existeMaterial.IdMaterial).ToListAsync();
                     //Actualiza los proveedores del material si es que tiene
                     if (listProvExistentes.Count() > 0)
                     {
@@ -280,6 +433,61 @@ namespace ServiceIndustriaHuitzil.Services
                             await _ctx.SaveChangesAsync();
                         }
                     }
+                    //Actualiza las ubicaciones del material si es que tiene
+                    if (listUbiExistentes.Count() > 0)
+                    {
+                        List<MaterialesUbicacione> ubiAdd = new List<MaterialesUbicacione>();
+                        List<MaterialesUbicacione> ubiDelete = new List<MaterialesUbicacione>();
+                        //Si no existe en base y viene del request lo agrega
+                        request.ubicaciones.ForEach(data =>
+                        {
+                            if (listUbiExistentes.Find(x => x.IdUbicacion == data.IdUbicacion) == null)
+                            {
+                                ubiAdd.Add(new MaterialesUbicacione()
+                                {
+                                    IdMaterial = existeMaterial.IdMaterial,
+                                    IdUbicacion = data.IdUbicacion
+                                });
+                            }
+                        });
+                        if (ubiAdd.Count() > 0)
+                        {
+                            _ctx.MaterialesUbicaciones.AddRange(ubiAdd);
+                            await _ctx.SaveChangesAsync();
+                        }
+                        //Si existe en base y no viene del request lo elimina
+                        listUbiExistentes.ForEach(data =>
+                        {
+                            if (request.ubicaciones.Find(x => x.IdUbicacion == data.IdUbicacion) == null)
+                            {
+                                ubiDelete.Add(data);
+                            }
+                        });
+                        if (ubiDelete.Count() > 0)
+                        {
+                            _ctx.MaterialesUbicaciones.RemoveRange(ubiDelete);
+                            await _ctx.SaveChangesAsync();
+                        }
+                    }
+                    else
+                    {
+                        //Inserta las ubicaciones del material si es que tiene
+                        if (request.ubicaciones.Count() > 0)
+                        {
+                            List<MaterialesUbicacione> listMaterialesUbicaciones = new List<MaterialesUbicacione>();
+                            request.ubicaciones.ForEach(dataProveedor =>
+                            {
+                                listMaterialesUbicaciones.Add(new MaterialesUbicacione()
+                                {
+                                    IdMaterial = existeMaterial.IdMaterial,
+                                    IdUbicacion = dataProveedor.IdUbicacion
+                                });
+                            });
+                            _ctx.MaterialesUbicaciones.AddRange(listMaterialesUbicaciones);
+                            await _ctx.SaveChangesAsync();
+                        }
+                    }
+
                     response.exito = true;
                     response.mensaje = "Se actualizó el material correctamente!!";
                     response.respuesta = existeMaterial;
@@ -314,6 +522,162 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response.exito = true;
                     response.mensaje = "Se eliminó el material correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region MaterialesUbicaciones
+        public async Task<ResponseModel> getMaterialesUbicaciones()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay ubicaciones de materiales para mostrar";
+                response.respuesta = "[]";
+
+                List<MaterialesUbicacionesRequest> listaR = new List<MaterialesUbicacionesRequest>();
+                List<MaterialesUbicacione> lista = await _ctx.MaterialesUbicaciones.Include(x => x.IdMaterialNavigation).Include(y => y.IdUbicacionNavigation)
+                                                                .Where(z => z.IdMaterialNavigation.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las ubicaciones de los materiales!!";
+                    listaR = lista.ConvertAll(x => new MaterialesUbicacionesRequest()
+                    {
+                        IdMaterialUbicacion = x.IdMaterialUbicacion,
+                        IdMaterial = x.IdMaterial,
+                        IdUbicacion = x.IdUbicacion,
+                        material = new MaterialRequest()
+                        {
+                            IdMaterial = x.IdMaterialNavigation.IdMaterial,
+                            Nombre = x.IdMaterialNavigation.Nombre,
+                            Descripcion = x.IdMaterialNavigation.Descripcion,
+                            Precio = (double)x.IdMaterialNavigation.Precio,
+                            TipoMedicion = x.IdMaterialNavigation.TipoMedicion,
+                            Status = x.IdMaterialNavigation.Status,
+                            Stock = (double)x.IdMaterialNavigation.Stock,
+                            Visible = (bool)x.IdMaterialNavigation.Visible,
+                            proveedores = null,
+                            ubicaciones = null
+                        },
+                        ubicacion = new UbicacionRequest()
+                        {
+                            IdUbicacion = x.IdUbicacionNavigation.IdUbicacion,
+                            Direccion = x.IdUbicacionNavigation.Direccion,
+                            NombreEncargado = x.IdUbicacionNavigation.NombreEncargado,
+                            ApellidoPEncargado = x.IdUbicacionNavigation.ApellidoPEncargado,
+                            ApellidoMEncargado = x.IdUbicacionNavigation.ApellidoMEncargado,
+                            Telefono1 = x.IdUbicacionNavigation.Telefono1,
+                            Telefono2 = x.IdUbicacionNavigation.Telefono2,
+                            Correo = x.IdUbicacionNavigation.Correo
+                        }
+                    });
+                    response.respuesta = listaR;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> postMaterialUbicacion(MaterialesUbicacionesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar la nuevo ubicacion material";
+                response.respuesta = "[]";
+
+                MaterialesUbicacione newMaterialUbi = new MaterialesUbicacione();
+
+                newMaterialUbi.IdMaterial = request.IdMaterial;
+                newMaterialUbi.IdUbicacion = request.IdUbicacion;
+
+                _ctx.MaterialesUbicaciones.Add(newMaterialUbi);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó la ubicacion material correctamente!!";
+                response.respuesta = newMaterialUbi;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> putMaterialUbicacion(MaterialesUbicacionesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la ubicacion material";
+                response.respuesta = "[]";
+
+                MaterialesUbicacione existeMaterialUbi = _ctx.MaterialesUbicaciones.FirstOrDefault(x => x.IdMaterialUbicacion == request.IdMaterialUbicacion);
+
+                if (existeMaterialUbi != null)
+                {
+                    existeMaterialUbi.IdMaterial = request.IdMaterial;
+                    existeMaterialUbi.IdUbicacion = request.IdUbicacion;
+
+                    _ctx.MaterialesUbicaciones.Update(existeMaterialUbi);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó la ubicacion material correctamente!!";
+                    response.respuesta = existeMaterialUbi;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> deleteMaterialUbicacion(MaterialesUbicacionesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar la ubicacion material";
+                response.respuesta = "[]";
+
+                MaterialesUbicacione existeMaterialUbi = _ctx.MaterialesUbicaciones.FirstOrDefault(x => x.IdMaterialUbicacion == request.IdMaterialUbicacion);
+                if (existeMaterialUbi != null)
+                {
+                    _ctx.MaterialesUbicaciones.Remove(existeMaterialUbi);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó la ubicacion material correctamente!!";
                     response.respuesta = "[]";
                 }
 
@@ -485,15 +849,17 @@ namespace ServiceIndustriaHuitzil.Services
                                                        Unidad=u.Unidad,
                                                        Existencia=u.Existencia,
                                                        Descripcion=u.Descripcion,
-                                                       FechaIngreso=u.FechaIngreso,
+                                                       FechaIngreso=(DateTime)u.FechaIngreso,
                                                        idTalla=(int)u.IdTalla,
                                                        idCategoria=(int)u.IdCategoria,
                                                        idUbicacion=(int)u.IdUbicacion,
-                                                       imagen=u.imagen,
+                                                       imagen=u.Imagen,
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion= u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
+                                                       precio = (int)u.Precio,
                                                        sku = u.Sku
+
                                                    });
                 if (lista != null)
                 {
@@ -531,7 +897,8 @@ namespace ServiceIndustriaHuitzil.Services
                 newArticulo.IdUbicacion = request.idUbicacion;
                 newArticulo.IdCategoria = request.idCategoria;
                 newArticulo.IdTalla = request.idTalla;
-                newArticulo.imagen = request.imagen;
+                newArticulo.Imagen = request.imagen;
+                newArticulo.Precio = request.precio;
                 newArticulo.Sku = request.sku;
 
                 _ctx.Articulos.Add(newArticulo);
@@ -573,6 +940,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeArticulo.IdCategoria = request.idCategoria;
                     existeArticulo.IdTalla = request.idTalla;
                     existeArticulo.Sku = request.sku;
+                    existeArticulo.Precio = request.precio;
                    
                     _ctx.Articulos.Update(existeArticulo);
                     await _ctx.SaveChangesAsync();
@@ -655,14 +1023,15 @@ namespace ServiceIndustriaHuitzil.Services
                             Unidad = product.Unidad,
                             Existencia = product.Existencia,
                             Descripcion = product.Descripcion,
-                            FechaIngreso = product.FechaIngreso,
+                            FechaIngreso = (DateTime)product.FechaIngreso,
                             idTalla = (int)product.IdTalla,
                             idCategoria = (int)product.IdCategoria,
                             idUbicacion = (int)product.IdUbicacion,
-                            imagen = product.imagen,
+                            imagen = product.Imagen,
                             talla = product.IdTallaNavigation.Nombre,
                             ubicacion = product.IdUbicacionNavigation.Direccion,
                             categoria = product.IdCategoriaNavigation.Descripcion,
+                            precio = (int)product.Precio,
                             sku = product.Sku
                         });
                     });
@@ -676,14 +1045,15 @@ namespace ServiceIndustriaHuitzil.Services
                                 Unidad = product.Unidad,
                                 Existencia = product.Existencia,
                                 Descripcion = product.Descripcion,
-                                FechaIngreso = product.FechaIngreso,
+                                FechaIngreso = (DateTime)product.FechaIngreso,
                                 idTalla = (int)product.IdTalla,
                                 idCategoria = (int)product.IdCategoria,
                                 idUbicacion = (int)product.IdUbicacion,
-                                imagen = product.imagen,
+                                imagen = product.Imagen,
                                 talla = product.IdTallaNavigation.Nombre,
                                 ubicacion = product.IdUbicacionNavigation.Direccion,
                                 categoria = product.IdCategoriaNavigation.Descripcion,
+                                precio = (int)product.Precio,
                                 sku = product.Sku
                             });
                         }

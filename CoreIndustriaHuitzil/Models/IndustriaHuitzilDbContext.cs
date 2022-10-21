@@ -17,27 +17,19 @@ namespace CoreIndustriaHuitzil.Models
         }
 
         public virtual DbSet<Articulo> Articulos { get; set; } = null!;
+        public virtual DbSet<Caja> Cajas { get; set; } = null!;
         public virtual DbSet<CatCategoria> CatCategorias { get; set; } = null!;
         public virtual DbSet<CatProveedore> CatProveedores { get; set; } = null!;
         public virtual DbSet<CatTalla> CatTallas { get; set; } = null!;
         public virtual DbSet<CatUbicacione> CatUbicaciones { get; set; } = null!;
         public virtual DbSet<Materiale> Materiales { get; set; } = null!;
+        public virtual DbSet<MaterialesUbicacione> MaterialesUbicaciones { get; set; } = null!;
         public virtual DbSet<ProveedoresMateriale> ProveedoresMateriales { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Vista> Vistas { get; set; } = null!;
         public virtual DbSet<VistasRol> VistasRols { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                //optionsBuilder.UseSqlServer("Server=localhost;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512");
-                //optionsBuilder.UseSqlServer("Server=industriahuitzil.ckqnuap2vm5f.us-east-1.rds.amazonaws.com,1433;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=HuitzilDEV;Password=Ventana0512");
-                optionsBuilder.UseSqlServer("Server=DESKTOP-4HBFH8F\\SQLEXPRESS;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=admin");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,7 +60,16 @@ namespace CoreIndustriaHuitzil.Models
 
                 entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
 
-                entity.Property(e => e.Sku).HasColumnName("sku");
+                entity.Property(e => e.Imagen)
+                    .IsUnicode(false)
+                    .HasColumnName("imagen");
+
+                entity.Property(e => e.Precio).HasColumnName("precio");
+
+                entity.Property(e => e.Sku)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("sku");
 
                 entity.Property(e => e.Unidad)
                     .HasMaxLength(50)
@@ -89,6 +90,40 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.Articulos)
                     .HasForeignKey(d => d.IdUbicacion)
                     .HasConstraintName("FK_Articulos_Ubicaciones");
+            });
+
+            modelBuilder.Entity<Caja>(entity =>
+            {
+                entity.HasKey(e => e.IdCaja)
+                    .HasName("PK__Caja__C71E2476ACB9E461");
+
+                entity.ToTable("Caja");
+
+                entity.Property(e => e.IdCaja).HasColumnName("id_caja");
+
+                entity.Property(e => e.Fecha)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fecha");
+
+                entity.Property(e => e.FechaCierre)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fecha_cierre");
+
+                entity.Property(e => e.IdEmpleado).HasColumnName("id_empleado");
+
+                entity.Property(e => e.Monto)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("monto");
+
+                entity.Property(e => e.MontoCierre)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("monto_cierre");
+
+                entity.HasOne(d => d.IdEmpleadoNavigation)
+                    .WithMany(p => p.Cajas)
+                    .HasForeignKey(d => d.IdEmpleado)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Caja__id_emplead__3C34F16F");
             });
 
             modelBuilder.Entity<CatCategoria>(entity =>
@@ -248,6 +283,30 @@ namespace CoreIndustriaHuitzil.Models
                     .IsRequired()
                     .HasColumnName("visible")
                     .HasDefaultValueSql("((1))");
+            });
+
+            modelBuilder.Entity<MaterialesUbicacione>(entity =>
+            {
+                entity.HasKey(e => e.IdMaterialUbicacion)
+                    .HasName("PK__Material__ED06EAA728964921");
+
+                entity.Property(e => e.IdMaterialUbicacion).HasColumnName("id_material_ubicacion");
+
+                entity.Property(e => e.IdMaterial).HasColumnName("id_material");
+
+                entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
+
+                entity.HasOne(d => d.IdMaterialNavigation)
+                    .WithMany(p => p.MaterialesUbicaciones)
+                    .HasForeignKey(d => d.IdMaterial)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MaterialesUbicaciones_Materiales");
+
+                entity.HasOne(d => d.IdUbicacionNavigation)
+                    .WithMany(p => p.MaterialesUbicaciones)
+                    .HasForeignKey(d => d.IdUbicacion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MaterialesUbicaciones_CatUbicaciones");
             });
 
             modelBuilder.Entity<ProveedoresMateriale>(entity =>

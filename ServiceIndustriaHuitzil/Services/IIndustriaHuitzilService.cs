@@ -15,11 +15,24 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> auth(AuthUserRequest usuario);
         #endregion
 
+        #region Caja
+        Task<ResponseModel> getCaja(int idUser);
+        Task<ResponseModel> openCaja(CajaRequest request);
+        Task<ResponseModel> closeCaja(CajaRequest request);
+        #endregion
+
         #region Materiales
         Task<ResponseModel> getMateriales();
         Task<ResponseModel> postMaterial(MaterialRequest material);
         Task<ResponseModel> putMaterial(MaterialRequest material);
         Task<ResponseModel> deleteMaterial(MaterialRequest material);
+        #endregion
+
+        #region MaterialesUbicaciones
+        Task<ResponseModel> getMaterialesUbicaciones();
+        Task<ResponseModel> postMaterialUbicacion(MaterialesUbicacionesRequest materialUbicacion);
+        Task<ResponseModel> putMaterialUbicacion(MaterialesUbicacionesRequest materialUbicacion);
+        Task<ResponseModel> deleteMaterialUbicacion(MaterialesUbicacionesRequest materialUbicacion);
         #endregion
 
         #region Proveedores
