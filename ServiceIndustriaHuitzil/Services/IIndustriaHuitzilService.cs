@@ -21,6 +21,12 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> closeCaja(CajaRequest request);
         #endregion
 
+        #region Cambios y Devoluciones
+        Task<ResponseModel> getCambiosyDevoluciones();
+        Task<ResponseModel> postCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
+        Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
+        #endregion
+
         #region Materiales
         Task<ResponseModel> getMateriales();
         Task<ResponseModel> postMaterial(MaterialRequest material);
@@ -30,9 +36,6 @@ namespace ServiceIndustriaHuitzil.Services
 
         #region MaterialesUbicaciones
         Task<ResponseModel> getMaterialesUbicaciones();
-        Task<ResponseModel> postMaterialUbicacion(MaterialesUbicacionesRequest materialUbicacion);
-        Task<ResponseModel> putMaterialUbicacion(MaterialesUbicacionesRequest materialUbicacion);
-        Task<ResponseModel> deleteMaterialUbicacion(MaterialesUbicacionesRequest materialUbicacion);
         #endregion
 
         #region Proveedores
@@ -43,19 +46,16 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Productos
-        Task<ResponseModel> getProductos();
+        Task<ResponseModel> getProductos(string sucursal);
         Task<ResponseModel> postProductos(ProductoRequest producto);
         Task<ResponseModel> putProductos(ProductoRequest producto);
         Task<ResponseModel> deleteProductos(ProductoRequest producto);
 
-        Task<ResponseModel> searchProduct(string queryString);
+        Task<ResponseModel> searchProduct(string queryString, string sucursal);
         #endregion
 
         #region ProveedoresMateriales
         Task<ResponseModel> getProveedoresMateriales();
-        Task<ResponseModel> postProveedorMaterial(ProveedoresMaterialesRequest proveedoresMateriales);
-        Task<ResponseModel> putProveedorMaterial(ProveedoresMaterialesRequest proveedoresMaterialesRequest);
-        Task<ResponseModel> deleteProveedorMaterial(ProveedoresMaterialesRequest proveedoresMateriales);
         #endregion
 
         #region Roles

@@ -16,16 +16,16 @@ namespace waRESTIndustriaHuitzil.Controllers
         #region GET
         [HttpGet("Consulta")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetProductos()
+        public async Task<IActionResult> GetProductos(string sucursal)
         {
-            return Ok(await _service.getProductos());
+            return Ok(await _service.getProductos(sucursal));
         }
 
         [HttpGet("SearchProduct")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> SearchProduct(string queryString)
+        public async Task<IActionResult> SearchProduct(string queryString, string sucursal)
         {
-            return Ok(await _service.searchProduct(queryString));
+            return Ok(await _service.searchProduct(queryString, sucursal));
         }
         #endregion
 

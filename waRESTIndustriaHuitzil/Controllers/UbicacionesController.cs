@@ -21,13 +21,6 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.getUbicaciones());
         }
-
-        //[HttpGet("ConsultaAllVR")]
-        //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<IActionResult> GetVistasRoles(int idRol)
-        //{
-        //    return Ok(await _service.getVistasRol(idRol));
-        //}
         #endregion
 
         #region POST

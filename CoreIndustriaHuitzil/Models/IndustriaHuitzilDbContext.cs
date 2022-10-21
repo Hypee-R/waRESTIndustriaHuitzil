@@ -18,6 +18,8 @@ namespace CoreIndustriaHuitzil.Models
 
         public virtual DbSet<Articulo> Articulos { get; set; } = null!;
         public virtual DbSet<Caja> Cajas { get; set; } = null!;
+        public virtual DbSet<CambiosDevolucione> CambiosDevoluciones { get; set; } = null!;
+        public virtual DbSet<CambiosDevolucionesArticulo> CambiosDevolucionesArticulos { get; set; } = null!;
         public virtual DbSet<CatCategoria> CatCategorias { get; set; } = null!;
         public virtual DbSet<CatProveedore> CatProveedores { get; set; } = null!;
         public virtual DbSet<CatTalla> CatTallas { get; set; } = null!;
@@ -28,6 +30,8 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<Venta> Ventas { get; set; } = null!;
+        public virtual DbSet<VentaArticulo> VentaArticulos { get; set; } = null!;
         public virtual DbSet<Vista> Vistas { get; set; } = null!;
         public virtual DbSet<VistasRol> VistasRols { get; set; } = null!;
 
@@ -123,7 +127,92 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.Cajas)
                     .HasForeignKey(d => d.IdEmpleado)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Caja__id_emplead__3C34F16F");
+                    .HasConstraintName("FK__Caja__Empleado");
+            });
+
+            modelBuilder.Entity<CambiosDevolucione>(entity =>
+            {
+                entity.HasKey(e => e.IdCambioDevolucion)
+                    .HasName("PK__CambiosD__DB3A8A4727E7EC86");
+
+                entity.Property(e => e.IdCambioDevolucion).HasColumnName("id_cambio_devolucion");
+
+                entity.Property(e => e.Fecha)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fecha");
+
+                entity.Property(e => e.IdVenta).HasColumnName("id_venta");
+
+                entity.Property(e => e.NoArticulos).HasColumnName("no_articulos");
+
+                entity.Property(e => e.Subtotal)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("subtotal");
+
+                entity.Property(e => e.Total)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("total");
+
+                entity.HasOne(d => d.IdVentaNavigation)
+                    .WithMany(p => p.CambiosDevoluciones)
+                    .HasForeignKey(d => d.IdVenta)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__CambiosDevoluciones_Ventas");
+            });
+
+            modelBuilder.Entity<CambiosDevolucionesArticulo>(entity =>
+            {
+                entity.HasKey(e => e.IdCambioArticulo)
+                    .HasName("PK__CambiosD__9DD2439FE364C556");
+
+                entity.Property(e => e.IdCambioArticulo).HasColumnName("id_cambio_articulo");
+
+                entity.Property(e => e.Cantidad).HasColumnName("cantidad");
+
+                entity.Property(e => e.Deducible)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("deducible");
+
+                entity.Property(e => e.Estado)
+                    .HasMaxLength(150)
+                    .IsUnicode(false)
+                    .HasColumnName("estado");
+
+                entity.Property(e => e.IdArticulo).HasColumnName("id_articulo");
+
+                entity.Property(e => e.IdCambioDevolucion).HasColumnName("id_cambio_devolucion");
+
+                entity.Property(e => e.IdVentaArticulo).HasColumnName("id_venta_articulo");
+
+                entity.Property(e => e.MotivoCambio)
+                    .HasMaxLength(300)
+                    .IsUnicode(false)
+                    .HasColumnName("motivo_cambio");
+
+                entity.Property(e => e.PrecioActual)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("precio_actual");
+
+                entity.Property(e => e.PrecioAnterior)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("precio_anterior");
+
+                entity.HasOne(d => d.IdArticuloNavigation)
+                    .WithMany(p => p.CambiosDevolucionesArticulos)
+                    .HasForeignKey(d => d.IdArticulo)
+                    .HasConstraintName("FK__CambiosDevolucionesArticulos_Articulos");
+
+                entity.HasOne(d => d.IdCambioDevolucionNavigation)
+                    .WithMany(p => p.CambiosDevolucionesArticulos)
+                    .HasForeignKey(d => d.IdCambioDevolucion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__CambiosDevolucionesArticulos_CambiosDevoluciones");
+
+                entity.HasOne(d => d.IdVentaArticuloNavigation)
+                    .WithMany(p => p.CambiosDevolucionesArticulos)
+                    .HasForeignKey(d => d.IdVentaArticulo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__CambiosDevolucionesArticulos_VentaArticulos");
             });
 
             modelBuilder.Entity<CatCategoria>(entity =>
@@ -458,6 +547,85 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRol)
                     .HasConstraintName("FK_Users_Rol");
+            });
+
+            modelBuilder.Entity<Venta>(entity =>
+            {
+                entity.HasKey(e => e.IdVenta)
+                    .HasName("PK__Ventas__459533BF081C1F5A");
+
+                entity.Property(e => e.IdVenta).HasColumnName("id_venta");
+
+                entity.Property(e => e.Fecha)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fecha");
+
+                entity.Property(e => e.IdCaja).HasColumnName("id_caja");
+
+                entity.Property(e => e.NoArticulos).HasColumnName("no_articulos");
+
+                entity.Property(e => e.NoTicket)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("no_ticket");
+
+                entity.Property(e => e.Subtotal)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("subtotal");
+
+                entity.Property(e => e.TipoPago)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("tipo_pago");
+
+                entity.Property(e => e.TipoVenta)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("tipo_venta");
+
+                entity.Property(e => e.Total)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("total");
+
+                entity.HasOne(d => d.IdCajaNavigation)
+                    .WithMany(p => p.Venta)
+                    .HasForeignKey(d => d.IdCaja)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Ventas__Caja");
+            });
+
+            modelBuilder.Entity<VentaArticulo>(entity =>
+            {
+                entity.HasKey(e => e.IdVentaArticulo)
+                    .HasName("PK__VentaArt__A3985937EAF0CFF6");
+
+                entity.Property(e => e.IdVentaArticulo).HasColumnName("id_venta_articulo");
+
+                entity.Property(e => e.Cantidad).HasColumnName("cantidad");
+
+                entity.Property(e => e.IdArticulo).HasColumnName("id_articulo");
+
+                entity.Property(e => e.IdVenta).HasColumnName("id_venta");
+
+                entity.Property(e => e.PrecioUnitario)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("precio_unitario");
+
+                entity.Property(e => e.Subtotal)
+                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnName("subtotal");
+
+                entity.HasOne(d => d.IdArticuloNavigation)
+                    .WithMany(p => p.VentaArticulos)
+                    .HasForeignKey(d => d.IdArticulo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__VentaArticulos_Articulos");
+
+                entity.HasOne(d => d.IdVentaNavigation)
+                    .WithMany(p => p.VentaArticulos)
+                    .HasForeignKey(d => d.IdVenta)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__VentaArticulos_Ventas");
             });
 
             modelBuilder.Entity<Vista>(entity =>

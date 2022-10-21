@@ -5,6 +5,12 @@ namespace CoreIndustriaHuitzil.Models
 {
     public partial class Articulo
     {
+        public Articulo()
+        {
+            CambiosDevolucionesArticulos = new HashSet<CambiosDevolucionesArticulo>();
+            VentaArticulos = new HashSet<VentaArticulo>();
+        }
+
         public int IdArticulo { get; set; }
         public string? Unidad { get; set; }
         public string? Existencia { get; set; }
@@ -20,5 +26,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual CatCategoria? IdCategoriaNavigation { get; set; }
         public virtual CatTalla? IdTallaNavigation { get; set; }
         public virtual CatUbicacione? IdUbicacionNavigation { get; set; }
+        public virtual ICollection<CambiosDevolucionesArticulo> CambiosDevolucionesArticulos { get; set; }
+        public virtual ICollection<VentaArticulo> VentaArticulos { get; set; }
     }
 }
