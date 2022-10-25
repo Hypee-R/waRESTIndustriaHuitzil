@@ -23,8 +23,6 @@ namespace ServiceIndustriaHuitzil.Services
             )
         {
             _ctx = ctx;
-            _connectionString = "Server=DESKTOP-GHBL8TT\\SQLEXPRESS;Database=IndustriasHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
-            //_connectionString = "Server=DESARROLLOXR\\SA;Database=IndustriaHuitzil;Trusted_Connection=false;MultipleActiveResultSets=true;User ID=sa;Password=Ventana0512";
             _configuration = configuration;
             _jwtSettings = jwtSettings;
         }
@@ -259,7 +257,10 @@ namespace ServiceIndustriaHuitzil.Services
                             Subtotal = x.IdVentaNavigation.Subtotal,
                             Total = x.IdVentaNavigation.Total
                         },
-                        CambiosDevolucionesArticulos = x.CambiosDevolucionesArticulos.ToList().ConvertAll(x => new CambiosDevolucionesArticuloRequest()
+                        CambiosDevolucionesArticulos = _ctx.CambiosDevolucionesArticulos.Include(a => a.IdArticuloNavigation).ThenInclude(aa => aa.IdTallaNavigation)
+                                                                                        .Include(b => b.IdVentaArticuloNavigation).ThenInclude(ba => ba.IdArticuloNavigation)
+                                                                                        .ThenInclude(baa => baa.IdTallaNavigation).Where(x => x.IdCambioDevolucion == x.IdCambioDevolucion)
+                                                                                        .ToList().ConvertAll(x => new CambiosDevolucionesArticuloRequest()
                         {
                             IdCambioArticulo = x.IdCambioArticulo,
                             IdCambioDevolucion = x.IdCambioDevolucion,
@@ -271,8 +272,49 @@ namespace ServiceIndustriaHuitzil.Services
                             PrecioAnterior = x.PrecioAnterior,
                             PrecioActual = x.PrecioActual,
                             Deducible = x.Deducible,
-                            Articulo = null,
-                            VentaArticulo = null
+                            Articulo = new ProductoRequest()
+                            {
+                                IdArticulo = x.IdArticuloNavigation.IdArticulo,
+                                Unidad = x.IdArticuloNavigation.Unidad,
+                                Existencia = x.IdArticuloNavigation.Existencia,
+                                Descripcion = x.IdArticuloNavigation.Descripcion,
+                                FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
+                                idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
+                                idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
+                                idTalla = (int)x.IdArticuloNavigation.IdTalla,
+                                talla = x.IdArticuloNavigation.IdTallaNavigation.Nombre,
+                                categoria = null,
+                                ubicacion = null,
+                                sku = x.IdArticuloNavigation.Sku,
+                                precio = (int)x.IdArticuloNavigation.Precio,
+                                imagen = x.IdArticuloNavigation.Imagen
+                            },
+                            VentaArticulo = new VentaArticuloRequest()
+                            {
+                                IdVentaArticulo = x.IdVentaArticuloNavigation.IdVentaArticulo,
+                                IdVenta = x.IdVentaArticuloNavigation.IdVenta,
+                                IdArticulo = x.IdVentaArticuloNavigation.IdArticulo,
+                                Cantidad = x.IdVentaArticuloNavigation.Cantidad,
+                                PrecioUnitario = x.IdVentaArticuloNavigation.PrecioUnitario,
+                                Subtotal = x.IdVentaArticuloNavigation.Subtotal,
+                                Articulo = new ProductoRequest()
+                                {
+                                    IdArticulo = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdArticulo,
+                                    Unidad = x.IdVentaArticuloNavigation.IdArticuloNavigation.Unidad,
+                                    Existencia = x.IdVentaArticuloNavigation.IdArticuloNavigation.Existencia,
+                                    Descripcion = x.IdVentaArticuloNavigation.IdArticuloNavigation.Descripcion,
+                                    FechaIngreso = (DateTime)x.IdVentaArticuloNavigation.IdArticuloNavigation.FechaIngreso,
+                                    idUbicacion = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdUbicacion,
+                                    idCategoria = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdCategoria,
+                                    idTalla = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTalla,
+                                    talla = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTallaNavigation.Nombre,
+                                    categoria = null,
+                                    ubicacion = null,
+                                    sku = x.IdVentaArticuloNavigation.IdArticuloNavigation.Sku,
+                                    precio = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.Precio,
+                                    imagen = x.IdVentaArticuloNavigation.IdArticuloNavigation.Imagen
+                                }
+                            }
                         })
                     });
 
@@ -323,6 +365,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 List<CambiosDevolucionesArticulo> lstCambiosDevolucionesArticulos = new List<CambiosDevolucionesArticulo>();
                                 request.CambiosDevolucionesArticulos.ForEach(dataArticulo =>
                                 {
+                                    VentaArticulo ventaArticulo = _ctx.VentaArticulos.FirstOrDefault(x => x.IdVentaArticulo == dataArticulo.IdVentaArticulo);
                                     lstCambiosDevolucionesArticulos.Add(new CambiosDevolucionesArticulo()
                                     {
                                         IdCambioArticulo = dataArticulo.IdCambioArticulo,
@@ -336,11 +379,34 @@ namespace ServiceIndustriaHuitzil.Services
                                         PrecioActual = dataArticulo.PrecioActual,
                                         Deducible = dataArticulo.Deducible
                                     });
+
+                                    //Actualiza el stock
+                                    Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == ventaArticulo.IdArticulo);
+                                    Articulo articuloCambio = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
+
+                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) + dataArticulo.Cantidad).ToString();
+                                    if ( (Int32.Parse(articuloCambio.Existencia) - dataArticulo.Cantidad) >= 0 )
+                                    {
+                                        articuloCambio.Existencia = (Int32.Parse(articuloCambio.Existencia) - dataArticulo.Cantidad).ToString();
+                                    }
+                                    else
+                                    {
+                                        response.exito = false;
+                                        response.mensaje = "Ya no hay stock del articulo para cambio!";
+                                        response.respuesta = "[]";
+                                        dbContextTransaction.Rollback();
+                                    }
+
+                                    _ctx.Articulos.Update(articuloVenta);
+                                    _ctx.Articulos.Update(articuloCambio);
+                                    
                                 });
                                 
                                 _ctx.CambiosDevolucionesArticulos.AddRange(lstCambiosDevolucionesArticulos);
                                 await _ctx.SaveChangesAsync();
+
                             }
+
 
                             //Hacemos commit de todos los datos
                             dbContextTransaction.Commit();
@@ -359,6 +425,10 @@ namespace ServiceIndustriaHuitzil.Services
                         }
                     }
 
+                }
+                else
+                {
+                    response.mensaje = "La venta ya tiene algún cambio realizado";
                 }
 
                 return response;
