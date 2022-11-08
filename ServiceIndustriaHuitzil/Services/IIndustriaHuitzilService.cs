@@ -27,6 +27,14 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
         #endregion
 
+        #region Dashboard
+        Task<ResponseModel> getCards(int idSucursal);
+        Task<ResponseModel> getVentasPorMes(int idSucursal);
+        Task<ResponseModel> getRankingArticulos();
+        Task<ResponseModel> getRankingEmpleados();
+        Task<ResponseModel> getRankingSucursales();
+        #endregion
+
         #region Materiales
         Task<ResponseModel> getMateriales();
         Task<ResponseModel> postMaterial(MaterialRequest material);

@@ -5,6 +5,9 @@ using CoreIndustriaHuitzil.ModelsRequest;
 using CoreIndustriaHuitzil.ModelsResponse;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity.Core.EntityClient;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -516,6 +519,262 @@ namespace ServiceIndustriaHuitzil.Services
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
+
+        #region Dashboard
+        public async Task<ResponseModel> getCards(int idSucursal)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                List<CardResponse> cardsResponse = new List<CardResponse>();
+
+
+                var fechaInicio = DateTime.Parse("01-01-"+DateTime.Now.Year);
+                var fechaFin = DateTime.Parse("31-12-"+DateTime.Now.Year);
+
+                var gananciasTotales = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
+                var gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.CostoTotal);
+
+                var ingresosTotales = float.Parse(gananciasTotales.ToString()) - float.Parse(gastosTotales.ToString());
+
+                cardsResponse.Add(new CardResponse() { title = "Ganancias Totales", value = gananciasTotales.ToString(), aditionalValue = "" });
+                cardsResponse.Add(new CardResponse() { title = "Gastos Totales", value = gastosTotales.ToString(), aditionalValue = "" });
+                cardsResponse.Add(new CardResponse() { title = "Ingresos Totales", value = ingresosTotales.ToString(), aditionalValue = "" });
+
+                response.exito = true;
+                response.mensaje = "Datos Analitycs Ventas";
+                response.respuesta = cardsResponse;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.exito = false;
+                response.mensaje = e.Message;
+                response.respuesta = "[]";
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> getVentasPorMes(int idSucursal)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                ChartBarResponse chartBarResponse = new ChartBarResponse();
+                List<Series> series = new List<Series>();
+                int[] seriesEfectivo = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                int[] seriesTarjeta  = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                int[] seriesMultiple = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+                using (var con = _ctx.Database.GetDbConnection())
+                {
+                    con.Open();
+                    DbCommand cmd = con.CreateCommand();
+                    string query = "SELECT DATEPART(MONTH, fecha) AS 'Mes', tipo_pago, Count(id_venta) AS 'No Ventas' FROM Ventas "+
+                                   "WHERE DATEPART(YEAR, fecha) = "+ DateTime.Now.Year + " " +
+                                   "GROUP BY DATEPART(MONTH, fecha), tipo_pago "+
+                                   "ORDER BY Mes";
+                    
+                    cmd.CommandText = query;
+                    
+                    using (DbDataReader rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SequentialAccess | CommandBehavior.CloseConnection))
+                    {
+                        while (rdr.Read())
+                        {
+                            int mes = rdr.GetInt32(0);
+                            string tipoPago = rdr.GetString(1);
+                            if (tipoPago == "EFECTIVO")
+                            {
+                                seriesEfectivo[mes-1] = rdr.GetInt32(2);
+                            }else if (tipoPago == "TARJETA")
+                            {
+                                seriesTarjeta[mes-1] = rdr.GetInt32(2);
+                            }
+                            else if (tipoPago == "MULTIPLE")
+                            {
+                                seriesMultiple[mes-1] = rdr.GetInt32(2);
+                            }
+                        }
+                    }
+                }
+
+                series.Add(new Series() { name = "EFECTIVO", data = seriesEfectivo.ToList() });
+                series.Add(new Series() { name = "TARJETA", data = seriesTarjeta.ToList() });
+                series.Add(new Series() { name = "MULTIPLE", data = seriesMultiple.ToList() });
+
+                chartBarResponse.title = "Ventas por Mes año "+DateTime.Now.Year;
+                chartBarResponse.series = series;
+
+                response.exito = true;
+                response.mensaje = "Datos Gráfica Ventas por Mes";
+                response.respuesta = chartBarResponse;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.exito = false;
+                response.mensaje = e.Message;
+                response.respuesta = "[]";
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> getRankingArticulos()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                RankingResponse rankingArticulosResponse = new RankingResponse();
+
+                using (var con = _ctx.Database.GetDbConnection())
+                {
+                    con.Open();
+                    DbCommand cmd = con.CreateCommand();
+                    string query = "SELECT TOP 3 * FROM "+
+                                   "(SELECT a.descripcion AS 'Articulo', SUM(va.cantidad) AS 'No Ventas' FROM VentaArticulos AS va "+
+                                   "INNER JOIN Articulos AS a "+
+                                   "ON va.id_articulo = a.id_articulo "+
+                                   "INNER JOIN Ventas AS v "+
+                                   "ON va.id_venta = v.id_venta "+
+                                   "WHERE DATEPART(YEAR, v.fecha) = "+ DateTime.Now.Year + " " +
+                                   "GROUP BY va.id_articulo, a.descripcion) AS ranking_articles "+
+                                   "ORDER BY [No Ventas] DESC";
+
+                    cmd.CommandText = query;
+
+                    using (DbDataReader rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SequentialAccess | CommandBehavior.CloseConnection))
+                    {
+                        while (rdr.Read())
+                        {
+                            rankingArticulosResponse.ranking.Add(new DataRanking() { descripcion = rdr.GetString(0), noVentas = rdr.GetInt32(1).ToString() });
+                        }
+                    }
+                }
+
+                rankingArticulosResponse.title = "Articulos más vendidos año " + DateTime.Now.Year;
+
+                response.exito = true;
+                response.mensaje = "Datos Ranking Articulos";
+                response.respuesta = rankingArticulosResponse;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.exito = false;
+                response.mensaje = e.Message;
+                response.respuesta = "[]";
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> getRankingEmpleados()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                RankingResponse rankingEmpleadosResponse = new RankingResponse();
+
+                using (var con = _ctx.Database.GetDbConnection())
+                {
+                    con.Open();
+                    DbCommand cmd = con.CreateCommand();
+                    string query = "SELECT TOP 3 * FROM "+
+                                   "(SELECT u.usuario AS 'Empleado', SUM(v.no_articulos) AS 'No Ventas' FROM Ventas AS v "+
+                                   "INNER JOIN Caja AS c "+
+                                   "ON v.id_caja = c.id_caja "+
+                                   "INNER JOIN Users AS u "+
+                                   "ON c.id_empleado = u.id_user "+
+                                   "WHERE DATEPART(YEAR, v.fecha) = "+ DateTime.Now.Year + " " +
+                                   "GROUP BY u.id_user, u.usuario) AS ranking_empleados "+
+                                   "ORDER BY [No Ventas] DESC";
+
+                    cmd.CommandText = query;
+
+                    using (DbDataReader rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SequentialAccess | CommandBehavior.CloseConnection))
+                    {
+                        while (rdr.Read())
+                        {
+                            rankingEmpleadosResponse.ranking.Add(new DataRanking() { descripcion = rdr.GetString(0), noVentas = rdr.GetInt32(1).ToString() });
+                        }
+                    }
+                }
+
+                rankingEmpleadosResponse.title = "Empleados con más ventas año " + DateTime.Now.Year;
+
+                response.exito = true;
+                response.mensaje = "Datos Ranking Empleados";
+                response.respuesta = rankingEmpleadosResponse;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.exito = false;
+                response.mensaje = e.Message;
+                response.respuesta = "[]";
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> getRankingSucursales()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                RankingResponse rankingSucursalesResponse = new RankingResponse();
+
+                using (var con = _ctx.Database.GetDbConnection())
+                {
+                    con.Open();
+                    DbCommand cmd = con.CreateCommand();
+                    string query = "SELECT TOP 3 * FROM "+
+                                   "(SELECT u.direccion AS 'Sucursal', SUM(va.cantidad) AS 'No Ventas' FROM VentaArticulos AS va "+
+                                   "INNER JOIN Ventas AS v "+
+                                   "ON v.id_venta = va.id_venta "+
+                                   "INNER JOIN Articulos AS a "+
+                                   "ON va.id_articulo = a.id_articulo "+
+                                   "INNER JOIN CatUbicaciones AS u "+
+                                   "ON a.id_ubicacion = u.id_ubicacion "+
+                                   "WHERE DATEPART(YEAR, v.fecha) = "+ DateTime.Now.Year + " " +
+                                   "GROUP BY u.id_ubicacion, u.direccion) AS ranking_sucursales "+
+                                   "ORDER BY [No Ventas] DESC";
+
+                    cmd.CommandText = query;
+
+                    using (DbDataReader rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SequentialAccess | CommandBehavior.CloseConnection))
+                    {
+                        while (rdr.Read())
+                        {
+                            rankingSucursalesResponse.ranking.Add(new DataRanking() { descripcion = rdr.GetString(0), noVentas = rdr.GetInt32(1).ToString() });
+                        }
+                    }
+                }
+
+                rankingSucursalesResponse.title = "Sucursales con más ventas año " + DateTime.Now.Year;
+
+                response.exito = true;
+                response.mensaje = "Datos Ranking Sucursales";
+                response.respuesta = rankingSucursalesResponse;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.exito = false;
+                response.mensaje = e.Message;
+                response.respuesta = "[]";
                 return response;
             }
         }
