@@ -533,8 +533,8 @@ namespace ServiceIndustriaHuitzil.Services
                 List<CardResponse> cardsResponse = new List<CardResponse>();
 
 
-                var fechaInicio = DateTime.Parse("01-01-"+DateTime.Now.Year);
-                var fechaFin = DateTime.Parse("31-12-"+DateTime.Now.Year);
+                var fechaInicio = DateTime.ParseExact("01/01/"+DateTime.Now.Year, "dd/MM/yyyy", null);
+                var fechaFin = DateTime.ParseExact("31/12/"+DateTime.Now.Year, "dd/MM/yyyy", null);
 
                 var gananciasTotales = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
                 var gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.CostoTotal);
