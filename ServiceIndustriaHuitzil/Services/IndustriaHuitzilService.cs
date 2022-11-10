@@ -333,7 +333,7 @@ namespace ServiceIndustriaHuitzil.Services
                         },
                         CambiosDevolucionesArticulos = _ctx.CambiosDevolucionesArticulos.Include(a => a.IdArticuloNavigation).ThenInclude(aa => aa.IdTallaNavigation)
                                                                                         .Include(b => b.IdVentaArticuloNavigation).ThenInclude(ba => ba.IdArticuloNavigation)
-                                                                                        .ThenInclude(baa => baa.IdTallaNavigation).Where(x => x.IdCambioDevolucion == x.IdCambioDevolucion)
+                                                                                        .ThenInclude(baa => baa.IdTallaNavigation).Where(y => y.IdCambioDevolucion == x.IdCambioDevolucion)
                                                                                         .ToList().ConvertAll(x => new CambiosDevolucionesArticuloRequest()
                         {
                             IdCambioArticulo = x.IdCambioArticulo,
