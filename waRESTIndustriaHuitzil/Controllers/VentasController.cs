@@ -37,6 +37,13 @@ namespace waRESTIndustriaHuitzil.Controllers
         #endregion
 
         #region Cambios y Devoluciones
+        [HttpGet("Returns/SearchSale")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> SearchVenta(string noTicket)
+        {
+            return Ok(await _service.searchVentaByNoTicket(noTicket));
+        }
+
         [HttpGet("Returns/Consulta")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetCambioDevolucion()

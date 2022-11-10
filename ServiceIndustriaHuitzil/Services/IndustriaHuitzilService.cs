@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.Common;
-using System.Data.Entity.Core.EntityClient;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -222,6 +221,78 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Cambios y Devoluciones
+        public async Task<ResponseModel> searchVentaByNoTicket(string noTicket)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "Venta no encontrada";
+                response.respuesta = "[]";
+                List<VentaRequest> resultadoVenta = new List<VentaRequest>();
+                VentaRequest venta = new VentaRequest();
+                Venta result = await _ctx.Ventas.Where(x => x.NoTicket == noTicket).FirstOrDefaultAsync();
+
+                if (result != null)
+                {
+                    List<VentaArticulo> articulosVenta = await _ctx.VentaArticulos.Include(w => w.IdArticuloNavigation)
+                                                                              .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)
+                                                                              .Include(wb => wb.IdArticuloNavigation.IdCategoriaNavigation)
+                                                                              .Include(wc => wc.IdArticuloNavigation.IdTallaNavigation)
+                                                                              .Where(x => x.IdVenta == result.IdVenta).ToListAsync();
+                    venta.IdVenta = result.IdVenta;
+                    venta.IdCaja = result.IdCaja;
+                    venta.Fecha = result.Fecha.ToString();
+                    venta.NoTicket = result.NoTicket;
+                    venta.TipoPago = result.TipoPago;
+                    venta.TipoVenta = result.TipoVenta;
+                    venta.NoArticulos = result.NoArticulos;
+                    venta.Subtotal = result.Subtotal;
+                    venta.Total = result.Total;
+                    venta.ventaArticulo = articulosVenta.ConvertAll(x => new VentaArticuloRequest()
+                    {
+                        IdVentaArticulo = x.IdVentaArticulo,
+                        IdVenta = x.IdVenta,
+                        IdArticulo = x.IdArticulo,
+                        Cantidad = x.Cantidad,
+                        PrecioUnitario = x.PrecioUnitario,
+                        Subtotal = x.Subtotal,
+                        Articulo = new ProductoRequest()
+                        {
+                            IdArticulo = x.IdArticulo,
+                            Unidad = x.IdArticuloNavigation.Unidad,
+                            Existencia = x.IdArticuloNavigation.Existencia,
+                            Descripcion = x.IdArticuloNavigation.Descripcion,
+                            FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
+                            idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
+                            idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
+                            idTalla = (int)x.IdArticuloNavigation.IdTalla,
+                            talla = x.IdArticuloNavigation.IdTallaNavigation.Descripcion,
+                            categoria = x.IdArticuloNavigation.IdCategoriaNavigation.Descripcion,
+                            ubicacion = x.IdArticuloNavigation.IdUbicacionNavigation.Direccion,
+                            sku = x.IdArticuloNavigation.Sku,
+                            precio = (int)x.IdArticuloNavigation.Precio,
+                            imagen = x.IdArticuloNavigation.Imagen
+                        }
+                    });
+                    resultadoVenta.Add(venta);
+
+                    response.exito = true;
+                    response.mensaje = "Se consultaron los datos de la venta exitosamente!";
+                    response.respuesta = resultadoVenta;
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.exito = false;
+                response.mensaje = e.Message;
+                response.respuesta = "[]";
+                return response;
+            }
+        }
         public async Task<ResponseModel> getCambiosyDevoluciones()
         {
             ResponseModel response = new ResponseModel();
@@ -536,9 +607,13 @@ namespace ServiceIndustriaHuitzil.Services
                 var fechaInicio = DateTime.ParseExact("01/01/"+DateTime.Now.Year, "dd/MM/yyyy", null);
                 var fechaFin = DateTime.ParseExact("31/12/"+DateTime.Now.Year, "dd/MM/yyyy", null);
 
-                var gananciasTotales = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
+                var ganancias = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
+                var cambios = await _ctx.CambiosDevoluciones.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
                 var gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.CostoTotal);
 
+                
+                float gananciasTotales = float.Parse(ganancias.ToString()) + (float.Parse(cambios.ToString()));
+                
                 var ingresosTotales = float.Parse(gananciasTotales.ToString()) - float.Parse(gastosTotales.ToString());
 
                 cardsResponse.Add(new CardResponse() { title = "Ganancias Totales", value = gananciasTotales.ToString(), aditionalValue = "" });
@@ -2847,7 +2922,6 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
         #endregion
-
 
     }
 }
