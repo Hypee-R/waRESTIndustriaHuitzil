@@ -123,5 +123,14 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> putVistaRol(VistaRolRequest vistaRol);
         Task<ResponseModel> deleteVistaRol(VistaRolRequest vistasRol);
         #endregion
+
+        #region Ventas 
+        //Task<ResponseModel> searchVentaByNoTicket(string noTicket);
+        //Task<ResponseModel> getCambiosyDevoluciones();
+        Task<ResponseModel> postAddVentas(VentaRequest venta);
+        //Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
+        #endregion
+
+
     }
 }

@@ -66,5 +66,14 @@ namespace waRESTIndustriaHuitzil.Controllers
         }
         #endregion
 
+        #region Ventas 
+        [HttpPost("Sales/Agrega")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AgregaVentas([FromBody] VentaRequest request)
+        {
+            return Ok(await _service.postAddVentas(request));
+        }
+        #endregion
+
     }
 }

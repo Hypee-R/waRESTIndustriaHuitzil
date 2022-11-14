@@ -2908,6 +2908,8 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
+
+
         public class Encrypt
         {
             public static string GetSHA1(string str)
@@ -2923,5 +2925,116 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Ventas
+        public async Task<ResponseModel> postAddVentas(VentaRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo registrar la venta";
+                response.respuesta = "[]";
+
+              
+             
+                    Venta newVenta = new Venta();
+
+                    using (var dbContextTransaction = _ctx.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            newVenta.IdVenta = request.IdVenta;
+                            newVenta.IdCaja = request.IdCaja;
+                            newVenta.Fecha = DateTime.Parse(request.Fecha);
+                            newVenta.NoTicket = request.NoTicket;
+                            newVenta.TipoPago = request.TipoPago;
+                            newVenta.TipoVenta = request.TipoVenta;
+                            newVenta.NoArticulos = request.NoArticulos;
+                            newVenta.Subtotal = request.Subtotal;
+                            newVenta.Total = request.Total;
+
+                            _ctx.Add(newVenta);
+                        await _ctx.SaveChangesAsync();
+
+                            //Actualiza  el stock de los productos del inventario
+                            if (request.ventaArticulo?.Count() > 0)
+                            {
+                                List<VentaArticuloRequest> listventasArticulos = new List<VentaArticuloRequest>();
+
+                                request.ventaArticulo.ForEach(dataArticulo =>
+                                {
+                                    VentaArticulo ventaArticulo = _ctx.VentaArticulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
+
+                                    listventasArticulos.Add(new VentaArticuloRequest()
+                                    {
+                                        IdVentaArticulo = dataArticulo.IdVentaArticulo,
+                                        IdVenta = dataArticulo.IdVenta,
+                                        IdArticulo = dataArticulo.IdArticulo,
+                                        Cantidad = dataArticulo.Cantidad,
+                                        PrecioUnitario = dataArticulo.PrecioUnitario,
+                                        Subtotal = dataArticulo.Subtotal,
+                                        Articulo  = dataArticulo.Articulo
+                                      
+
+                                    });
+
+                                    //Actualiza el stock
+                                    Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == ventaArticulo.IdArticulo);
+                                    //Articulo articuloCambio = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
+
+                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) + dataArticulo.Cantidad).ToString();
+                                
+                                    if ((Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad) >= 0)
+                                    {
+                                        articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad).ToString();
+                                    }
+                                    else
+                                    {
+                                        response.exito = false;
+                                        response.mensaje = "Ya no hay stock del articulo !";
+                                        response.respuesta = "[]";
+                                        dbContextTransaction.Rollback();
+                                    }
+
+                                    _ctx.Articulos.Update(articuloVenta);
+                                  //  _ctx.Articulos.Update(articuloCambio);
+
+                                });
+
+                               // _ctx.CambiosDevolucionesArticulos.AddRange(listventasArticulos);
+                                await _ctx.SaveChangesAsync();
+
+                            }
+
+
+                            //Hacemos commit de todos los datos
+                            dbContextTransaction.Commit();
+                            response.exito = true;
+                            response.mensaje = "Se ha registrado la venta!";
+                            response.respuesta = "[]";
+
+                        }
+                        catch (Exception ex)
+                        {
+                            response.exito = false;
+                            response.mensaje = ex.Message;
+                            response.respuesta = "[]";
+                            dbContextTransaction.Rollback();
+                            return response;
+                        }
+                    }
+
+             
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+        #endregion
     }
 }

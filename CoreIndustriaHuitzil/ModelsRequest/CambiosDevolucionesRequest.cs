@@ -34,6 +34,12 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public decimal? Deducible { get; set; }
 
         public virtual ProductoRequest? Articulo { get; set; } = null!;
-        public virtual VentaArticuloRequest? VentaArticulo { get; set; } = null!;
+        public virtual VentaArticuloRequest? VentaArticulo {
+            
+            get; set; } = null!;
     }
+
+
+
+
 }
