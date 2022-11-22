@@ -106,7 +106,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay una caja para mostrar";
                 response.respuesta = "[]";
 
-                Caja existeCaja = _ctx.Cajas.Where(a => a.IdEmpleado == idUser).OrderByDescending(x => x.IdCaja).FirstOrDefault();
+                Caja existeCaja = await _ctx.Cajas.Where(a => a.IdEmpleado == idUser).OrderByDescending(x => x.IdCaja).FirstOrDefaultAsync();
                 if (existeCaja != null)
                 {
                     CajaRequest caja = new CajaRequest();
@@ -150,7 +150,9 @@ namespace ServiceIndustriaHuitzil.Services
                     response.exito = true;
                     response.mensaje = "Caja abierta exitosamente!";
 
-                    newCaja.Fecha = DateTime.Parse(request.Fecha);
+                    DateTime fechaOpen = setFormatDate(request.Fecha);
+
+                    newCaja.Fecha = fechaOpen;
                     newCaja.Monto = request.Monto;
                     newCaja.IdEmpleado = request.IdEmpleado;
                     _ctx.Cajas.Add(newCaja);
@@ -199,7 +201,9 @@ namespace ServiceIndustriaHuitzil.Services
                     response.exito = true;
                     response.mensaje = "Caja cerrada exitosamente!";
 
-                    existeCaja.FechaCierre = DateTime.Parse(request.FechaCierre ?? "");
+                    DateTime fechaCierre = setFormatDate(request.FechaCierre);
+
+                    existeCaja.FechaCierre = fechaCierre;
                     existeCaja.MontoCierre = request.MontoCierre;
                     _ctx.Cajas.Update(existeCaja);
                     await _ctx.SaveChangesAsync();
@@ -415,7 +419,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No se pudo registrar el cambio y/o devolución";
                 response.respuesta = "[]";
 
-                CambiosDevolucione existeCambio = _ctx.CambiosDevoluciones.FirstOrDefault(x => x.IdVenta == request.IdVenta);
+                CambiosDevolucione existeCambio = await _ctx.CambiosDevoluciones.FirstOrDefaultAsync(x => x.IdVenta == request.IdVenta);
                 if (existeCambio == null)
                 {
                     CambiosDevolucione newCambioDevolucion = new CambiosDevolucione();
@@ -424,8 +428,10 @@ namespace ServiceIndustriaHuitzil.Services
                     {
                         try
                         {
+                            
+                            DateTime fechaCambio = setFormatDate(request.Fecha);
                             newCambioDevolucion.IdVenta = request.IdVenta;
-                            newCambioDevolucion.Fecha = DateTime.Parse(request.Fecha);
+                            newCambioDevolucion.Fecha = fechaCambio;
                             newCambioDevolucion.NoArticulos = request.NoArticulos;
                             newCambioDevolucion.Subtotal = request.Subtotal;
                             newCambioDevolucion.Total = request.Total;
@@ -2922,6 +2928,44 @@ namespace ServiceIndustriaHuitzil.Services
                 for (int i = 0; i < stream.Length; i++) sb.AppendFormat("{0:x2}", stream[i]);
                 return sb.ToString();
             }
+        }
+
+        private DateTime setFormatDate(string fecha)
+        {
+            DateTime fechaR;
+            var fechaComponents = fecha.Split(" ");
+            var date = fechaComponents[0].Split("/");
+            var hours = fechaComponents[1].Split(":");
+
+            var hora = 0;
+            //PM
+            if (fecha.Contains("PM"))
+            {
+                if (Int32.Parse(hours[0]) != 12)
+                {
+                    hora = Int32.Parse(hours[0]) + 12;
+                }
+                else
+                {
+                    hora = Int32.Parse(hours[0]);
+                }
+            }
+            //AM
+            else
+            {
+                if (Int32.Parse(hours[0]) != 12)
+                {
+                    hora = Int32.Parse(hours[0]);
+                }
+                else
+                {
+                    hora = Int32.Parse(hours[0]) - 12;
+                }
+            }
+
+            fechaR = new DateTime(Int32.Parse(date[2]), Int32.Parse(date[1]), Int32.Parse(date[0]), hora, Int32.Parse(hours[1]), Int32.Parse(hours[2]));
+
+            return fechaR;
         }
         #endregion
 
