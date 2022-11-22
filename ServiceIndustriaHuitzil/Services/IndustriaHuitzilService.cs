@@ -2954,7 +2954,7 @@ namespace ServiceIndustriaHuitzil.Services
                             newVenta.Total = request.Total;
 
                             _ctx.Add(newVenta);
-                        await _ctx.SaveChangesAsync();
+                         _ctx.SaveChangesAsync();
 
                             //Actualiza  el stock de los productos del inventario
                             if (request.ventaArticulo?.Count() > 0)
@@ -3002,7 +3002,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 });
 
                                // _ctx.CambiosDevolucionesArticulos.AddRange(listventasArticulos);
-                                await _ctx.SaveChangesAsync();
+                                 _ctx.SaveChangesAsync();
 
                             }
 
