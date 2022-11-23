@@ -2998,10 +2998,10 @@ namespace ServiceIndustriaHuitzil.Services
                             newVenta.Total = request.Total;
 
                             _ctx.Add(newVenta);
-                         _ctx.SaveChangesAsync();
+                         await _ctx.SaveChangesAsync();
 
-                            //Actualiza  el stock de los productos del inventario
-                            if (request.ventaArticulo?.Count() > 0)
+                        //Actualiza  el stock de los productos del inventario
+                        if (request.ventaArticulo?.Count() > 0)
                             {
                                 List<VentaArticuloRequest> listventasArticulos = new List<VentaArticuloRequest>();
 
@@ -3030,14 +3030,14 @@ namespace ServiceIndustriaHuitzil.Services
                                 
                                     if ((Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad) >= 0)
                                     {
-                                        articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad).ToString();
+                                       articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad).ToString();
                                     }
                                     else
                                     {
                                         response.exito = false;
                                         response.mensaje = "Ya no hay stock del articulo !";
                                         response.respuesta = "[]";
-                                        dbContextTransaction.Rollback();
+                                       dbContextTransaction.Rollback();
                                     }
 
                                     _ctx.Articulos.Update(articuloVenta);
