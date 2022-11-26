@@ -19,4 +19,10 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public string Telefono { get; set; }
         public string Correo { get; set; }
     }
+
+    public class UpdatePswRequest
+    {
+        public int IdUser { get; set; }
+        public string NewPassword { get; set; } = String.Empty;
+    }
 }

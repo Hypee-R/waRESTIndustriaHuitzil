@@ -15,45 +15,45 @@ namespace waRESTIndustriaHuitzil.Controllers
         #region Cards
         [HttpGet("Cards")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetCards(int idSucursal)
+        public async Task<IActionResult> GetCards(string year, int idSucursal)
         {
-            return Ok(await _service.getCards(idSucursal));
+            return Ok(await _service.getCards(year, idSucursal));
         }
         #endregion
 
         #region ChartBar
         [HttpGet("ChartBar")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetDataChartBar(int idSucursal)
+        public async Task<IActionResult> GetDataChartBar(string year, int idSucursal)
         {
-            return Ok(await _service.getVentasPorMes(idSucursal));
+            return Ok(await _service.getVentasPorMes(year, idSucursal));
         }
         #endregion
 
         #region RankingArticulos
         [HttpGet("RankingArticles")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetRankingArticles()
+        public async Task<IActionResult> GetRankingArticles(string year, int idSucursal)
         {
-            return Ok(await _service.getRankingArticulos());
+            return Ok(await _service.getRankingArticulos(year, idSucursal));
         }
         #endregion
 
         #region RankingEmpleados
         [HttpGet("RankingEmpleados")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetRankingEmpleados()
+        public async Task<IActionResult> GetRankingEmpleados(string year, int idSucursal)
         {
-            return Ok(await _service.getRankingEmpleados());
+            return Ok(await _service.getRankingEmpleados(year, idSucursal));
         }
         #endregion
 
         #region RankingSucursales
         [HttpGet("RankingSucursales")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetRankingSucursales()
+        public async Task<IActionResult> GetRankingSucursales(string year)
         {
-            return Ok(await _service.getRankingSucursales());
+            return Ok(await _service.getRankingSucursales(year));
         }
         #endregion
     }

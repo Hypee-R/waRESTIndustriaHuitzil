@@ -67,7 +67,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.id = existeUsuario.IdUser;
                     dataLogin.nombre = existeUsuario.Nombre;
                     dataLogin.usuario = existeUsuario.Usuario;
-                    dataLogin.password = "!Pa55Wo0rD!";
+                    dataLogin.password = existeUsuario.Password;
                     dataLogin.apellidoPaterno = existeUsuario.ApellidoPaterno;
                     dataLogin.apellidoMaterno = existeUsuario.ApellidoMaterno;
                     dataLogin.correo = existeUsuario.Correo;
@@ -602,20 +602,41 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Dashboard
-        public async Task<ResponseModel> getCards(int idSucursal)
+        public async Task<ResponseModel> getCards(string year, int idSucursal)
         {
             ResponseModel response = new ResponseModel();
             try
             {
                 List<CardResponse> cardsResponse = new List<CardResponse>();
+                decimal? ganancias = 0;
+                decimal? cambios = 0;
+                double? gastosTotales = 0;
 
 
-                var fechaInicio = DateTime.ParseExact("01/01/"+DateTime.Now.Year, "dd/MM/yyyy", null);
-                var fechaFin = DateTime.ParseExact("31/12/"+DateTime.Now.Year, "dd/MM/yyyy", null);
+                var fechaInicio = DateTime.ParseExact("01/01/"+year, "dd/MM/yyyy", null);
+                var fechaFin = DateTime.ParseExact("31/12/"+year, "dd/MM/yyyy", null);
 
-                var ganancias = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
-                var cambios = await _ctx.CambiosDevoluciones.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
-                var gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.CostoTotal);
+                if (idSucursal == 0)
+                {
+                    ganancias = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
+                    cambios = await _ctx.CambiosDevoluciones.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
+                    gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.CostoTotal);
+                }
+                else
+                {
+                    ganancias = await _ctx.VentaArticulos.Include(w => w.IdVentaNavigation).Include(ww => ww.IdArticuloNavigation)
+                                                         .Where(x => x.IdVentaNavigation.Fecha >= fechaInicio && x.IdVentaNavigation.Fecha <= fechaFin && x.IdArticuloNavigation.IdUbicacion == idSucursal).SumAsync(x => x.IdVentaNavigation.Total);
+                    cambios = await _ctx.CambiosDevolucionesArticulos.Include(w => w.IdCambioDevolucionNavigation).Include(ww => ww.IdArticuloNavigation)
+                                                        .Where(x => x.IdCambioDevolucionNavigation.Fecha >= fechaInicio && x.IdCambioDevolucionNavigation.Fecha <= fechaFin).SumAsync(x => x.IdCambioDevolucionNavigation.Total);
+                    var query = from sm in _ctx.SolicitudesMateriales
+                                join pm in _ctx.ProveedoresMateriales on sm.IdProveedorMaterial equals pm.IdProveedorMaterial
+                                join m in _ctx.Materiales on pm.IdMaterial equals m.IdMaterial
+                                join mu in _ctx.MaterialesUbicaciones on m.IdMaterial equals mu.IdMaterial
+                                where sm.Fecha >= fechaInicio && sm.Fecha <= fechaFin && mu.IdUbicacion == idSucursal
+                                select sm.CostoTotal;
+
+                    gastosTotales = query.ToList().Sum(x => x.Value);
+                }
 
                 
                 float gananciasTotales = float.Parse(ganancias.ToString()) + (float.Parse(cambios.ToString()));
@@ -642,7 +663,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<ResponseModel> getVentasPorMes(int idSucursal)
+        public async Task<ResponseModel> getVentasPorMes(string year, int idSucursal)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -657,11 +678,25 @@ namespace ServiceIndustriaHuitzil.Services
                 {
                     con.Open();
                     DbCommand cmd = con.CreateCommand();
-                    string query = "SELECT DATEPART(MONTH, fecha) AS 'Mes', tipo_pago, Count(id_venta) AS 'No Ventas' FROM Ventas "+
-                                   "WHERE DATEPART(YEAR, fecha) = "+ DateTime.Now.Year + " " +
+
+                    string query = "";
+                    if (idSucursal == 0)
+                    {
+                        query = "SELECT DATEPART(MONTH, fecha) AS 'Mes', tipo_pago, Count(id_venta) AS 'No Ventas' FROM Ventas "+
+                                   "WHERE DATEPART(YEAR, fecha) = "+ year + " " +
                                    "GROUP BY DATEPART(MONTH, fecha), tipo_pago "+
                                    "ORDER BY Mes";
-                    
+                    }
+                    else
+                    {
+                        query = "SELECT DATEPART(MONTH, v.fecha) AS 'Mes', v.tipo_pago, Count(v.id_venta) AS 'No Ventas' FROM Ventas AS V " +
+                                       "INNER JOIN VentaArticulos AS VA ON V.id_venta = VA.id_venta " +
+                                       "INNER JOIN Articulos as A ON VA.id_articulo = A.id_articulo " +
+                                       "WHERE DATEPART(YEAR, v.fecha) = " + year + " AND A.id_ubicacion = " + idSucursal + " " +
+                                       "GROUP BY DATEPART(MONTH, v.fecha), tipo_pago " +
+                                       "ORDER BY Mes";
+                    }
+
                     cmd.CommandText = query;
                     
                     using (DbDataReader rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SequentialAccess | CommandBehavior.CloseConnection))
@@ -689,7 +724,7 @@ namespace ServiceIndustriaHuitzil.Services
                 series.Add(new Series() { name = "TARJETA", data = seriesTarjeta.ToList() });
                 series.Add(new Series() { name = "MULTIPLE", data = seriesMultiple.ToList() });
 
-                chartBarResponse.title = "Ventas por Mes año "+DateTime.Now.Year;
+                chartBarResponse.title = "Ventas por Mes año " + year;
                 chartBarResponse.series = series;
 
                 response.exito = true;
@@ -708,7 +743,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<ResponseModel> getRankingArticulos()
+        public async Task<ResponseModel> getRankingArticulos(string year, int idSucursal)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -719,15 +754,31 @@ namespace ServiceIndustriaHuitzil.Services
                 {
                     con.Open();
                     DbCommand cmd = con.CreateCommand();
-                    string query = "SELECT TOP 3 * FROM "+
-                                   "(SELECT a.descripcion AS 'Articulo', SUM(va.cantidad) AS 'No Ventas' FROM VentaArticulos AS va "+
-                                   "INNER JOIN Articulos AS a "+
-                                   "ON va.id_articulo = a.id_articulo "+
-                                   "INNER JOIN Ventas AS v "+
-                                   "ON va.id_venta = v.id_venta "+
-                                   "WHERE DATEPART(YEAR, v.fecha) = "+ DateTime.Now.Year + " " +
-                                   "GROUP BY va.id_articulo, a.descripcion) AS ranking_articles "+
-                                   "ORDER BY [No Ventas] DESC";
+                    string query = "";
+                    if (idSucursal == 0)
+                    {
+                        query = "SELECT TOP 3 * FROM "+
+                                       "(SELECT a.descripcion AS 'Articulo', SUM(va.cantidad) AS 'No Ventas' FROM VentaArticulos AS va "+
+                                       "INNER JOIN Articulos AS a "+
+                                       "ON va.id_articulo = a.id_articulo "+
+                                       "INNER JOIN Ventas AS v "+
+                                       "ON va.id_venta = v.id_venta "+
+                                       "WHERE DATEPART(YEAR, v.fecha) = "+ year + " " +
+                                       "GROUP BY va.id_articulo, a.descripcion) AS ranking_articles "+
+                                       "ORDER BY [No Ventas] DESC";
+                    }
+                    else
+                    {
+                        query = "SELECT TOP 3 * FROM " +
+                                       "(SELECT a.descripcion AS 'Articulo', SUM(va.cantidad) AS 'No Ventas' FROM VentaArticulos AS va " +
+                                       "INNER JOIN Articulos AS a " +
+                                       "ON va.id_articulo = a.id_articulo " +
+                                       "INNER JOIN Ventas AS v " +
+                                       "ON va.id_venta = v.id_venta " +
+                                       "WHERE DATEPART(YEAR, v.fecha) = " + year + " AND a.id_ubicacion = " + idSucursal + " "+
+                                       "GROUP BY va.id_articulo, a.descripcion) AS ranking_articles " +
+                                       "ORDER BY [No Ventas] DESC";
+                    }
 
                     cmd.CommandText = query;
 
@@ -740,7 +791,7 @@ namespace ServiceIndustriaHuitzil.Services
                     }
                 }
 
-                rankingArticulosResponse.title = "Articulos más vendidos año " + DateTime.Now.Year;
+                rankingArticulosResponse.title = "Articulos más vendidos año " + year;
 
                 response.exito = true;
                 response.mensaje = "Datos Ranking Articulos";
@@ -758,7 +809,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<ResponseModel> getRankingEmpleados()
+        public async Task<ResponseModel> getRankingEmpleados(string year, int idSucursal)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -769,15 +820,35 @@ namespace ServiceIndustriaHuitzil.Services
                 {
                     con.Open();
                     DbCommand cmd = con.CreateCommand();
-                    string query = "SELECT TOP 3 * FROM "+
-                                   "(SELECT u.usuario AS 'Empleado', SUM(v.no_articulos) AS 'No Ventas' FROM Ventas AS v "+
-                                   "INNER JOIN Caja AS c "+
-                                   "ON v.id_caja = c.id_caja "+
-                                   "INNER JOIN Users AS u "+
-                                   "ON c.id_empleado = u.id_user "+
-                                   "WHERE DATEPART(YEAR, v.fecha) = "+ DateTime.Now.Year + " " +
-                                   "GROUP BY u.id_user, u.usuario) AS ranking_empleados "+
-                                   "ORDER BY [No Ventas] DESC";
+                    string query = "";
+                    if (idSucursal == 0)
+                    {
+                        query = "SELECT TOP 3 * FROM " +
+                                       "(SELECT u.usuario AS 'Empleado', SUM(v.no_articulos) AS 'No Ventas' FROM Ventas AS v " +
+                                       "INNER JOIN Caja AS c " +
+                                       "ON v.id_caja = c.id_caja " +
+                                       "INNER JOIN Users AS u " +
+                                       "ON c.id_empleado = u.id_user " +
+                                       "WHERE DATEPART(YEAR, v.fecha) = " + year + " " +
+                                       "GROUP BY u.id_user, u.usuario) AS ranking_empleados " +
+                                       "ORDER BY [No Ventas] DESC";
+                    }
+                    else
+                    {
+                        query = "SELECT TOP 3 * FROM " +
+                                       "(SELECT u.usuario AS 'Empleado', SUM(v.no_articulos) AS 'No Ventas' FROM Ventas AS v " +
+                                       "INNER JOIN VentaArticulos AS va " +
+                                       "ON v.id_venta = va.id_venta " +
+                                       "INNER JOIN Articulos AS a " +
+                                       "ON va.id_articulo = a.id_articulo " +
+                                       "INNER JOIN Caja AS c " +
+                                       "ON v.id_caja = c.id_caja " +
+                                       "INNER JOIN Users AS u " +
+                                       "ON c.id_empleado = u.id_user " +
+                                       "WHERE DATEPART(YEAR, v.fecha) = " + year + " AND a.id_ubicacion = " + idSucursal + " " +
+                                       "GROUP BY u.id_user, u.usuario) AS ranking_empleados " +
+                                       "ORDER BY [No Ventas] DESC";
+                    }
 
                     cmd.CommandText = query;
 
@@ -790,7 +861,7 @@ namespace ServiceIndustriaHuitzil.Services
                     }
                 }
 
-                rankingEmpleadosResponse.title = "Empleados con más ventas año " + DateTime.Now.Year;
+                rankingEmpleadosResponse.title = "Empleados con más ventas año " + year;
 
                 response.exito = true;
                 response.mensaje = "Datos Ranking Empleados";
@@ -808,7 +879,7 @@ namespace ServiceIndustriaHuitzil.Services
             }
         }
 
-        public async Task<ResponseModel> getRankingSucursales()
+        public async Task<ResponseModel> getRankingSucursales(string year)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -827,7 +898,7 @@ namespace ServiceIndustriaHuitzil.Services
                                    "ON va.id_articulo = a.id_articulo "+
                                    "INNER JOIN CatUbicaciones AS u "+
                                    "ON a.id_ubicacion = u.id_ubicacion "+
-                                   "WHERE DATEPART(YEAR, v.fecha) = "+ DateTime.Now.Year + " " +
+                                   "WHERE DATEPART(YEAR, v.fecha) = "+ year + " " +
                                    "GROUP BY u.id_ubicacion, u.direccion) AS ranking_sucursales "+
                                    "ORDER BY [No Ventas] DESC";
 
@@ -842,7 +913,7 @@ namespace ServiceIndustriaHuitzil.Services
                     }
                 }
 
-                rankingSucursalesResponse.title = "Sucursales con más ventas año " + DateTime.Now.Year;
+                rankingSucursalesResponse.title = "Sucursales con más ventas año " + year;
 
                 response.exito = true;
                 response.mensaje = "Datos Ranking Sucursales";
@@ -2635,22 +2706,31 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No se pudo insertar el usuario";
                 response.respuesta = "[]";
 
-                User newUser = new User();
-                newUser.Usuario = request.Usuario;
-                newUser.Password = request.Password;
-                newUser.Nombre = request.Nombre;
-                newUser.ApellidoPaterno = request.ApellidoPaterno;
-                newUser.ApellidoMaterno = request.ApellidoMaterno; 
-                newUser.Telefono = request.Telefono;
-                newUser.Correo = request.Correo;
-                newUser.IdRol = request.IdRol;
+                User existUser = await _ctx.Users.Where(x => x.Usuario == request.Usuario || x.Correo == request.Correo).FirstOrDefaultAsync();
 
-                _ctx.Users.Add(newUser);
-                await _ctx.SaveChangesAsync();
+                if (existUser == null)
+                {
+                    User newUser = new User();
+                    newUser.Usuario = request.Usuario;
+                    newUser.Password = request.Password;
+                    newUser.Nombre = request.Nombre;
+                    newUser.ApellidoPaterno = request.ApellidoPaterno;
+                    newUser.ApellidoMaterno = request.ApellidoMaterno; 
+                    newUser.Telefono = request.Telefono;
+                    newUser.Correo = request.Correo;
+                    newUser.IdRol = request.IdRol;
 
-                response.exito = true;
-                response.mensaje = "Se insertó el usuario correctamente!!";
-                response.respuesta = newUser;
+                    _ctx.Users.Add(newUser);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se insertó el usuario correctamente!!";
+                    response.respuesta = newUser;
+                }
+                else
+                {
+                    response.mensaje = "Ya existe un usuario con el usuario y correo registrado";
+                }
 
                 return response;
             }
@@ -2719,6 +2799,38 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response.exito = true;
                     response.mensaje = "Se eliminó el usuario correctamente!!";
+                    response.respuesta = "[]";
+                }
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                return response;
+            }
+        }
+
+        public async Task<ResponseModel> updatePassword(int idUser, string newPassword)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar la contraseña";
+                response.respuesta = "[]";
+
+                User existeUser = _ctx.Users.FirstOrDefault(x => x.IdUser == idUser);
+
+                if (existeUser != null)
+                {
+                    existeUser.Password = newPassword;
+                    _ctx.Users.Update(existeUser);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó la contraseña correctamente!!";
                     response.respuesta = "[]";
                 }
 
@@ -2913,9 +3025,6 @@ namespace ServiceIndustriaHuitzil.Services
                 throw;
             }
         }
-
-
-
         public class Encrypt
         {
             public static string GetSHA1(string str)
@@ -2929,7 +3038,6 @@ namespace ServiceIndustriaHuitzil.Services
                 return sb.ToString();
             }
         }
-
         private DateTime setFormatDate(string fecha)
         {
             DateTime fechaR;

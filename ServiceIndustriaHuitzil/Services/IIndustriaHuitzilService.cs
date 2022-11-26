@@ -29,11 +29,11 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Dashboard
-        Task<ResponseModel> getCards(int idSucursal);
-        Task<ResponseModel> getVentasPorMes(int idSucursal);
-        Task<ResponseModel> getRankingArticulos();
-        Task<ResponseModel> getRankingEmpleados();
-        Task<ResponseModel> getRankingSucursales();
+        Task<ResponseModel> getCards(string year, int idSucursal);
+        Task<ResponseModel> getVentasPorMes(string year, int idSucursal);
+        Task<ResponseModel> getRankingArticulos(string year, int idSucursal);
+        Task<ResponseModel> getRankingEmpleados(string year, int idSucursal);
+        Task<ResponseModel> getRankingSucursales(string year);
         #endregion
 
         #region Materiales
@@ -111,6 +111,7 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> postUsuario(UsuarioRequest usuario);
         Task<ResponseModel> putUsuario(UsuarioRequest usuario);
         Task<ResponseModel> deleteUsuario(UsuarioRequest usuario);
+        Task<ResponseModel> updatePassword(int idUsuario, string newPassword);
         #endregion
 
         #region Vistas
