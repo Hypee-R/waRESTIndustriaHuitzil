@@ -25,7 +25,6 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> searchVentaByNoTicket(string noTicket);
         Task<ResponseModel> getCambiosyDevoluciones();
         Task<ResponseModel> postCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
-        Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
         #endregion
 
         #region Dashboard

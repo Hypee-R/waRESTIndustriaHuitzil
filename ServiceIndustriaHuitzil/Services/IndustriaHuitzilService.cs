@@ -121,14 +121,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.respuesta = caja;
                 }
 
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> openCaja(CajaRequest request)
@@ -175,15 +176,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.respuesta = newCaja;
                 }
 
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> closeCaja(CajaRequest request)
@@ -211,16 +212,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.respuesta = existeCaja;
 
                 }
-
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -285,8 +285,6 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se consultaron los datos de la venta exitosamente!";
                     response.respuesta = resultadoVenta;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
@@ -294,8 +292,8 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = e.Message;
                 response.respuesta = "[]";
-                return response;
             }
+            return response;
         }
         public async Task<ResponseModel> getCambiosyDevoluciones()
         {
@@ -398,16 +396,15 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response.respuesta = listaResultados;
                 }
-
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postCambiosyDevoluciones(CambiosDevolucionesRequest request)
@@ -510,94 +507,15 @@ namespace ServiceIndustriaHuitzil.Services
                 {
                     response.mensaje = "La venta ya tiene algún cambio realizado";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
-            }
-        }
-
-        public async Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest request)
-        {
-            ResponseModel response = new ResponseModel();
-            try
-            {
                 response.exito = false;
-                response.mensaje = "No se puede hacer otro cambio y/o devolucion!";
                 response.respuesta = "[]";
-
-                CambiosDevolucione existeCambio = _ctx.CambiosDevoluciones.FirstOrDefault(x => x.IdCambioDevolucion == request.IdCambioDevolucion);
-                if (existeCambio != null)
-                {
-
-                    //using (var dbContextTransaction = _ctx.Database.BeginTransaction())
-                    //{
-                    //    try
-                    //    {
-                    //        existeCambio.IdVenta = request.IdVenta;
-                    //        existeCambio.Fecha = DateTime.Parse(request.Fecha);
-                    //        existeCambio.NoArticulos = request.NoArticulos;
-                    //        existeCambio.Subtotal = request.Subtotal;
-                    //        existeCambio.Total = request.Total;
-
-                    //        _ctx.Update(existeCambio);
-                    //        await _ctx.SaveChangesAsync();
-
-                    //        //Inserta los articulos cambiados o devueltos si es que tiene
-                    //        if (request.CambiosDevolucionesArticulos?.Count() > 0)
-                    //        {
-                    //            List<CambiosDevolucionesArticulo> lstCambiosDevolucionesArticulos = new List<CambiosDevolucionesArticulo>();
-                    //            request.CambiosDevolucionesArticulos.ForEach(dataArticulo =>
-                    //            {
-                    //                lstCambiosDevolucionesArticulos.Add(new CambiosDevolucionesArticulo()
-                    //                {
-                    //                    IdCambioArticulo = dataArticulo.IdCambioArticulo,
-                    //                    IdCambioDevolucion = existeCambio.IdCambioDevolucion,
-                    //                    IdVentaArticulo = dataArticulo.IdVentaArticulo,
-                    //                    IdArticulo = dataArticulo.IdArticulo,
-                    //                    Cantidad = dataArticulo.Cantidad,
-                    //                    Estado = dataArticulo.Estado,
-                    //                    MotivoCambio = dataArticulo.MotivoCambio,
-                    //                    PrecioAnterior = dataArticulo.PrecioAnterior,
-                    //                    PrecioActual = dataArticulo.PrecioActual,
-                    //                    Deducible = dataArticulo.Deducible
-                    //                });
-                    //            });
-
-                    //            _ctx.CambiosDevolucionesArticulos.AddRange(lstCambiosDevolucionesArticulos);
-                    //            await _ctx.SaveChangesAsync();
-                    //        }
-
-                    //        //Hacemos commit de todos los datos
-                    //        dbContextTransaction.Commit();
-                    //        response.exito = true;
-                    //        response.mensaje = "Se ha registrado el cambio y/o devolucion!";
-                    //        response.respuesta = "[]";
-
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        response.exito = true;
-                    //        response.mensaje = ex.Message;
-                    //        response.respuesta = "[]";
-                    //        dbContextTransaction.Rollback();
-                    //    }
-                    //}
-
-                }
-
-                return response;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                response.mensaje = e.Message;
-                return response;
-            }
+            return response;
         }
         #endregion
 
@@ -620,7 +538,7 @@ namespace ServiceIndustriaHuitzil.Services
                 {
                     ganancias = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
                     cambios = await _ctx.CambiosDevoluciones.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
-                    gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.CostoTotal);
+                    gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin && x.Status.Trim().ToLower().Equals("completado")).SumAsync(x => x.CostoTotal);
                 }
                 else
                 {
@@ -650,8 +568,6 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Datos Analitycs Ventas";
                 response.respuesta = cardsResponse;
-
-                return response;
             }
             catch (Exception e)
             {
@@ -659,8 +575,8 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = e.Message;
                 response.respuesta = "[]";
-                return response;
             }
+            return response;
         }
 
         public async Task<ResponseModel> getVentasPorMes(string year, int idSucursal)
@@ -730,8 +646,6 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Datos Gráfica Ventas por Mes";
                 response.respuesta = chartBarResponse;
-
-                return response;
             }
             catch (Exception e)
             {
@@ -739,8 +653,8 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = e.Message;
                 response.respuesta = "[]";
-                return response;
             }
+            return response;
         }
 
         public async Task<ResponseModel> getRankingArticulos(string year, int idSucursal)
@@ -796,8 +710,6 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Datos Ranking Articulos";
                 response.respuesta = rankingArticulosResponse;
-
-                return response;
             }
             catch (Exception e)
             {
@@ -805,8 +717,8 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = e.Message;
                 response.respuesta = "[]";
-                return response;
             }
+            return response;
         }
 
         public async Task<ResponseModel> getRankingEmpleados(string year, int idSucursal)
@@ -866,8 +778,6 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Datos Ranking Empleados";
                 response.respuesta = rankingEmpleadosResponse;
-
-                return response;
             }
             catch (Exception e)
             {
@@ -875,8 +785,8 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = e.Message;
                 response.respuesta = "[]";
-                return response;
             }
+            return response;
         }
 
         public async Task<ResponseModel> getRankingSucursales(string year)
@@ -918,8 +828,6 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Datos Ranking Sucursales";
                 response.respuesta = rankingSucursalesResponse;
-
-                return response;
             }
             catch (Exception e)
             {
@@ -927,8 +835,8 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = e.Message;
                 response.respuesta = "[]";
-                return response;
             }
+            return response;
         }
         #endregion
 
@@ -988,15 +896,15 @@ namespace ServiceIndustriaHuitzil.Services
                     });
                     response.respuesta = listaR;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postMaterial(MaterialRequest request)
@@ -1063,15 +971,15 @@ namespace ServiceIndustriaHuitzil.Services
                         return response;
                     }
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putMaterial(MaterialRequest request)
@@ -1141,15 +1049,15 @@ namespace ServiceIndustriaHuitzil.Services
                     }
 
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteMaterial(MaterialRequest request)
@@ -1173,15 +1081,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó el material correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -1234,15 +1142,15 @@ namespace ServiceIndustriaHuitzil.Services
                     });
                     response.respuesta = listaR;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<bool> postMaterialUbicacion(List<UbicacionRequest> ubicaciones, int idMaterial)
@@ -1265,14 +1173,13 @@ namespace ServiceIndustriaHuitzil.Services
                     await _ctx.SaveChangesAsync();
                     response = true;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return response;
+                response = false;
             }
+            return response;
         }
 
         public async Task<bool> putMaterialUbicacion(List<UbicacionRequest> ubicaciones, int idMaterial)
@@ -1322,15 +1229,13 @@ namespace ServiceIndustriaHuitzil.Services
                     var insertaUbicaciones = await postMaterialUbicacion(ubicaciones, idMaterial);
                     response = insertaUbicaciones;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response = false;
-                return response;
             }
+            return response;
         }
         #endregion
 
@@ -1351,15 +1256,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente los proveedores!!";
                     response.respuesta = lista;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postProveedor(ProveedorRequest request)
@@ -1387,15 +1292,15 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Se insertó el proveedor correctamente!!";
                 response.respuesta = newProveedor;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putProveedor(ProveedorRequest request)
@@ -1427,15 +1332,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó el proveedor correctamente!!";
                     response.respuesta = existeProveedor;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteProveedor(ProveedorRequest request)
@@ -1459,15 +1364,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó el proveedor correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -1531,15 +1436,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente los proveedores!!";
                     response.respuesta = lista;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postProductos(ProductoRequest request)
@@ -1571,15 +1476,15 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Se agrego el articulo correctamente!!";
                 response.respuesta = newArticulo;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putProductos(ProductoRequest request)
@@ -1593,9 +1498,6 @@ namespace ServiceIndustriaHuitzil.Services
                 Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
                 if (existeArticulo != null)
                 {
-
-
-
                     existeArticulo.Unidad = request.Unidad;
                     existeArticulo.Descripcion = request.Descripcion;
                     existeArticulo.FechaIngreso = request.FechaIngreso;
@@ -1613,15 +1515,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó el articulo correctamente!!";
                     response.respuesta = existeArticulo;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteProductos(ProductoRequest request)
@@ -1647,15 +1549,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó el articulo correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> searchProduct(string queryString, string sucursal)
@@ -1737,14 +1639,14 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se obtuvieron las coincidencias relacionadas con el filtro!!";
                     response.respuesta = allResults;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -1797,15 +1699,15 @@ namespace ServiceIndustriaHuitzil.Services
                     });
                     response.respuesta = listaR;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<bool> postProveedorMaterial(List<ProveedorRequest> proveedores, int idMaterial)
@@ -1828,14 +1730,13 @@ namespace ServiceIndustriaHuitzil.Services
                     await _ctx.SaveChangesAsync();
                     response = true;
                 }
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response = false;
-                return response;
             }
+            return response;
         }
 
         public async Task<bool> putProveedorMaterial(List<ProveedorRequest> proveedores, int idMaterial)
@@ -1887,15 +1788,13 @@ namespace ServiceIndustriaHuitzil.Services
 
                     response = insertaProveedores;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response = false;
-                return response;
             }
+            return response;
         }
 
         public async Task<ResponseModel> searchCliente(string queryString)
@@ -1937,14 +1836,14 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se obtuvieron las coincidencias relacionadas con el filtro!!";
                     response.respuesta = allResults;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -1964,15 +1863,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente los roles!!";
                     response.respuesta = lista;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         public async Task<ResponseModel> postRol(RolRequest request)
         {
@@ -1992,15 +1891,15 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Se insertó el rol correctamente!!";
                 response.respuesta = newRol;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         public async Task<ResponseModel> putRol(RolRequest request)
         {
@@ -2023,16 +1922,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó el rol correctamente!!";
                     response.respuesta = existeRol;
                 }
-
-                return response;
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         public async Task<ResponseModel> deleteRol(RolRequest request)
         {
@@ -2055,15 +1953,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó el rol correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -2143,15 +2041,15 @@ namespace ServiceIndustriaHuitzil.Services
                     });
                     response.respuesta = listaR;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postSolicitudMaterial(SolicitudesMaterialesRequest request)
@@ -2180,15 +2078,15 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Se realizó la solicitud de material correctamente!!";
                 response.respuesta = newSolicitudMaterial;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putSolicitudMaterial(SolicitudesMaterialesRequest request)
@@ -2218,15 +2116,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó la solicitud de material correctamente!!";
                     response.respuesta = existeSolMaterial;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteSolicitudMaterial(SolicitudesMaterialesRequest request)
@@ -2250,15 +2148,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó la solicitud de material correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -2279,15 +2177,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente las tallas!!";
                     response.respuesta = lista;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postTalla(TallaRequest request)
@@ -2309,15 +2207,15 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Se insertó la talla correctamente!!";
                 response.respuesta = newTalla;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putTalla(TallaRequest request)
@@ -2343,15 +2241,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó la talla correctamente!!";
                     response.respuesta = existeTalla;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteTalla(TallaRequest request)
@@ -2375,15 +2273,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó la talla correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -2403,16 +2301,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente las ubicaciones!!";
                     response.respuesta = lista;
                 }
-
-                return response;
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postUbicacion(UbicacionRequest request)
@@ -2433,22 +2330,21 @@ namespace ServiceIndustriaHuitzil.Services
                 newCatUbicacione.Telefono2 = request.Telefono2;
                 newCatUbicacione.Correo = request.Correo;
 
-
                 _ctx.CatUbicaciones.Add(newCatUbicacione);
                 await _ctx.SaveChangesAsync();
 
                 response.exito = true;
                 response.mensaje = "Se Creo Correctamente la Ubicacion!!";
                 response.respuesta = newCatUbicacione;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putUbicacion(UbicacionRequest request)
@@ -2480,15 +2376,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó correctamente la Ubicacion!!";
                     response.respuesta = existeUbicacion;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteUbicacion(UbicacionRequest request)
@@ -2504,7 +2400,6 @@ namespace ServiceIndustriaHuitzil.Services
 
                 if (existeUbicacion != null)
                 {
-
                     _ctx.Remove(existeUbicacion);
                     await _ctx.SaveChangesAsync();
 
@@ -2512,15 +2407,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó correctamente la vista correspondiente al rol!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -2540,16 +2435,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente las Categorias!!";
                     response.respuesta = lista;
                 }
-
-                return response;
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postCategoria(CategoriaRequest request)
@@ -2565,24 +2459,21 @@ namespace ServiceIndustriaHuitzil.Services
                 newCatCategoria.IdCategoria = request.IdCategoria;
                 newCatCategoria.Nombre = request.Nombre;
                 newCatCategoria.Descripcion = request.Descripcion;
-             
-
-
                 _ctx.CatCategorias.Add(newCatCategoria);
                 await _ctx.SaveChangesAsync();
 
                 response.exito = true;
                 response.mensaje = "Se Creo Correctamente la Categoria!!";
                 response.respuesta = newCatCategoria;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putCategoria(CategoriaRequest request)
@@ -2601,8 +2492,6 @@ namespace ServiceIndustriaHuitzil.Services
                     existeCategoria.IdCategoria = request.IdCategoria;
                     existeCategoria.Nombre = request.Nombre;
                     existeCategoria.Descripcion = request.Descripcion;
-                 
-                   
 
                     _ctx.Update(existeCategoria);
                     await _ctx.SaveChangesAsync();
@@ -2611,15 +2500,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó correctamente la Categoria!!";
                     response.respuesta = existeCategoria;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteCategoria(CategoriaRequest request)
@@ -2643,15 +2532,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó correctamente la Categoria!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -2686,15 +2575,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente los usuarios!!";
                     response.respuesta = lista;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> postUsuario(UsuarioRequest request)
@@ -2731,15 +2620,15 @@ namespace ServiceIndustriaHuitzil.Services
                 {
                     response.mensaje = "Ya existe un usuario con el usuario y correo registrado";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> putUsuario(UsuarioRequest request)
@@ -2769,15 +2658,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó el usuario correctamente!!";
                     response.respuesta = existeUser;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> deleteUsuario(UsuarioRequest request)
@@ -2801,15 +2690,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó el usuario correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
 
         public async Task<ResponseModel> updatePassword(int idUser, string newPassword)
@@ -2833,15 +2722,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó la contraseña correctamente!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -2861,16 +2750,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente las vistas!!";
                     response.respuesta = lista;
                 }
-
-                return response;
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -2900,14 +2788,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se han consultado exitosamente las vistas por rol!!";
                     response.respuesta = vistaRol;
                 }
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         public async Task<ResponseModel> postVistaRol(VistaRolRequest request)
         {
@@ -2928,15 +2817,15 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = true;
                 response.mensaje = "Se asignó correctamente la vista correspondiente al rol!!";
                 response.respuesta = newVistaRol;
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         public async Task<ResponseModel> putVistaRol(VistaRolRequest request)
         {
@@ -2961,15 +2850,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se actualizó correctamente la vista correspondiente al rol!!";
                     response.respuesta = existeVistaRol;
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         public async Task<ResponseModel> deleteVistaRol(VistaRolRequest request)
         {
@@ -2992,15 +2881,15 @@ namespace ServiceIndustriaHuitzil.Services
                     response.mensaje = "Se eliminó correctamente la vista correspondiente al rol!!";
                     response.respuesta = "[]";
                 }
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
 
@@ -3086,9 +2975,6 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No se pudo registrar la venta";
                 response.respuesta = "[]";
-
-              
-             
                     Venta newVenta = new Venta();
 
                     using (var dbContextTransaction = _ctx.Database.BeginTransaction())
@@ -3175,17 +3061,15 @@ namespace ServiceIndustriaHuitzil.Services
                             return response;
                         }
                     }
-
-             
-
-                return response;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 response.mensaje = e.Message;
-                return response;
+                response.exito = false;
+                response.respuesta = "[]";
             }
+            return response;
         }
         #endregion
     }
