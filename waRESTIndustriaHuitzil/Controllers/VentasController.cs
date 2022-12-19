@@ -57,13 +57,6 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.postCambiosyDevoluciones(request));
         }
-
-        [HttpPut("Returns/Actualiza")]
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> ActualizaCambioDevolucion([FromBody] CambiosDevolucionesRequest request)
-        {
-            return Ok(await _service.putCambiosyDevoluciones(request));
-        }
         #endregion
 
         #region Ventas 

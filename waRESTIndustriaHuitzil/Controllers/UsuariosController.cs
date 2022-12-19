@@ -37,6 +37,13 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.putUsuario(request));
         }
+
+        [HttpPut("ActualizaPsw")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> ActualizaPassword([FromBody] UpdatePswRequest data)
+        {
+            return Ok(await _service.updatePassword(data.IdUser, data.NewPassword));
+        }
         #endregion
 
         #region DELETE
