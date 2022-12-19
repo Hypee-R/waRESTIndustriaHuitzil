@@ -2987,7 +2987,7 @@ namespace ServiceIndustriaHuitzil.Services
                     {
                         try
                         {
-                            newVenta.IdVenta = request.IdVenta;
+                            //newVenta.IdVenta = request.IdVenta;
                             newVenta.IdCaja = request.IdCaja;
                             newVenta.Fecha = DateTime.Parse(request.Fecha);
                             newVenta.NoTicket = request.NoTicket;
@@ -3011,8 +3011,8 @@ namespace ServiceIndustriaHuitzil.Services
 
                                     listventasArticulos.Add(new VentaArticuloRequest()
                                     {
-                                        IdVentaArticulo = dataArticulo.IdVentaArticulo,
-                                        IdVenta = dataArticulo.IdVenta,
+                                       /// IdVentaArticulo = dataArticulo.IdVentaArticulo,
+                                        //IdVenta = dataArticulo.IdVenta,
                                         IdArticulo = dataArticulo.IdArticulo,
                                         Cantidad = dataArticulo.Cantidad,
                                         PrecioUnitario = dataArticulo.PrecioUnitario,
@@ -3045,8 +3045,10 @@ namespace ServiceIndustriaHuitzil.Services
 
                                 });
 
-                               // _ctx.CambiosDevolucionesArticulos.AddRange(listventasArticulos);
-                                 _ctx.SaveChangesAsync();
+
+
+                                 //_ctx.CambiosDevolucionesArticulos.AddRange(listventasArticulos);
+                            await _ctx.SaveChangesAsync();
 
                             }
 
