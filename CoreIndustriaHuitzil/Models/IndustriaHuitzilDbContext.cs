@@ -116,11 +116,11 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.IdEmpleado).HasColumnName("id_empleado");
 
                 entity.Property(e => e.Monto)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("monto");
 
                 entity.Property(e => e.MontoCierre)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("monto_cierre");
 
                 entity.HasOne(d => d.IdEmpleadoNavigation)
@@ -146,11 +146,11 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.NoArticulos).HasColumnName("no_articulos");
 
                 entity.Property(e => e.Subtotal)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("subtotal");
 
                 entity.Property(e => e.Total)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("total");
 
                 entity.HasOne(d => d.IdVentaNavigation)
@@ -170,7 +170,7 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.Cantidad).HasColumnName("cantidad");
 
                 entity.Property(e => e.Deducible)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("deducible");
 
                 entity.Property(e => e.Estado)
@@ -190,11 +190,11 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("motivo_cambio");
 
                 entity.Property(e => e.PrecioActual)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("precio_actual");
 
                 entity.Property(e => e.PrecioAnterior)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("precio_anterior");
 
                 entity.HasOne(d => d.IdArticuloNavigation)
@@ -267,7 +267,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("telefono1");
 
                 entity.Property(e => e.Telefono2)
-                    .HasMaxLength(80)
+                    .HasMaxLength(50)
                     .HasColumnName("telefono2");
 
                 entity.Property(e => e.Visible)
@@ -570,7 +570,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("no_ticket");
 
                 entity.Property(e => e.Subtotal)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("subtotal");
 
                 entity.Property(e => e.TipoPago)
@@ -584,7 +584,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("tipo_venta");
 
                 entity.Property(e => e.Total)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("total");
 
                 entity.HasOne(d => d.IdCajaNavigation)
@@ -608,11 +608,11 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.IdVenta).HasColumnName("id_venta");
 
                 entity.Property(e => e.PrecioUnitario)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("precio_unitario");
 
                 entity.Property(e => e.Subtotal)
-                    .HasColumnType("decimal(11, 2)")
+                    .HasColumnType("decimal(18, 2)")
                     .HasColumnName("subtotal");
 
                 entity.HasOne(d => d.IdArticuloNavigation)
