@@ -3017,7 +3017,7 @@ namespace ServiceIndustriaHuitzil.Services
                                     });
 
                                     //Actualiza el stock
-                                    Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == ventaArticulo.IdArticulo);
+                                    Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
                                     //Articulo articuloCambio = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
 
                                     articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) + dataArticulo.Cantidad).ToString();
@@ -3035,13 +3035,12 @@ namespace ServiceIndustriaHuitzil.Services
                                     }
 
                                     _ctx.Articulos.Update(articuloVenta);
-                                  //  _ctx.Articulos.Update(articuloCambio);
+                              
 
                                 });
 
 
 
-                                 //_ctx.CambiosDevolucionesArticulos.AddRange(listventasArticulos);
                             await _ctx.SaveChangesAsync();
 
                             }
