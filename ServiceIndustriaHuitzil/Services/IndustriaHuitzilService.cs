@@ -1507,7 +1507,9 @@ namespace ServiceIndustriaHuitzil.Services
                     existeArticulo.IdTalla = request.idTalla;
                     existeArticulo.Sku = request.sku;
                     existeArticulo.Precio = request.precio;
-                   
+                    existeArticulo.Imagen = request.imagen;
+
+
                     _ctx.Articulos.Update(existeArticulo);
                     await _ctx.SaveChangesAsync();
 
