@@ -2993,35 +2993,35 @@ namespace ServiceIndustriaHuitzil.Services
 
                             _ctx.Add(newVenta);
                          await _ctx.SaveChangesAsync();
+                        int idVenta = newVenta.IdVenta; // recuperar
 
                         //Actualiza  el stock de los productos del inventario
                         if (request.ventaArticulo?.Count() > 0)
                             {
-                                List<VentaArticuloRequest> listventasArticulos = new List<VentaArticuloRequest>();
+                                List<VentaArticulo> listventasArticulos = new List<VentaArticulo>();
 
                                 request.ventaArticulo.ForEach(dataArticulo =>
                                 {
-                                    VentaArticulo ventaArticulo = _ctx.VentaArticulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
+                                    
 
-                                    listventasArticulos.Add(new VentaArticuloRequest()
+                                    listventasArticulos.Add(new VentaArticulo()
                                     {
-                                       /// IdVentaArticulo = dataArticulo.IdVentaArticulo,
-                                        //IdVenta = dataArticulo.IdVenta,
+                                       // IdVentaArticulo = 1,
+                                        IdVenta = idVenta,
                                         IdArticulo = dataArticulo.IdArticulo,
                                         Cantidad = dataArticulo.Cantidad,
                                         PrecioUnitario = dataArticulo.PrecioUnitario,
                                         Subtotal = dataArticulo.Subtotal,
-                                        Articulo  = dataArticulo.Articulo
+                                       // Articulo  = dataArticulo.Articulo
                                       
 
                                     });
 
+                                  
                                     //Actualiza el stock
                                     Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
-                                    //Articulo articuloCambio = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
-
-                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) + dataArticulo.Cantidad).ToString();
-                                
+                                   
+                                 
                                     if ((Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad) >= 0)
                                     {
                                        articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad).ToString();
@@ -3035,13 +3035,15 @@ namespace ServiceIndustriaHuitzil.Services
                                     }
 
                                     _ctx.Articulos.Update(articuloVenta);
-                              
 
+                                 
                                 });
+                            if (listventasArticulos.Count() > 0) {
+                                _ctx.VentaArticulos.AddRange(listventasArticulos);
+                                await _ctx.SaveChangesAsync();
+                            }
 
-
-
-                            await _ctx.SaveChangesAsync();
+                                
 
                             }
 
@@ -3055,8 +3057,9 @@ namespace ServiceIndustriaHuitzil.Services
                         }
                         catch (Exception ex)
                         {
-                            response.exito = false;
-                            response.mensaje = ex.Message;
+                        Console.WriteLine(ex.InnerException.Message);
+                        response.exito = false;
+                            response.mensaje = ex.InnerException.Message;
                             response.respuesta = "[]";
                             dbContextTransaction.Rollback();
                             return response;
