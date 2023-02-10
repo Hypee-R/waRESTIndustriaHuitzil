@@ -1222,6 +1222,7 @@ namespace ServiceIndustriaHuitzil.Services
                         _ctx.MaterialesUbicaciones.RemoveRange(ubiDelete);
                         await _ctx.SaveChangesAsync();
                     }
+                    response = true;
                 }
                 else
                 {
