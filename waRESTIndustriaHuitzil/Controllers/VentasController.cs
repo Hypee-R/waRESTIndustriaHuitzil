@@ -66,6 +66,14 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.postAddVentas(request));
         }
+
+        [HttpGet("Sales")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetVentas()
+        {
+            return Ok(await _service.getVentas());
+        }
+
         #endregion
 
     }

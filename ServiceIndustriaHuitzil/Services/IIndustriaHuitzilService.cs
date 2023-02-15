@@ -128,6 +128,8 @@ namespace ServiceIndustriaHuitzil.Services
         //Task<ResponseModel> searchVentaByNoTicket(string noTicket);
         //Task<ResponseModel> getCambiosyDevoluciones();
         Task<ResponseModel> postAddVentas(VentaRequest venta);
+        Task<ResponseModel> getVentas();
+
         //Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
         #endregion
 
