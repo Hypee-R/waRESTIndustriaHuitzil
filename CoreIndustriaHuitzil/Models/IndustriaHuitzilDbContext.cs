@@ -21,6 +21,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<CambiosDevolucione> CambiosDevoluciones { get; set; } = null!;
         public virtual DbSet<CambiosDevolucionesArticulo> CambiosDevolucionesArticulos { get; set; } = null!;
         public virtual DbSet<CatCategoria> CatCategorias { get; set; } = null!;
+        public virtual DbSet<CatCliente> CatClientes { get; set; } = null!;
         public virtual DbSet<CatProveedore> CatProveedores { get; set; } = null!;
         public virtual DbSet<CatTalla> CatTallas { get; set; } = null!;
         public virtual DbSet<CatUbicacione> CatUbicaciones { get; set; } = null!;
@@ -34,6 +35,15 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<VentaArticulo> VentaArticulos { get; set; } = null!;
         public virtual DbSet<Vista> Vistas { get; set; } = null!;
         public virtual DbSet<VistasRol> VistasRols { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=tcp:huitzildesarrollo.database.windows.net,1433;Initial Catalog=IndustriaHuitzil;Persist Security Info=False;User ID=HuitzilDEV;Password=Ventana0512;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -230,6 +240,45 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("nombre");
+            });
+
+            modelBuilder.Entity<CatCliente>(entity =>
+            {
+                entity.HasKey(e => e.IdCliente);
+
+                entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
+
+                entity.Property(e => e.ApellidoMaterno)
+                    .HasMaxLength(50)
+                    .HasColumnName("apellido_materno")
+                    .IsFixedLength();
+
+                entity.Property(e => e.ApellidoPaterno)
+                    .HasMaxLength(50)
+                    .HasColumnName("apellido_paterno")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Direccion)
+                    .HasMaxLength(50)
+                    .HasColumnName("direccion")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .HasColumnName("nombre")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Telefono1)
+                    .HasMaxLength(50)
+                    .HasColumnName("telefono1")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Telefono2)
+                    .HasMaxLength(50)
+                    .HasColumnName("telefono2")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Visible).HasColumnName("visible");
             });
 
             modelBuilder.Entity<CatProveedore>(entity =>
@@ -685,7 +734,7 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.VistasRols)
                     .HasForeignKey(d => d.IdVista)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VistaRol_Vista");
+                    .HasConstraintName("FK_VistaRol_Vistas");
             });
 
             OnModelCreatingPartial(modelBuilder);
