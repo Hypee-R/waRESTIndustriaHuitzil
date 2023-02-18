@@ -519,6 +519,139 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Clientes
+        public async Task<ResponseModel> getClientes()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay clientes para mostrar";
+                response.respuesta = "[]";
+
+                List<CatCliente> lista = await _ctx.CatClientes.Where(x => x.Visible == true).ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los clientes!!";
+                    response.respuesta = lista;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> postCliente(ClienteRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo insertar el nuevo cliente";
+                response.respuesta = "[]";
+
+                CatCliente newCliente = new CatCliente();
+                newCliente.Nombre = request.Nombre;
+                newCliente.ApellidoPaterno = request.ApellidoPaterno;
+                newCliente.ApellidoMaterno = request.ApellidoMaterno;
+                newCliente.Telefono1 = request.Telefono1;
+                newCliente.Telefono2 = request.Telefono2;
+                newCliente.Direccion = request.Direccion;
+                newCliente.Visible = true;
+                _ctx.CatClientes.Add(newCliente);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el cliente correctamente!!";
+                response.respuesta = newCliente;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> putCliente(ClienteRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo actualizar el cliente";
+                response.respuesta = "[]";
+
+                CatCliente existeCliente = _ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdCliente);
+
+                if (existeCliente != null)
+                {
+                    existeCliente.Nombre = request.Nombre;
+                    existeCliente.ApellidoPaterno = request.ApellidoPaterno;
+                    existeCliente.ApellidoMaterno = request.ApellidoMaterno;
+                    existeCliente.Telefono1 = request.Telefono1;
+                    existeCliente.Telefono2 = request.Telefono2;
+                    existeCliente.Direccion = request.Direccion;
+                    _ctx.CatClientes.Update(existeCliente);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó el cliente correctamente!!";
+                    response.respuesta = existeCliente;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> deleteCliente(ClienteRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el proveedor";
+                response.respuesta = "[]";
+
+                CatCliente existeCliente = _ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdCliente);
+
+                if (existeCliente != null)
+                {
+                    existeCliente.Visible = false;
+                    _ctx.CatClientes.Update(existeCliente);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el cliente correctamente!!";
+                    response.respuesta = "[]";
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        #endregion
+
         #region Dashboard
         public async Task<ResponseModel> getCards(string year, int idSucursal)
         {

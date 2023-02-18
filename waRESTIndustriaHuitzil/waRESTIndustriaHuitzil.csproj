@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\AssemblyInfo.cs" />
+    <Compile Remove="Controllers\ClienteController.cs" />
   </ItemGroup>
 
   <ItemGroup>

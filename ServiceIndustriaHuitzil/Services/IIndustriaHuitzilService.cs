@@ -27,6 +27,13 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> postCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
         #endregion
 
+        #region Clientes
+        Task<ResponseModel> getClientes();
+        Task<ResponseModel> postCliente(ClienteRequest cliente);
+        Task<ResponseModel> putCliente(ClienteRequest cliente);
+        Task<ResponseModel> deleteCliente(ClienteRequest cliente);
+        #endregion
+
         #region Dashboard
         Task<ResponseModel> getCards(string year, int idSucursal);
         Task<ResponseModel> getVentasPorMes(string year, int idSucursal);
