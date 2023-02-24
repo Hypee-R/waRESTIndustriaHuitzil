@@ -15,6 +15,14 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> auth(AuthUserRequest usuario);
         #endregion
 
+        #region Apartados
+        Task<ResponseModel> getApartados();
+        Task<ResponseModel> getApartadosByUser(int IdUsuario);
+        Task<ResponseModel> postApartados(ApartadosRequest apartadosRequest);
+        Task<ResponseModel> putApartados(ApartadosRequest apartadosRequest);
+        Task<ResponseModel> deleteApartados(ApartadosRequest apartadosRequest);
+
+        #endregion
         #region Caja
         Task<ResponseModel> getCaja(int idUser);
         Task<ResponseModel> openCaja(CajaRequest request);
@@ -64,6 +72,7 @@ namespace ServiceIndustriaHuitzil.Services
 
         #region Productos
         Task<ResponseModel> getProductos(string sucursal);
+        Task<ResponseModel> getInexistencias(string sucursal);
         Task<ResponseModel> postProductos(ProductoRequest producto);
         Task<ResponseModel> putProductos(ProductoRequest producto);
         Task<ResponseModel> deleteProductos(ProductoRequest producto);

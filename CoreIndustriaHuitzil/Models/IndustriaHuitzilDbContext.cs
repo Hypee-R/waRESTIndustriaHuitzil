@@ -17,6 +17,7 @@ namespace CoreIndustriaHuitzil.Models
         }
 
         public virtual DbSet<Articulo> Articulos { get; set; } = null!;
+        public virtual DbSet<Apartados> Apartados { get; set; } = null!;
         public virtual DbSet<Caja> Cajas { get; set; } = null!;
         public virtual DbSet<CambiosDevolucione> CambiosDevoluciones { get; set; } = null!;
         public virtual DbSet<CambiosDevolucionesArticulo> CambiosDevolucionesArticulos { get; set; } = null!;
@@ -47,6 +48,54 @@ namespace CoreIndustriaHuitzil.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Apartados>(entity =>
+            {
+                entity.HasKey(e => e.IdApartado);
+
+                entity.Property(e => e.IdApartado).HasColumnName("id_Apartado");
+
+                entity.Property(e => e.IdEmpleado)
+                    .HasMaxLength(50)
+                    .HasColumnName("id_empleado")
+                    .IsFixedLength();
+
+                entity.Property(e => e.idArticulo)
+                    .HasMaxLength(50)
+                    .HasColumnName("id_articulo")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Direccion)
+                    .HasMaxLength(50)
+                    .HasColumnName("direccion")
+                    .IsFixedLength();
+
+                entity.Property(e => e.IdTalla)
+                    .HasMaxLength(50)
+                    .HasColumnName("idTalla")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Telefono)
+                    .HasMaxLength(50)
+                    .HasColumnName("telefono")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Fecha)
+                    .HasMaxLength(50)
+                    .HasColumnName("fecha")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .HasColumnName("status")
+                    .IsFixedLength();
+
+                entity.Property(e => e.FechaEntrega)
+                    .HasMaxLength(50)
+                    .HasColumnName("fecha_entrega")
+                    .IsFixedLength();
+
+            });
+
             modelBuilder.Entity<Articulo>(entity =>
             {
                 entity.HasKey(e => e.IdArticulo)

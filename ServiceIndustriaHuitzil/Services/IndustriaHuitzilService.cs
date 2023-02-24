@@ -96,6 +96,175 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region Apartados
+        public async Task<ResponseModel> getApartados()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay clientes para mostrar";
+                response.respuesta = "[]";
+
+                List<Apartados> lista = await _ctx.Apartados.ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los apartados!!";
+                    response.respuesta = lista;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> getApartadosByUser(int IdUsuario)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Apartados para mostrar";
+                response.respuesta = null;
+                //_ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdApartado);
+                List<Apartados> apartado = await _ctx.Apartados.Where(x => x.IdEmpleado == IdUsuario).OrderByDescending(apartado => apartado.Status).ToListAsync();
+                if (apartado != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los apartados!!";
+                    response.respuesta = apartado;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = null;
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> postApartados(ApartadosRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo hacer el apartado";
+                response.respuesta = "[]";
+
+                Apartados newApartado = new Apartados();
+                newApartado.idArticulo = request.idArticulo;
+                newApartado.IdEmpleado = request.IdEmpleado;
+                newApartado.Telefono = request.Telefono;
+                newApartado.IdTalla = request.IdTalla;
+                newApartado.Fecha = (DateTime)request.Fecha;
+                newApartado.Direccion = request.Direccion;
+                newApartado.Status = "Espera";
+                _ctx.Apartados.Add(newApartado);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el cliente correctamente!!";
+                response.respuesta = newApartado;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> putApartados(ApartadosRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo entregar el producto";
+                response.respuesta = "[]";
+
+                Apartados existeApartado = _ctx.Apartados.FirstOrDefault(x => x.IdApartado == request.IdApartado);
+                //CatCliente existeCliente = _ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdApartado);
+
+                if (existeApartado != null)
+                {
+                    existeApartado.idArticulo = request.idArticulo;
+                    existeApartado.IdEmpleado = request.IdEmpleado;
+                    existeApartado.Telefono = request.Telefono;
+                    existeApartado.IdTalla = request.IdTalla;
+                    existeApartado.Fecha = (DateTime)request.Fecha;
+                    existeApartado.FechaEntrega = (DateTime)request.FechaEntrega;
+                    existeApartado.Direccion = request.Direccion;
+                    existeApartado.Status = request.Status;
+                    /* existeCliente.Nombre = request.Nombre;
+                     existeCliente.ApellidoPaterno = request.ApellidoPaterno;
+                     existeCliente.ApellidoMaterno = request.ApellidoMaterno;
+                     existeCliente.Telefono1 = request.Telefono1;
+                     existeCliente.Telefono2 = request.Telefono2;
+                     existeCliente.Direccion = request.Direccion;*/
+                    _ctx.Apartados.Update(existeApartado);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se entrego el producto correctamente";
+                    response.respuesta = existeApartado;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> deleteApartados(ApartadosRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el proveedor";
+                response.respuesta = "[]";
+
+                //CatCliente existeCliente = _ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdCliente);
+
+                /*if (existeCliente != null)
+                {
+                    existeCliente.Visible = false;
+                    _ctx.CatClientes.Update(existeCliente);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó el cliente correctamente!!";
+                    response.respuesta = "[]";
+                }*/
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        #endregion
+
         #region Caja
         public async Task<ResponseModel> getCaja(int idUser)
         {
@@ -1580,6 +1749,78 @@ namespace ServiceIndustriaHuitzil.Services
             }
             return response;
         }
+
+
+        public async Task<ResponseModel> getInexistencias(string request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay articulos para mostrar";
+                response.respuesta = "[]";
+                List<ProductoRequest> lista = new List<ProductoRequest>();
+                if (request == "all")
+                {
+                    lista = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                   .Where(x => x.IdArticulo != null && x.Existencia == "0").ToList()
+                                                   .ConvertAll(u => new ProductoRequest()
+                                                   {
+                                                       IdArticulo = u.IdArticulo,
+                                                       Unidad = u.Unidad,
+                                                       Existencia = u.Existencia,
+                                                       Descripcion = u.Descripcion,
+                                                       FechaIngreso = (DateTime)u.FechaIngreso,
+                                                       idTalla = (int)u.IdTalla,
+                                                       idCategoria = (int)u.IdCategoria,
+                                                       idUbicacion = (int)u.IdUbicacion,
+                                                       imagen = u.Imagen,
+                                                       talla = u.IdTallaNavigation.Nombre,
+                                                       ubicacion = u.IdUbicacionNavigation.Direccion,
+                                                       categoria = u.IdCategoriaNavigation.Descripcion,
+                                                       precio = (int)u.Precio,
+                                                       sku = u.Sku
+                                                   });
+                }
+                else
+                {
+                    lista = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                   .Where(x => x.IdArticulo != null && x.IdUbicacionNavigation.Direccion == request).ToList()
+                                                   .ConvertAll(u => new ProductoRequest()
+                                                   {
+                                                       IdArticulo = u.IdArticulo,
+                                                       Unidad = u.Unidad,
+                                                       Existencia = u.Existencia,
+                                                       Descripcion = u.Descripcion,
+                                                       FechaIngreso = (DateTime)u.FechaIngreso,
+                                                       idTalla = (int)u.IdTalla,
+                                                       idCategoria = (int)u.IdCategoria,
+                                                       idUbicacion = (int)u.IdUbicacion,
+                                                       imagen = u.Imagen,
+                                                       talla = u.IdTallaNavigation.Nombre,
+                                                       ubicacion = u.IdUbicacionNavigation.Direccion,
+                                                       categoria = u.IdCategoriaNavigation.Descripcion,
+                                                       precio = (int)u.Precio,
+                                                       sku = u.Sku
+                                                   });
+                }
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los proveedores!!";
+                    response.respuesta = lista;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
 
         public async Task<ResponseModel> postProductos(ProductoRequest request)
         {

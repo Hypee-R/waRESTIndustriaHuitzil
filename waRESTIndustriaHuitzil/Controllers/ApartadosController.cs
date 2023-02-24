@@ -1,3 +1,4 @@
+using CoreIndustriaHuitzil.Models;
 using CoreIndustriaHuitzil.ModelsRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,44 +9,52 @@ namespace waRESTIndustriaHuitzil.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class ApartadosController : ControllerBase
     {
         private readonly IIndustriaHuitzilService _service;
-        public ClientesController(IIndustriaHuitzilService service) => _service = service;
+        public ApartadosController(IIndustriaHuitzilService service) => _service = service;
 
         #region GET
-        [HttpGet("Consulta")]
+        [HttpGet("ConsultaAll")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetClientes()
+        public async Task<IActionResult> GetApartados()
         {
-            return Ok(await _service.getClientes());
+            return Ok(await _service.getApartados());
         }
+
+        [HttpGet("Consulta/Usuario")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetApartadosByUsuario(int idUsuario)
+        {
+            return Ok(await _service.getApartadosByUser(idUsuario));
+        }
+
         #endregion
 
         #region POST
         [HttpPost("Agrega")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> AgregaCliente([FromBody] ClienteRequest request)
+        public async Task<IActionResult> AgregarApartado([FromBody] ApartadosRequest request)
         {
-            return Ok(await _service.postCliente(request));
+            return Ok(await _service.postApartados(request));
         }
         #endregion
 
         #region PUT
         [HttpPut("Actualiza")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> ActualizaCliente([FromBody] ClienteRequest request)
+        public async Task<IActionResult> ActualizaApartado([FromBody] ApartadosRequest request)
         {
-            return Ok(await _service.putCliente(request));
+            return Ok(await _service.putApartados(request));
         }
         #endregion
 
         #region DELETE
-        [HttpDelete("Elimina")]
+        [HttpDelete("EliminaCategoria")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> EliminaCliente([FromBody] ClienteRequest request)
+        public async Task<IActionResult> EliminaUbicacion([FromBody] CategoriaRequest request)
         {
-            return Ok(await _service.deleteCliente(request));
+            return Ok(await _service.deleteCategoria(request));
         }
         #endregion
     }

@@ -27,6 +27,13 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.searchProduct(queryString, sucursal));
         }
+
+        [HttpGet("Inexistencias")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetInexistencias(string sucursal)
+        {
+            return Ok(await _service.getInexistencias(sucursal));
+        }
         #endregion
 
         #region POST
