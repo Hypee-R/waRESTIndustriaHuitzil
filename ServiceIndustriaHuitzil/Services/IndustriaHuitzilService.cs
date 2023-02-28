@@ -1828,29 +1828,55 @@ namespace ServiceIndustriaHuitzil.Services
             try
             {
                 response.exito = false;
-                response.mensaje = "No se pudo insertar el nuevo proveedor";
+                response.mensaje = "No se pudo insertar el nuevo articulo";
                 response.respuesta = "[]";
 
-                Articulo newArticulo = new Articulo();
-                CatProveedore newProveedor = new CatProveedore();
-            
-                newArticulo.Unidad = request.Unidad;
-                newArticulo.Descripcion = request.Descripcion;
-                newArticulo.FechaIngreso = request.FechaIngreso;
-                newArticulo.Existencia = request.Existencia;
-                newArticulo.IdUbicacion = request.idUbicacion;
-                newArticulo.IdCategoria = request.idCategoria;
-                newArticulo.IdTalla = request.idTalla;
-                newArticulo.Imagen = request.imagen;
-                newArticulo.Precio = request.precio;
-                newArticulo.Sku = request.sku;
 
-                _ctx.Articulos.Add(newArticulo);
-                await _ctx.SaveChangesAsync();
+                Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
+                if (existeArticulo != null)
+                {
+                    existeArticulo.Unidad = request.Unidad;
+                    existeArticulo.Descripcion = request.Descripcion;
+                    existeArticulo.FechaIngreso = request.FechaIngreso;
+                    existeArticulo.Existencia = request.Existencia;
+                    existeArticulo.IdUbicacion = request.idUbicacion;
+                    existeArticulo.IdCategoria = request.idCategoria;
+                    existeArticulo.IdTalla = request.idTalla;
+                    existeArticulo.Sku = request.sku;
+                    existeArticulo.Precio = request.precio;
+                    existeArticulo.Imagen = request.imagen;
+
+
+                    _ctx.Articulos.Update(existeArticulo);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se actualizó el articulo correctamente!!";
+                    response.respuesta = existeArticulo;
+                }
+                else {
+                    Articulo newArticulo = new Articulo();
+                    newArticulo.Unidad = request.Unidad;
+                    newArticulo.Descripcion = request.Descripcion;
+                    newArticulo.FechaIngreso = request.FechaIngreso;
+                    newArticulo.Existencia = request.Existencia;
+                    newArticulo.IdUbicacion = request.idUbicacion;
+                    newArticulo.IdCategoria = request.idCategoria;
+                    newArticulo.IdTalla = request.idTalla;
+                    newArticulo.Imagen = request.imagen;
+                    newArticulo.Precio = request.precio;
+                    newArticulo.Sku = request.sku;
+
+                    _ctx.Articulos.Add(newArticulo);
+                    await _ctx.SaveChangesAsync();
+                    response.exito = true;
+                    response.mensaje = "Se agrego el articulo correctamente!!";
+                    response.respuesta = newArticulo;
+
+                }
+               
                 
-                response.exito = true;
-                response.mensaje = "Se agrego el articulo correctamente!!";
-                response.respuesta = newArticulo;
+              
             }
             catch (Exception e)
             {
