@@ -145,7 +145,7 @@ namespace ServiceIndustriaHuitzil.Services
                     Telefono = u.Telefono,
                     Direccion = u.Direccion,
                     Fecha = (DateTime)u.Fecha,
-                    FechaEntrega = (DateTime)u.FechaEntrega,
+                    FechaEntrega = (DateTime?)u.FechaEntrega,
                     Status = u.Status,
                     talla = u.IdTallaNavigation.Descripcion,
                     articulo = u.IdArticuloNavigation.Descripcion
