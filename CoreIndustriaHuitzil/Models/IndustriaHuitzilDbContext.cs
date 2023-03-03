@@ -94,6 +94,16 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("fecha_entrega")
                     .IsFixedLength();
 
+                entity.HasOne(d => d.IdTallaNavigation)
+                   .WithMany(p => p.Apartados)
+                   .HasForeignKey(d => d.IdTalla)
+                   .HasConstraintName("FK_Articulos_Tallas");
+
+                entity.HasOne(d => d.IdArticuloNavigation)
+                   .WithMany(p => p.Apartados)
+                   .HasForeignKey(d => d.idArticulo)
+                   .HasConstraintName("FK_Apartados_Articulos");
+
             });
 
             modelBuilder.Entity<Articulo>(entity =>

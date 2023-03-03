@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -132,13 +133,46 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No hay Apartados para mostrar";
                 response.respuesta = null;
+                List<ApartadosRequest> apartados = new List<ApartadosRequest>();
                 //_ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdApartado);
-                List<Apartados> apartado = await _ctx.Apartados.Where(x => x.IdEmpleado == IdUsuario).OrderByDescending(apartado => apartado.Status).ToListAsync();
-                if (apartado != null)
+                apartados =  _ctx.Apartados.Include(a => a.IdTallaNavigation).Include(b=>b.IdArticuloNavigation).Where(x => x.IdEmpleado == IdUsuario).OrderByDescending(apartado => apartado.Status).ToList()
+                    .ConvertAll(u => new ApartadosRequest()
+                {
+                    IdApartado = u.IdApartado,
+                    IdEmpleado = u.IdEmpleado,
+                    idArticulo = u.idArticulo,
+                    IdTalla = u.IdTalla,
+                    Telefono = u.Telefono,
+                    Direccion = u.Direccion,
+                    Fecha = (DateTime)u.Fecha,
+                    FechaEntrega = (DateTime)u.FechaEntrega,
+                    Status = u.Status,
+                    talla = u.IdTallaNavigation.Descripcion,
+                    articulo = u.IdArticuloNavigation.Descripcion
+                   
+                    //articulo = u.articuloNav.Descripcion
+             
+                    
+                    /*IdArticulo = u.IdArticulo,
+                    Unidad = u.Unidad,
+                    Existencia = u.Existencia,
+                    Descripcion = u.Descripcion,
+                    FechaIngreso = (DateTime)u.FechaIngreso,
+                    idTalla = (int)u.IdTalla,
+                    idCategoria = (int)u.IdCategoria,
+                    idUbicacion = (int)u.IdUbicacion,
+                    imagen = u.Imagen,
+                    talla = u.IdTallaNavigation.Nombre,
+                    ubicacion = u.IdUbicacionNavigation.Direccion,
+                    categoria = u.IdCategoriaNavigation.Descripcion,
+                    precio = (int)u.Precio,
+                    sku = u.Sku*/
+                });
+                if (apartados != null)
                 {
                     response.exito = true;
                     response.mensaje = "Se han consultado exitosamente los apartados!!";
-                    response.respuesta = apartado;
+                    response.respuesta = apartados;
                 }
             }
             catch (Exception e)
