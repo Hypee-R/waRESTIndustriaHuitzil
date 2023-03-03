@@ -23,6 +23,5 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public int precio { get; set; }
 
         public string imagen { get; set; }
-        //public Base64FormattingOptions imagen { get; set; }
     }
 }
