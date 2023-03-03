@@ -61,7 +61,7 @@ namespace ServiceIndustriaHuitzil.Services
                     var dataAccess = generarToken(existeUsuario);
                     existeUsuario.Token = dataAccess.Token;
                     existeUsuario.UltimoAcceso = DateTime.Now;
-                    existeUsuario.ExpiredTime = DateTime.UtcNow.AddDays(1);
+                    existeUsuario.ExpiredTime = DateTime.Now.AddDays(1);
                     _ctx.Users.Update(existeUsuario);
                     _ctx.SaveChanges();
 
@@ -369,8 +369,9 @@ namespace ServiceIndustriaHuitzil.Services
                     Caja newCaja = new Caja();
                     response.exito = true;
                     response.mensaje = "Caja abierta exitosamente!";
+                    DateTime fechaOpen = setFormatDate(request.Fecha);
 
-                    newCaja.Fecha = DateTime.Parse(request.Fecha);
+                    newCaja.Fecha = fechaOpen;
                     newCaja.Monto = request.Monto;
                     newCaja.IdEmpleado = request.IdEmpleado;
                     _ctx.Cajas.Add(newCaja);
