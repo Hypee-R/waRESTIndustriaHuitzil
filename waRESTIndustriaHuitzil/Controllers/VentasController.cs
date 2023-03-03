@@ -74,6 +74,12 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getVentas());
         }
 
+        [HttpGet("SalesByDates")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetVentasByDates(DateTime dateI,DateTime dateF)
+        {
+            return Ok(await _service.getVentasByDates(dateI,dateF));
+        }
         #endregion
 
     }
