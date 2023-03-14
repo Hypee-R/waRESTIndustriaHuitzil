@@ -61,6 +61,13 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> getMaterialesUbicaciones();
         #endregion
 
+        #region PagoApártados
+        Task<ResponseModel> getPagos();
+        Task<ResponseModel> getPagosByUser(int IdUsuario);
+        /*Task<ResponseModel> postApartados(ApartadosRequest apartadosRequest);
+        Task<ResponseModel> putApartados(ApartadosRequest apartadosRequest);
+        Task<ResponseModel> deleteApartados(ApartadosRequest apartadosRequest);*/
+        #endregion
         #region Proveedores
         Task<ResponseModel> getProveedores();
         Task<ResponseModel> postProveedor(ProveedorRequest proveedor);

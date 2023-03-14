@@ -147,7 +147,9 @@ namespace ServiceIndustriaHuitzil.Services
                     FechaEntrega = (DateTime?)u.FechaEntrega,
                     Status = u.Status,
                     talla = u.IdTallaNavigation.Descripcion,
-                    articulo = u.IdArticuloNavigation.Descripcion
+                    articulo = u.IdArticuloNavigation.Descripcion,
+                    precio = u.IdArticuloNavigation.Precio
+                    
                 
                 });
                 if (apartados != null)

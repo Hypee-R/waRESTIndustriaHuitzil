@@ -20,6 +20,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
             public string? Status { get; set; }
             public string? talla { get; set; }
             public string? articulo { get; set; }
+            public int? precio { get; set; }    
     }
     
 
