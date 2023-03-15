@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreIndustriaHuitzil.Models
+namespace CoreIndustriaHuitzil.ModelsRequest
 {
-    public partial class PagoApartado
+    public partial class PagoApartadoRequest
     {
         public int IdPagoApartado { get; set; }
         public int? IdApartado { get; set; }

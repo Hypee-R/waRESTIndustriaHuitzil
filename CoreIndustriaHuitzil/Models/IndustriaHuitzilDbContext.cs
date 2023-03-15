@@ -29,7 +29,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<Materiale> Materiales { get; set; } = null!;
         public virtual DbSet<MaterialesUbicacione> MaterialesUbicaciones { get; set; } = null!;
         public virtual DbSet<ProveedoresMateriale> ProveedoresMateriales { get; set; } = null!;
-        public virtual DbSet<PagoApartado> PagoApartado { get; set; } = null!;
+        public virtual DbSet<PagoApartado> PagoApartados { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
@@ -510,7 +510,7 @@ namespace CoreIndustriaHuitzil.Models
             modelBuilder.Entity<PagoApartado>(entity => 
             {
                     entity.HasKey(e => e.IdPagoApartado);
-                    entity.Property(e => e.IdApartado).HasColumnName("id_pagoApartado");
+                    entity.Property(e => e.IdPagoApartado).HasColumnName("id_pagoApartado");
 
                      entity.Property(e => e.IdApartado)
                     .HasMaxLength(50)
