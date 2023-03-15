@@ -147,7 +147,9 @@ namespace ServiceIndustriaHuitzil.Services
                     FechaEntrega = (DateTime?)u.FechaEntrega,
                     Status = u.Status,
                     talla = u.IdTallaNavigation.Descripcion,
-                    articulo = u.IdArticuloNavigation.Descripcion
+                    articulo = u.IdArticuloNavigation.Descripcion,
+                    precio = u.IdArticuloNavigation.Precio
+                    
                 
                 });
                 if (apartados != null)
@@ -1559,6 +1561,117 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
+        #region PagosApartados
+        public async Task<ResponseModel> getPagos()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay pagos para mostrar";
+                response.respuesta = "[]";
+
+                List<PagoApartado> lista = await _ctx.PagoApartados.ToListAsync();
+                //List<Apartados> lista = await _ctx.Apartados.ToListAsync();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los pagos!!";
+                    response.respuesta = lista;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> getPagosByApartado(int IdApartado)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay pagos pendientes";
+                response.respuesta = null;
+                List<PagoApartadoRequest> pagos = new List<PagoApartadoRequest>();
+                
+                pagos = _ctx.PagoApartados.Where(x => x.IdApartado == IdApartado).ToList()
+
+                .ConvertAll(u => new PagoApartadoRequest()
+                    {
+                        IdPagoApartado = u.IdPagoApartado,
+                        IdApartado = u.IdApartado,
+                        Fecha = (DateTime?)u.Fecha,
+                        Cantidad = u.Cantidad,
+                        Status = u.Status,
+                        IdArticulo = u.IdArticulo,
+                        
+
+
+                    });
+                if (pagos != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los apartados!!";
+                    response.respuesta = pagos;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = null;
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> postPagoApartado(PagoApartadoRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo hacer el pago";
+                response.respuesta = "[]";
+
+                PagoApartado newPago = new PagoApartado();
+                newPago.IdApartado = request.IdApartado;
+                newPago.Fecha = request.Fecha;
+                newPago.Cantidad = request.Cantidad;
+
+                /*newApartado.idArticulo = request.idArticulo;
+                newApartado.IdEmpleado = request.IdEmpleado;
+                newApartado.Telefono = request.Telefono;
+                newApartado.IdTalla = request.IdTalla;
+                newApartado.Fecha = (DateTime)request.Fecha;
+                newApartado.Direccion = request.Direccion;
+                newApartado.Status = "Espera";*/
+                _ctx.PagoApartados.Add(newPago);
+                //_ctx.Apartados.Add(newApartado);
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Se insertó el cliente correctamente!!";
+                response.respuesta = newPago;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+
+        #endregion
         #region Proveedores
         public async Task<ResponseModel> getProveedores()
         {

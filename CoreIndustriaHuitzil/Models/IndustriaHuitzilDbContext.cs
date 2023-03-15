@@ -29,6 +29,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<Materiale> Materiales { get; set; } = null!;
         public virtual DbSet<MaterialesUbicacione> MaterialesUbicaciones { get; set; } = null!;
         public virtual DbSet<ProveedoresMateriale> ProveedoresMateriales { get; set; } = null!;
+        public virtual DbSet<PagoApartado> PagoApartados { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<SolicitudesMateriale> SolicitudesMateriales { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
@@ -505,6 +506,45 @@ namespace CoreIndustriaHuitzil.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MaterialesUbicaciones_CatUbicaciones");
             });
+
+            modelBuilder.Entity<PagoApartado>(entity => 
+            {
+                    entity.HasKey(e => e.IdPagoApartado);
+                    entity.Property(e => e.IdPagoApartado).HasColumnName("id_pagoApartado");
+
+                     entity.Property(e => e.IdApartado)
+                    .HasMaxLength(50)
+                    .HasColumnName("id_apartado")
+                    .IsFixedLength();
+
+                entity.Property(e => e.IdArticulo)
+                    .HasMaxLength(50)
+                    .HasColumnName("id_articulo")
+                    .IsFixedLength();
+
+                entity.Property(e => e.IdCliente)
+                    .HasMaxLength(50)
+                    .HasColumnName("id_cliente")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Cantidad)
+                    .HasMaxLength(50)
+                    .HasColumnName("cantidad")
+                    .IsFixedLength();
+
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .HasColumnName("status")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Fecha)
+                    .HasMaxLength(50)
+                    .HasColumnName("fecha")
+                    .IsFixedLength();
+            }
+                
+                );
 
             modelBuilder.Entity<ProveedoresMateriale>(entity =>
             {
