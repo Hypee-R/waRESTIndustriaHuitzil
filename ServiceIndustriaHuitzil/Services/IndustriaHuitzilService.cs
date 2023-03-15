@@ -857,7 +857,7 @@ namespace ServiceIndustriaHuitzil.Services
                 {
                     ganancias = await _ctx.Ventas.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
                     cambios = await _ctx.CambiosDevoluciones.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin).SumAsync(x => x.Total);
-                    gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin && x.Status.Trim().ToLower().Equals("completado")).SumAsync(x => x.CostoTotal);
+                    gastosTotales = await _ctx.SolicitudesMateriales.Where(x => x.Fecha >= fechaInicio && x.Fecha <= fechaFin && x.Status.Trim().ToLower().Equals("COMPLETADO")).SumAsync(x => x.CostoTotal);
                 }
                 else
                 {
