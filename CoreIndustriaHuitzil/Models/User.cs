@@ -23,6 +23,9 @@ namespace CoreIndustriaHuitzil.Models
         public string? Token { get; set; }
         public DateTime? UltimoAcceso { get; set; }
         public bool? Visible { get; set; }
+        public string? pc { get; set; }
+
+
         public DateTime? ExpiredTime { get; set; }
 
         public virtual Rol? IdRolNavigation { get; set; }

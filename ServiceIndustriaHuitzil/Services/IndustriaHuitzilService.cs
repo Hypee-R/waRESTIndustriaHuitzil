@@ -79,6 +79,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.rol = existeUsuario.IdRolNavigation.Descripcion;
                     dataLogin.vistas = vistasU;
                     dataLogin.expiredTime = (DateTime)existeUsuario.ExpiredTime;
+                    dataLogin.pc = existeUsuario.pc;
 
                     respuesta.exito = true;
                     respuesta.mensaje = "Credenciales correctas!!";

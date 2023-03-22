@@ -691,6 +691,11 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("visible")
                     .HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.pc)
+                 .HasMaxLength(50)
+                 .IsUnicode(false)
+                 .HasColumnName("pc");
+
                 entity.HasOne(d => d.IdRolNavigation)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRol)
