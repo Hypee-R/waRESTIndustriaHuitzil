@@ -90,6 +90,11 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("status")
                     .IsFixedLength();
 
+                entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .HasColumnName("type")
+                .IsFixedLength ();
+
                 entity.Property(e => e.FechaEntrega)
                     .HasMaxLength(50)
                     .HasColumnName("fecha_entrega")

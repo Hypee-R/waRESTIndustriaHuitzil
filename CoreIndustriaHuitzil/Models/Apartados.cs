@@ -17,7 +17,8 @@ namespace CoreIndustriaHuitzil.Models
         public DateTime? Fecha { get; set; }
         public DateTime? FechaEntrega { get; set; }
         public string? Status { get; set; }
-
+        
+        public string? Type { get; set; }
         public virtual CatTalla? IdTallaNavigation { get; set; }
         public virtual Articulo? IdArticuloNavigation { get; set; }
 

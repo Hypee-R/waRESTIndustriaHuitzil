@@ -126,7 +126,7 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
-        public async Task<ResponseModel> getApartadosByUser(int IdUsuario)
+        public async Task<ResponseModel> getApartadosByUser(int IdUsuario,string type)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -135,7 +135,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay Apartados para mostrar";
                 response.respuesta = null;
                 List<ApartadosRequest> apartados = new List<ApartadosRequest>();
-                apartados =  _ctx.Apartados.Include(a => a.IdTallaNavigation).Include(b=>b.IdArticuloNavigation).Where(x => x.IdEmpleado == IdUsuario).OrderByDescending(apartado => apartado.Status).ToList()
+                apartados =  _ctx.Apartados.Include(a => a.IdTallaNavigation).Include(b=>b.IdArticuloNavigation).Where(x => x.IdEmpleado == IdUsuario  && x.Type == type).OrderByDescending(apartado => apartado.Status).ToList()
                     .ConvertAll(u => new ApartadosRequest()
                 {
                     IdApartado = u.IdApartado,
@@ -187,6 +187,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newApartado.Fecha = (DateTime)request.Fecha;
                 newApartado.Direccion = request.Direccion;
                 newApartado.Status = "Espera";
+                newApartado.Type = request.type;
                 _ctx.Apartados.Add(newApartado);
                 await _ctx.SaveChangesAsync();
 
