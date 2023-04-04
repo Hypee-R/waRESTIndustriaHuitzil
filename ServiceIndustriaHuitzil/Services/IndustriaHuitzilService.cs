@@ -107,13 +107,31 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No hay clientes para mostrar";
                 response.respuesta = "[]";
+                List<ApartadosRequest> apartados = new List<ApartadosRequest>();
+                apartados = _ctx.Apartados.Include(a => a.IdTallaNavigation).Include(b => b.IdArticuloNavigation).OrderByDescending(apartado => apartado.Status).ToList()
+                     .ConvertAll(u => new ApartadosRequest()
+                     {
+                         IdApartado = u.IdApartado,
+                         IdEmpleado = u.IdEmpleado,
+                         idArticulo = u.idArticulo,
+                         IdTalla = u.IdTalla,
+                         Telefono = u.Telefono,
+                         Direccion = u.Direccion,
+                         Fecha = (DateTime)u.Fecha,
+                         FechaEntrega = (DateTime?)u.FechaEntrega,
+                         Status = u.Status,
+                         talla = u.IdTallaNavigation.Descripcion,
+                         articulo = u.IdArticuloNavigation.Descripcion,
+                         precio = u.IdArticuloNavigation.Precio
+                         //cliente = u.
 
-                List<Apartados> lista = await _ctx.Apartados.ToListAsync();
-                if (lista != null)
+
+                     });
+                if (apartados != null)
                 {
                     response.exito = true;
                     response.mensaje = "Se han consultado exitosamente los apartados!!";
-                    response.respuesta = lista;
+                    response.respuesta = apartados;
                 }
             }
             catch (Exception e)
