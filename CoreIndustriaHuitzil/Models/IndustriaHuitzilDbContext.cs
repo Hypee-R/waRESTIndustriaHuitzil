@@ -110,6 +110,11 @@ namespace CoreIndustriaHuitzil.Models
                    .HasForeignKey(d => d.idArticulo)
                    .HasConstraintName("FK_Apartados_Articulos");
 
+                entity.HasOne(d => d.IdClienteNavigation)
+                .WithMany(p => p.Apartados)
+                .HasForeignKey(d => d.IdEmpleado)
+                .HasConstraintName("FK_Apartados_clientes");
+
             });
 
             modelBuilder.Entity<Articulo>(entity =>
@@ -169,6 +174,7 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.Articulos)
                     .HasForeignKey(d => d.IdUbicacion)
                     .HasConstraintName("FK_Articulos_Ubicaciones");
+                
             });
 
             modelBuilder.Entity<Caja>(entity =>

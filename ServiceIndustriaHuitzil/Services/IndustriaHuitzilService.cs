@@ -108,7 +108,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay clientes para mostrar";
                 response.respuesta = "[]";
                 List<ApartadosRequest> apartados = new List<ApartadosRequest>();
-                apartados = _ctx.Apartados.Include(a => a.IdTallaNavigation).Include(b => b.IdArticuloNavigation).OrderByDescending(apartado => apartado.Status).ToList()
+                apartados = _ctx.Apartados.Include(a => a.IdTallaNavigation).Include(b => b.IdArticuloNavigation).Include(c=>c.IdClienteNavigation).OrderByDescending(apartado => apartado.Status).ToList()
                      .ConvertAll(u => new ApartadosRequest()
                      {
                          IdApartado = u.IdApartado,
@@ -122,7 +122,8 @@ namespace ServiceIndustriaHuitzil.Services
                          Status = u.Status,
                          talla = u.IdTallaNavigation.Descripcion,
                          articulo = u.IdArticuloNavigation.Descripcion,
-                         precio = u.IdArticuloNavigation.Precio
+                         precio = u.IdArticuloNavigation.Precio,
+                         cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno
                          //cliente = u.
 
 

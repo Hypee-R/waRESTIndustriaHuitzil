@@ -22,6 +22,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
             public string? articulo { get; set; }
             public int? precio { get; set; }
             public string? type { get;  set; }
+            public string? cliente { get; set;}
     }
     
 
