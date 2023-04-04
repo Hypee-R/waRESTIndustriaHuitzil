@@ -123,6 +123,7 @@ namespace ServiceIndustriaHuitzil.Services
                          talla = u.IdTallaNavigation.Descripcion,
                          articulo = u.IdArticuloNavigation.Descripcion,
                          precio = u.IdArticuloNavigation.Precio,
+                         type = u.Type,
                          cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno
                          //cliente = u.
 
