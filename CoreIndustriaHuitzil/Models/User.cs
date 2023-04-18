@@ -24,7 +24,8 @@ namespace CoreIndustriaHuitzil.Models
         public DateTime? UltimoAcceso { get; set; }
         public bool? Visible { get; set; }
         public string? pc { get; set; }
-
+        public string? ubicacion { get; set; }
+        public string? impresora { get; set; }
 
         public DateTime? ExpiredTime { get; set; }
 

@@ -707,6 +707,17 @@ namespace CoreIndustriaHuitzil.Models
                  .IsUnicode(false)
                  .HasColumnName("pc");
 
+                entity.Property(e => e.ubicacion)
+                 .HasMaxLength(50)
+                 .IsUnicode(false)
+                 .HasColumnName("ubicacion");
+
+
+                entity.Property(e => e.impresora)
+                 .HasMaxLength(50)
+                 .IsUnicode(false)
+                 .HasColumnName("impresora");
+
                 entity.HasOne(d => d.IdRolNavigation)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRol)

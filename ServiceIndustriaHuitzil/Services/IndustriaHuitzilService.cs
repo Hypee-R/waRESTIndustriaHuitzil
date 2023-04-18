@@ -3164,6 +3164,8 @@ namespace ServiceIndustriaHuitzil.Services
                     newUser.Correo = request.Correo;
                     newUser.IdRol = request.IdRol;
                     newUser.pc = request.pc;
+                    newUser.ubicacion = request.ubicacion;
+                    newUser.impresora = request.impresora;
 
                     _ctx.Users.Add(newUser);
                     await _ctx.SaveChangesAsync();
