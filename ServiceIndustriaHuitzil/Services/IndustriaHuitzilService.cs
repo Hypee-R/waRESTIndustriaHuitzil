@@ -3142,6 +3142,7 @@ namespace ServiceIndustriaHuitzil.Services
                     newUser.Telefono = request.Telefono;
                     newUser.Correo = request.Correo;
                     newUser.IdRol = request.IdRol;
+                    newUser.pc = request.pc;
 
                     _ctx.Users.Add(newUser);
                     await _ctx.SaveChangesAsync();
@@ -3185,6 +3186,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeUser.Telefono = request.Telefono;
                     existeUser.Correo = request.Correo;
                     existeUser.IdRol = request.IdRol;
+                    existeUser.pc = request.pc;
                     _ctx.Users.Update(existeUser);
                     await _ctx.SaveChangesAsync();
 
