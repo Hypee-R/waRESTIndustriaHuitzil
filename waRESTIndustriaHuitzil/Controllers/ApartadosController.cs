@@ -24,9 +24,9 @@ namespace waRESTIndustriaHuitzil.Controllers
 
         [HttpGet("Consulta/Usuario")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetApartadosByUsuario(int idUsuario)
+        public async Task<IActionResult> GetApartadosByUsuario(int idUsuario,string type)
         {
-            return Ok(await _service.getApartadosByUser(idUsuario));
+            return Ok(await _service.getApartadosByUser(idUsuario,type));
         }
 
         #endregion
