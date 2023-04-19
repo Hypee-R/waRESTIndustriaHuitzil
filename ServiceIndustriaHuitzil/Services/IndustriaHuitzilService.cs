@@ -80,6 +80,8 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.vistas = vistasU;
                     dataLogin.expiredTime = (DateTime)existeUsuario.ExpiredTime;
                     dataLogin.pc = existeUsuario.pc;
+                    dataLogin.ubicacion = existeUsuario.ubicacion;
+                    dataLogin.impresora = existeUsuario.impresora;
 
                     respuesta.exito = true;
                     respuesta.mensaje = "Credenciales correctas!!";
@@ -3121,7 +3123,9 @@ namespace ServiceIndustriaHuitzil.Services
                                                      ApellidoPaterno = u.ApellidoPaterno,
                                                      ApellidoMaterno = u.ApellidoMaterno,
                                                      Telefono = u.Telefono,
-                                                     Correo = u.Correo
+                                                     Correo = u.Correo,
+                                                     direccion = u.ubicacion
+
                                                  });
 
                 if (lista != null)
@@ -3164,7 +3168,7 @@ namespace ServiceIndustriaHuitzil.Services
                     newUser.Correo = request.Correo;
                     newUser.IdRol = request.IdRol;
                     newUser.pc = request.pc;
-                    newUser.ubicacion = request.ubicacion;
+                    newUser.ubicacion = request.direccion;
                     newUser.impresora = request.impresora;
 
                     _ctx.Users.Add(newUser);
@@ -3210,6 +3214,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeUser.Correo = request.Correo;
                     existeUser.IdRol = request.IdRol;
                     existeUser.pc = request.pc;
+                    existeUser.ubicacion = request.direccion;
                     _ctx.Users.Update(existeUser);
                     await _ctx.SaveChangesAsync();
 

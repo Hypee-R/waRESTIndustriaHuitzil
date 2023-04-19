@@ -21,6 +21,8 @@ namespace CoreIndustriaHuitzil.ModelsResponse
         public DateTime expiredTime { get; set; }
 
         public string pc { get; set; } = string.Empty;
+        public string ubicacion { get; set; } = string.Empty;
+        public string impresora { get; set; } = string.Empty;
 
         public int idRol { get; set; }
         public string rol { get; set; } = string.Empty;

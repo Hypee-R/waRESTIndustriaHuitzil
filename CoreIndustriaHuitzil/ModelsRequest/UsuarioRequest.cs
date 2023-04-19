@@ -19,8 +19,8 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public string Telefono { get; set; }
         public string Correo { get; set; }
         public string pc { get; set; }
-        public string ubicacion { get; set; }
         public string impresora { get; set; }
+        public string direccion { get; set; }
     }
 
     public class UpdatePswRequest
