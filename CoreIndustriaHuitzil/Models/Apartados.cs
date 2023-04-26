@@ -12,6 +12,7 @@ namespace CoreIndustriaHuitzil.Models
         public int? IdEmpleado { get; set; }
         public int? idArticulo { get; set; }
         public int? IdTalla { get; set; }
+        public int? idParent { get; set; }
         public string? Telefono { get; set; }
         public string? Direccion { get; set; }
         public DateTime? Fecha { get; set; }

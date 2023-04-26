@@ -1,4 +1,4 @@
-using CoreIndustriaHuitzil.Models;
+    using CoreIndustriaHuitzil.Models;
 using CoreIndustriaHuitzil.ModelsRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,9 +24,9 @@ namespace waRESTIndustriaHuitzil.Controllers
 
         [HttpGet("Consulta/Usuario")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetApartadosByUsuario(int idUsuario,string type)
+        public async Task<IActionResult> GetApartadosByUsuario(int idUsuario,string type, int IdApartado)
         {
-            return Ok(await _service.getApartadosByUser(idUsuario,type));
+            return Ok(await _service.getApartadosByUser(idUsuario,type, IdApartado));
         }
 
         #endregion

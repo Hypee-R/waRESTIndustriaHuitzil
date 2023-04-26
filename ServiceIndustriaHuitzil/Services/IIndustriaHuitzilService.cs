@@ -17,7 +17,7 @@ namespace ServiceIndustriaHuitzil.Services
 
         #region Apartados
         Task<ResponseModel> getApartados();
-        Task<ResponseModel> getApartadosByUser(int IdUsuario, string type);
+        Task<ResponseModel> getApartadosByUser(int IdUsuario, string type, int IdApartado);
         Task<ResponseModel> postApartados(ApartadosRequest apartadosRequest);
         Task<ResponseModel> putApartados(ApartadosRequest apartadosRequest);
         Task<ResponseModel> deleteApartados(ApartadosRequest apartadosRequest);

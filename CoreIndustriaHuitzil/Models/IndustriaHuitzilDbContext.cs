@@ -59,7 +59,10 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .HasColumnName("id_empleado")
                     .IsFixedLength();
-
+                entity.Property(e => e.idParent)
+                   .HasMaxLength(50)
+                   .HasColumnName("id_parent")
+                   .IsFixedLength();
                 entity.Property(e => e.idArticulo)
                     .HasMaxLength(50)
                     .HasColumnName("id_articulo")
