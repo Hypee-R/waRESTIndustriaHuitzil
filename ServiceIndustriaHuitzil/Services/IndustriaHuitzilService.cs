@@ -2013,10 +2013,14 @@ namespace ServiceIndustriaHuitzil.Services
                 Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
                 if (existeArticulo != null)
                 {
+                    //Sumar
+                    int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(request.Existencia);
+                    //
+
                     existeArticulo.Unidad = request.Unidad;
                     existeArticulo.Descripcion = request.Descripcion;
                     existeArticulo.FechaIngreso = request.FechaIngreso;
-                    existeArticulo.Existencia = request.Existencia;
+                    existeArticulo.Existencia = result.ToString();
                     existeArticulo.IdUbicacion = request.idUbicacion;
                     existeArticulo.IdCategoria = request.idCategoria;
                     existeArticulo.IdTalla = request.idTalla;
