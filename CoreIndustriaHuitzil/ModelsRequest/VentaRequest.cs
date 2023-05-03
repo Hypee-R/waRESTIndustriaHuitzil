@@ -18,9 +18,13 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public decimal Subtotal { get; set; }
         public decimal? Total { get; set; }
 
+        public decimal? Tarjeta { get; set; }
+        public decimal? Efectivo { get; set; }
+
         public virtual CajaRequest? Caja { get; set; } = null!;
 
         public List<VentaArticuloRequest> ventaArticulo { get; set; } = new List<VentaArticuloRequest>();
+        
     }
     public class VentaArticuloRequest
     {
