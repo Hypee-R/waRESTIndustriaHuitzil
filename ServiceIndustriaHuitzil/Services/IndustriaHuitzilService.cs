@@ -332,6 +332,33 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Caja
+        public async Task<ResponseModel> getCajaDate()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja para mostrar";
+                response.respuesta = "[]";
+                List<Caja> cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.IdCaja).ToListAsync();
+                if (cajas != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las cajas!!";
+                    response.respuesta = cajas;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
         public async Task<ResponseModel> getCaja(int idUser)
         {
             ResponseModel response = new ResponseModel();

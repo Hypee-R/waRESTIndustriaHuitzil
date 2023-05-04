@@ -14,6 +14,13 @@ namespace waRESTIndustriaHuitzil.Controllers
         public VentasController(IIndustriaHuitzilService service) => _service = service;
 
         #region Caja
+        [HttpGet("Cash/Cajas")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetCaja()
+        {
+            return Ok(await _service.getCajaDate());
+        }
+
         [HttpGet("Cash/Consulta")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetCaja(int param)
