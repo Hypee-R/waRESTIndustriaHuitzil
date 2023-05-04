@@ -527,7 +527,7 @@ namespace ServiceIndustriaHuitzil.Services
                         Articulo = new ProductoRequest()
                         {
                             IdArticulo = x.IdArticulo,
-                            Unidad = x.IdArticuloNavigation.Unidad,
+                            Status = x.IdArticuloNavigation.Status,
                             Existencia = x.IdArticuloNavigation.Existencia,
                             Descripcion = x.IdArticuloNavigation.Descripcion,
                             FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
@@ -614,7 +614,7 @@ namespace ServiceIndustriaHuitzil.Services
                             Articulo = new ProductoRequest()
                             {
                                 IdArticulo = x.IdArticuloNavigation.IdArticulo,
-                                Unidad = x.IdArticuloNavigation.Unidad,
+                                Status = x.IdArticuloNavigation.Status,
                                 Existencia = x.IdArticuloNavigation.Existencia,
                                 Descripcion = x.IdArticuloNavigation.Descripcion,
                                 FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
@@ -639,7 +639,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 Articulo = new ProductoRequest()
                                 {
                                     IdArticulo = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdArticulo,
-                                    Unidad = x.IdVentaArticuloNavigation.IdArticuloNavigation.Unidad,
+                                    Status = x.IdVentaArticuloNavigation.IdArticuloNavigation.Status,
                                     Existencia = x.IdVentaArticuloNavigation.IdArticuloNavigation.Existencia,
                                     Descripcion = x.IdVentaArticuloNavigation.IdArticuloNavigation.Descripcion,
                                     FechaIngreso = (DateTime)x.IdVentaArticuloNavigation.IdArticuloNavigation.FechaIngreso,
@@ -1901,7 +1901,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo=u.IdArticulo,
-                                                       Unidad=u.Unidad,
+                                                       Status=u.Status,
                                                        Existencia=u.Existencia,
                                                        Descripcion=u.Descripcion,
                                                        FechaIngreso=(DateTime)u.FechaIngreso,
@@ -1923,7 +1923,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo = u.IdArticulo,
-                                                       Unidad = u.Unidad,
+                                                       Status = u.Status,
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
@@ -1972,7 +1972,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo = u.IdArticulo,
-                                                       Unidad = u.Unidad,
+                                                       Status = u.Status,
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
@@ -1994,7 +1994,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo = u.IdArticulo,
-                                                       Unidad = u.Unidad,
+                                                       Status = u.Status,
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
@@ -2044,7 +2044,7 @@ namespace ServiceIndustriaHuitzil.Services
                     int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(request.Existencia);
                     //
 
-                    existeArticulo.Unidad = request.Unidad;
+                    existeArticulo.Status = request.Status;
                     existeArticulo.Descripcion = request.Descripcion;
                     existeArticulo.FechaIngreso = request.FechaIngreso;
                     existeArticulo.Existencia = result.ToString();
@@ -2065,7 +2065,7 @@ namespace ServiceIndustriaHuitzil.Services
                 }
                 else {
                     Articulo newArticulo = new Articulo();
-                    newArticulo.Unidad = request.Unidad;
+                    newArticulo.Status = request.Status;
                     newArticulo.Descripcion = request.Descripcion;
                     newArticulo.FechaIngreso = request.FechaIngreso;
                     newArticulo.Existencia = request.Existencia;
@@ -2108,7 +2108,7 @@ namespace ServiceIndustriaHuitzil.Services
                 Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
                 if (existeArticulo != null)
                 {
-                    existeArticulo.Unidad = request.Unidad;
+                    existeArticulo.Status = request.Status;
                     existeArticulo.Descripcion = request.Descripcion;
                     existeArticulo.FechaIngreso = request.FechaIngreso;
                     existeArticulo.Existencia = request.Existencia;
@@ -2209,7 +2209,7 @@ namespace ServiceIndustriaHuitzil.Services
                         allResults.Add(new ProductoRequest()
                         {
                             IdArticulo = product.IdArticulo,
-                            Unidad = product.Unidad,
+                            Status = product.Status,
                             Existencia = product.Existencia,
                             Descripcion = product.Descripcion,
                             FechaIngreso = (DateTime)product.FechaIngreso,
@@ -2231,7 +2231,7 @@ namespace ServiceIndustriaHuitzil.Services
                             allResults.Add(new ProductoRequest()
                             {
                                 IdArticulo = product.IdArticulo,
-                                Unidad = product.Unidad,
+                                Status = product.Status,
                                 Existencia = product.Existencia,
                                 Descripcion = product.Descripcion,
                                 FechaIngreso = (DateTime)product.FechaIngreso,

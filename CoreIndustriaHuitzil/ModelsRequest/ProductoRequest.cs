@@ -9,7 +9,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
     public class ProductoRequest
     {
         public int IdArticulo { get; set; }
-        public string Unidad { get; set; } = String.Empty;
+        public string Status { get; set; } = String.Empty;
         public string Existencia { get; set; } = String.Empty;
         public string Descripcion { get; set; } = String.Empty;
         public DateTime FechaIngreso { get; set; }

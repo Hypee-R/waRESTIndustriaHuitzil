@@ -158,10 +158,10 @@ namespace CoreIndustriaHuitzil.Models
                     .IsUnicode(false)
                     .HasColumnName("sku");
 
-                entity.Property(e => e.Unidad)
+                entity.Property(e => e.Status)
                     .HasMaxLength(50)
                     .IsUnicode(false)
-                    .HasColumnName("unidad");
+                    .HasColumnName("status");
 
                 entity.HasOne(d => d.IdCategoriaNavigation)
                     .WithMany(p => p.Articulos)

@@ -13,7 +13,7 @@ namespace CoreIndustriaHuitzil.Models
         }
 
         public int IdArticulo { get; set; }
-        public string? Unidad { get; set; }
+        public string? Status { get; set; }
         public string? Existencia { get; set; }
         public string? Descripcion { get; set; }
         public DateTime? FechaIngreso { get; set; }
