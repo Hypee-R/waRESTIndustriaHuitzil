@@ -3609,8 +3609,10 @@ namespace ServiceIndustriaHuitzil.Services
                             newVenta.NoArticulos = request.NoArticulos;
                             newVenta.Subtotal = request.Subtotal;
                             newVenta.Total = request.Total;
+                            newVenta.Tarjeta = request.Tarjeta;
+                            newVenta.Efectivo = request.Efectivo;
 
-                            _ctx.Add(newVenta);
+                        _ctx.Add(newVenta);
                          await _ctx.SaveChangesAsync();
                         int idVenta = newVenta.IdVenta; // recuperar
 
@@ -3722,7 +3724,8 @@ namespace ServiceIndustriaHuitzil.Services
                         NoArticulos = x.NoArticulos,
                         Subtotal = x.Subtotal,
                         Total = x.Total,
-                          
+                        Tarjeta = x.Tarjeta,
+                        Efectivo = x.Efectivo,
                     }
                   
                     );
@@ -3766,7 +3769,8 @@ namespace ServiceIndustriaHuitzil.Services
                         NoArticulos = x.NoArticulos,
                         Subtotal = x.Subtotal,
                         Total = x.Total,
-
+                        Tarjeta = x.Tarjeta,
+                        Efectivo = x.Efectivo,
                     }
 
                     );
