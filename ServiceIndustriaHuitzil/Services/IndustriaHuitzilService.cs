@@ -3787,6 +3787,50 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> getVentasByCaja(int idCaja)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay ventas para mostrar";
+                response.respuesta = "[]";
+
+                List<VentaRequest> listaVentas = new List<VentaRequest>();
+                List<Venta> lista = _ctx.Ventas.Where(x => x.IdCaja == idCaja).ToList();
+                List<VentaArticulo> articulosVendidos = new List<VentaArticulo>();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las Ventas!!";
+                    listaVentas = lista.ConvertAll(x => new VentaRequest()
+                    {
+                        IdVenta = x.IdVenta,
+                        IdCaja = x.IdCaja,
+                        Fecha = x.Fecha.ToString(),
+                        NoTicket = x.NoTicket,
+                        TipoPago = x.TipoPago,
+                        TipoVenta = x.TipoVenta,
+                        NoArticulos = x.NoArticulos,
+                        Subtotal = x.Subtotal,
+                        Total = x.Total,
+
+                    }
+
+                    );
+                    response.respuesta = listaVentas;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
         #endregion
     }
 }
