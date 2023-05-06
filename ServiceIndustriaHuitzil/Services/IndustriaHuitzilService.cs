@@ -3889,11 +3889,15 @@ namespace ServiceIndustriaHuitzil.Services
 
                 List<VentaRequest> listaVentas = new List<VentaRequest>();
                 List<Venta> lista = _ctx.Ventas.Where(x => x.IdCaja == idCaja).ToList();
-                List<VentaArticulo> articulosVendidos = new List<VentaArticulo>();
+                //List<VentaArticulo> articulosVendidos = new List<VentaArticulo>();
                 if (lista != null)
                 {
+
                     response.exito = true;
                     response.mensaje = "Se han consultado exitosamente las Ventas!!";
+
+
+                    //listaVentas
                     listaVentas = lista.ConvertAll(x => new VentaRequest()
                     {
                         IdVenta = x.IdVenta,
@@ -3907,8 +3911,41 @@ namespace ServiceIndustriaHuitzil.Services
                         Total = x.Total,
 
                     }
+                    ); ;
+                    listaVentas.ForEach(venta => {
+                        List<VentaArticulo> articulosVenta = _ctx.VentaArticulos.Include(w => w.IdArticuloNavigation)
+                                                                            .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)
+                                                                            .Include(wb => wb.IdArticuloNavigation.IdCategoriaNavigation)
+                                                                            .Include(wc => wc.IdArticuloNavigation.IdTallaNavigation)
+                                                                            .Where(x => x.IdVenta == venta.IdVenta).ToList();
+                        venta.ventaArticulo  = articulosVenta.ConvertAll(x => new VentaArticuloRequest()
+                        {
+                            IdVentaArticulo = x.IdVentaArticulo,
+                            IdVenta = x.IdVenta,
+                            IdArticulo = x.IdArticulo,
+                            Cantidad = x.Cantidad,
+                            PrecioUnitario = x.PrecioUnitario,
+                            Subtotal = x.Subtotal,
+                            Articulo = new ProductoRequest()
+                            {
+                                IdArticulo = x.IdArticulo,
+                                Status = x.IdArticuloNavigation.Status,
+                                Existencia = x.IdArticuloNavigation.Existencia,
+                                Descripcion = x.IdArticuloNavigation.Descripcion,
+                                FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
+                                idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
+                                idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
+                                idTalla = (int)x.IdArticuloNavigation.IdTalla,
+                                talla = x.IdArticuloNavigation.IdTallaNavigation.Descripcion,
+                                categoria = x.IdArticuloNavigation.IdCategoriaNavigation.Descripcion,
+                                ubicacion = x.IdArticuloNavigation.IdUbicacionNavigation.Direccion,
+                                sku = x.IdArticuloNavigation.Sku,
+                                precio = (int)x.IdArticuloNavigation.Precio,
+                                imagen = x.IdArticuloNavigation.Imagen
+                            }
+                        });
 
-                    );
+                    });
                     response.respuesta = listaVentas;
                 }
             }
