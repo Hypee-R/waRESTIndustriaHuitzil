@@ -86,6 +86,9 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> deleteProductos(ProductoRequest producto);
 
         Task<ResponseModel> searchProduct(string queryString, string sucursal);
+
+        Task<ResponseModel> SearchProductFilterUbicacion( string sucursal);
+        
         #endregion
 
         #region ProveedoresMateriales

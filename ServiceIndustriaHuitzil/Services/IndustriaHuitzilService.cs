@@ -3,6 +3,7 @@ using AccessControl.Models;
 using CoreIndustriaHuitzil.Models;
 using CoreIndustriaHuitzil.ModelsRequest;
 using CoreIndustriaHuitzil.ModelsResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -2260,6 +2261,96 @@ namespace ServiceIndustriaHuitzil.Services
             }
             return response;
         }
+
+
+        public async Task<ResponseModel> SearchProductFilterUbicacion( string sucursal)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay productos relacionados con la busqueda";
+                response.respuesta = "[]";
+
+                List<ProductoRequest> allResults = new List<ProductoRequest>();
+                List<Articulo> resultsByName = new List<Articulo>();
+                List<Articulo> resultsBySku = new List<Articulo>();
+
+                if (sucursal == "all")
+                {
+                    resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                .ToList();
+
+                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                 .ToList();
+                }
+                resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                .Where(x =>  x.IdUbicacionNavigation.Direccion == sucursal).ToList();
+                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                .Where(x => x.IdUbicacionNavigation.Direccion == sucursal).ToList();
+                
+
+                if (resultsByName.Count() > 0 || resultsBySku.Count() > 0)
+                {
+                    resultsBySku.ForEach(product =>
+                    {
+                        allResults.Add(new ProductoRequest()
+                        {
+                            IdArticulo = product.IdArticulo,
+                            Status = product.Status,
+                            Existencia = product.Existencia,
+                            Descripcion = product.Descripcion,
+                            FechaIngreso = (DateTime)product.FechaIngreso,
+                            idTalla = (int)product.IdTalla,
+                            idCategoria = (int)product.IdCategoria,
+                            idUbicacion = (int)product.IdUbicacion,
+                            imagen = product.Imagen,
+                            talla = product.IdTallaNavigation.Nombre,
+                            ubicacion = product.IdUbicacionNavigation.Direccion,
+                            categoria = product.IdCategoriaNavigation.Descripcion,
+                            precio = (int)product.Precio,
+                            sku = product.Sku
+                        });
+                    });
+                    resultsByName.ForEach(product =>
+                    {
+                        if (allResults.Find(x => x.IdArticulo == product.IdArticulo) == null)
+                        {
+                            allResults.Add(new ProductoRequest()
+                            {
+                                IdArticulo = product.IdArticulo,
+                                Status = product.Status,
+                                Existencia = product.Existencia,
+                                Descripcion = product.Descripcion,
+                                FechaIngreso = (DateTime)product.FechaIngreso,
+                                idTalla = (int)product.IdTalla,
+                                idCategoria = (int)product.IdCategoria,
+                                idUbicacion = (int)product.IdUbicacion,
+                                imagen = product.Imagen,
+                                talla = product.IdTallaNavigation.Nombre,
+                                ubicacion = product.IdUbicacionNavigation.Direccion,
+                                categoria = product.IdCategoriaNavigation.Descripcion,
+                                precio = (int)product.Precio,
+                                sku = product.Sku
+                            });
+                        }
+                    });
+                    response.exito = true;
+                    response.mensaje = "Se obtuvieron las coincidencias relacionadas con el filtro!!";
+                    response.respuesta = allResults;
+                }
+            }
+            catch (Exception e)
+            {
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+
+        
         #endregion
 
         #region ProveedoresMateriales

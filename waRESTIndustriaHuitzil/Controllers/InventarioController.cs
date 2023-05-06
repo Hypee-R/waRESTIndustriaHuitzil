@@ -28,6 +28,17 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.searchProduct(queryString, sucursal));
         }
 
+
+
+        [HttpGet("SearchProductFilterUbicacion")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> SearchProductFilterUbicacion(string sucursal)
+        {
+            return Ok(await _service.SearchProductFilterUbicacion( sucursal));
+        }
+
+
+
         [HttpGet("Inexistencias")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetInexistencias(string sucursal)
