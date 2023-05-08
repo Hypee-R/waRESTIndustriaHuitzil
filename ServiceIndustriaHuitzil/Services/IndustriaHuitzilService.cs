@@ -341,7 +341,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No hay una caja para mostrar";
                 response.respuesta = "[]";
-                List<Caja> cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.IdCaja).ToListAsync();
+                List<Caja> cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.Fecha).ToListAsync();
                 if (cajas != null)
                 {
                     response.exito = true;
@@ -3908,6 +3908,8 @@ namespace ServiceIndustriaHuitzil.Services
                         TipoVenta = x.TipoVenta,
                         NoArticulos = x.NoArticulos,
                         Subtotal = x.Subtotal,
+                        Tarjeta = x.Tarjeta,
+                        Efectivo = x.Efectivo,
                         Total = x.Total,
 
                     }
