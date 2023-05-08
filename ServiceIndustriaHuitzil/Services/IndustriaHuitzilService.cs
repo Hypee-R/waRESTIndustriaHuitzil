@@ -360,6 +360,33 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> getCajaDate(DateTime dateI, DateTime dateF)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja para mostrar";
+                response.respuesta = "[]";
+                List<Caja> cajas = await _ctx.Cajas.Where(x => x.Fecha >= dateI && x.Fecha <= dateF).Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.Fecha).ToListAsync();
+                if (cajas != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las cajas!!";
+                    response.respuesta = cajas;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
         public async Task<ResponseModel> getCaja(int idUser)
         {
             ResponseModel response = new ResponseModel();
@@ -3844,7 +3871,6 @@ namespace ServiceIndustriaHuitzil.Services
 
                 List<VentaRequest> listaVentas = new List<VentaRequest>();
                 List<Venta> lista = _ctx.Ventas.Where(x => x.Fecha >= dateI && x.Fecha <= dateF).ToList();
-                List<VentaArticulo> articulosVendidos = new List<VentaArticulo>();
                 if (lista != null)
                 {
                     response.exito = true;
@@ -3865,6 +3891,7 @@ namespace ServiceIndustriaHuitzil.Services
                     }
 
                     );
+
                     response.respuesta = listaVentas;
                 }
             }
@@ -3889,15 +3916,12 @@ namespace ServiceIndustriaHuitzil.Services
 
                 List<VentaRequest> listaVentas = new List<VentaRequest>();
                 List<Venta> lista = _ctx.Ventas.Where(x => x.IdCaja == idCaja).ToList();
-                //List<VentaArticulo> articulosVendidos = new List<VentaArticulo>();
+               
                 if (lista != null)
                 {
 
                     response.exito = true;
                     response.mensaje = "Se han consultado exitosamente las Ventas!!";
-
-
-                    //listaVentas
                     listaVentas = lista.ConvertAll(x => new VentaRequest()
                     {
                         IdVenta = x.IdVenta,
@@ -3913,7 +3937,7 @@ namespace ServiceIndustriaHuitzil.Services
                         Total = x.Total,
 
                     }
-                    ); ;
+                    ); 
                     listaVentas.ForEach(venta => {
                         List<VentaArticulo> articulosVenta = _ctx.VentaArticulos.Include(w => w.IdArticuloNavigation)
                                                                             .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)

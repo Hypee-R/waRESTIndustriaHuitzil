@@ -21,7 +21,14 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getCajaDate());
         }
 
-        [HttpGet("Cash/Consulta")]
+        [HttpGet("Cash/CajasDate")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetCaja(DateTime dateI, DateTime dateF)
+        {
+            return Ok(await _service.getCajaDate(dateI,dateF));
+        }
+       
+    [HttpGet("Cash/Consulta")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetCaja(int param)
         {
