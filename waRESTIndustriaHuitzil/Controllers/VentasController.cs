@@ -103,7 +103,16 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getVentasByCaja(idCaja));
         }
 
+
+        [HttpPost("Correo")]
+        //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> Correo([FromBody] CorreoRequest request)
+        {
+            return Ok(await _service.correo(request));
+        }
+
         #endregion
+
 
     }
 }

@@ -159,6 +159,7 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> getVentas();
         Task<ResponseModel> getVentasByDates(DateTime dateI , DateTime dateF);
         Task<ResponseModel> getVentasByCaja(int idCaja);
+        Task<ResponseModel> correo(CorreoRequest correo);
         //Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
         #endregion
 

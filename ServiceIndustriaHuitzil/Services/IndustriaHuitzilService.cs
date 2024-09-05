@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.Common;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using MailKit.Net.Smtp;
+using MimeKit;
+using System.Threading.Tasks;
 
 namespace ServiceIndustriaHuitzil.Services
 {
@@ -3986,5 +3988,50 @@ namespace ServiceIndustriaHuitzil.Services
         }
 
         #endregion
+        private readonly string _smtpServer = "smtp.gmail.com"; // Cambia esto por tu servidor SMTP
+        private readonly int _smtpPort = 587; // Puerto del servidor SMTP (puede ser 465, 587, etc.)
+        private readonly string _smtpUsername = "notificacionesn00@gmail.com"; // Cambia esto por tu nombre de usuario SMTP
+        private readonly string _smtpPassword = "xzns ibeg dfpy hpyp"; // Cambia esto por tu contraseña SMTP
+
+        public async Task<ResponseModel> correo(CorreoRequest correo) {
+            ResponseModel response = new ResponseModel();
+            response.mensaje = "";
+            response.exito = true;
+            response.respuesta = "[]";
+
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress(correo.titulo, _smtpUsername));
+            emailMessage.To.Add(new MailboxAddress("", correo.correo));
+            emailMessage.Subject = correo.subject;
+            emailMessage.Body = new TextPart("plain")
+            {
+                Text = correo.mensaje
+            };
+
+            BodyBuilder cuerpo = new();
+            cuerpo.TextBody = "Notificacion";
+            cuerpo.HtmlBody = correo.mensaje;
+
+
+            emailMessage.Body = cuerpo.ToMessageBody();
+
+            SmtpClient clienteSmtp = new();
+            clienteSmtp.CheckCertificateRevocation = false;
+            clienteSmtp.Connect(_smtpServer, _smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            clienteSmtp.Authenticate(_smtpUsername, _smtpPassword);
+            clienteSmtp.Send(emailMessage);
+
+            clienteSmtp.Disconnect(true);
+            response.exito = true;
+
+            /*using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_smtpServer, _smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_smtpUsername, _smtpPassword);
+                await client.SendAsync(emailMessage);
+                await client.DisconnectAsync(true);
+            }*/
+            return response;
+        }
     }
 }
